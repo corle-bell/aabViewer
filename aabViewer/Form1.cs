@@ -36,22 +36,29 @@ namespace aabViewer
         {
             string configPath = Environment.CurrentDirectory.ToString() + "/Config/data.ini";
 
-            string [] data = File.ReadAllLines(configPath);
-
-            configNodes = new List<ConfigNode>();
-
-            int index = 0;
-            for(int i=0; i<data.Length; i++)
+            if(File.Exists(configPath))
             {
-                string[] _split_data = data[i].Split(new char[] { '#' });
-                ConfigNode tmp = new ConfigNode();
-                tmp.name = _split_data[0];
-                tmp.path = _split_data[1];
-                tmp.filter_name = _split_data[2];
-                configNodes.Add(tmp);
+                string[] data = File.ReadAllLines(configPath);
 
-                index = this.dataGridView1.Rows.Add();
-                this.dataGridView1.Rows[index].Cells[0].Value = tmp.name;
+                configNodes = new List<ConfigNode>();
+
+                int index = 0;
+                for (int i = 0; i < data.Length; i++)
+                {
+                    string[] _split_data = data[i].Split(new char[] { '#' });
+                    ConfigNode tmp = new ConfigNode();
+                    tmp.name = _split_data[0];
+                    tmp.path = _split_data[1];
+                    tmp.filter_name = _split_data[2];
+                    configNodes.Add(tmp);
+
+                    index = this.dataGridView1.Rows.Add();
+                    this.dataGridView1.Rows[index].Cells[0].Value = tmp.name;
+                }
+            }
+            else
+            {
+                MessageBox.Show("配置文件丢失，请检查配置文件!");
             }
 
         }
