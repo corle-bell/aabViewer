@@ -13,17 +13,47 @@ using System.IO;
 
 namespace aabViewer
 {
+   
+
     public partial class Form1 : Form
     {
+        public List<ConfigNode> configNodes = new List<ConfigNode>();
         public Form1(string [] args)
         {
             InitializeComponent();
 
-            if(args.Length>0)
+            Init();
+
+            if (args.Length>0)
             {
                 text_aab_path.Text = args[0];
                 ExecAabCheck();
             }
+            
+        }
+
+        private void Init()
+        {
+            string configPath = Environment.CurrentDirectory.ToString() + "/Config/data.ini";
+
+            string [] data = File.ReadAllLines(configPath);
+
+            configNodes = new List<ConfigNode>();
+
+            int index = 0;
+            for(int i=0; i<data.Length; i++)
+            {
+                string[] _split_data = data[i].Split(new char[] { '#' });
+                ConfigNode tmp = new ConfigNode();
+                tmp.name = _split_data[0];
+                tmp.path = _split_data[1];
+                tmp.filter_name = _split_data[2];
+                configNodes.Add(tmp);
+
+                index = this.dataGridView1.Rows.Add();
+                this.dataGridView1.Rows[index].Cells[0].Value = tmp.name;
+            }
+
         }
 
         private void ExecAabCheck()
@@ -47,38 +77,33 @@ namespace aabViewer
             nsp.AddNamespace("android", "http://schemas.android.com/apk/res/android");
 
 
-
-            string app_name = doc.SelectSingleNode("/manifest/application/@android:label", nsp).Value;
-            string pkg_name = doc.SelectSingleNode("/manifest/@package", nsp).Value;
-            string version_code = doc.SelectSingleNode("/manifest/@android:versionCode", nsp).Value;
-            string version_name = doc.SelectSingleNode("/manifest/@android:versionName", nsp).Value;
-
-            XmlNode t = doc.SelectSingleNode("/manifest/@android:debuggable", nsp);
-            string debuggable = t != null ? t.Value : "";
-
-            string min_sdk = doc.SelectSingleNode("/manifest/uses-sdk/@android:minSdkVersion", nsp).Value;
-            string build_sdk = doc.SelectSingleNode("/manifest/uses-sdk/@android:targetSdkVersion", nsp).Value;
-
-            string facebookId = "none";
-            XmlNodeList nodes = doc.SelectNodes("/manifest/application/meta-data", nsp);
-            foreach (XmlNode item in nodes)
+            for(int i=0; i<configNodes.Count; i++)
             {
-                string title = item.SelectSingleNode("@android:name", nsp).Value;
-                if (title == "com.facebook.sdk.ApplicationId")
+                ConfigNode tmp = configNodes[i];
+                if(tmp.filter_name=="")
                 {
-                    facebookId = item.SelectSingleNode("@android:value", nsp).Value;
-                    facebookId = facebookId.Replace("fb", "");
+                    XmlNode t = doc.SelectSingleNode(tmp.path, nsp);
+                    string text = t != null ? t.Value : "不存在";
+                    this.dataGridView1.Rows[i].Cells[1].Value = text;
+                }
+                else
+                {
+                    string text = "none";
+                    XmlNodeList nodes = doc.SelectNodes(tmp.path, nsp);
+                    foreach (XmlNode item in nodes)
+                    {
+                        string title = item.SelectSingleNode("@android:name", nsp).Value;
+                        if (title == tmp.filter_name)
+                        {
+                            text = item.SelectSingleNode("@android:value", nsp).Value;
+                        }
+                    }
+                    this.dataGridView1.Rows[i].Cells[1].Value = text;
                 }
             }
 
-            text_app_name.Text = app_name;
-            text_pkg_name.Text = pkg_name;
-            text_version_code.Text = version_code;
-            text_version_name.Text = version_name;
-            text_debug.Text = debuggable == "" ? "否" : "是";
-            text_min_sdk.Text = min_sdk;
-            text_build_sdk.Text = build_sdk;
-            text_facebook_id.Text = facebookId;
+
+            
         }
 
 
@@ -159,5 +184,13 @@ namespace aabViewer
             openFileDialog.Filter = "KeyStore文件(*.keystore,*.jks)|*.keystore;*.jks";
             text_key_path.Text = openFileDialog.FileName;
         }
+
+    }
+
+    public class ConfigNode
+    {
+        public string name;
+        public string path;
+        public string filter_name;
     }
 }
