@@ -15,5 +15,17 @@ facebookid
 可以生成签名base64hash值
 sha1指纹
 
-v2.0-pre
-将信息查看改为配置文件支持自定义配置。
+v2.0
+需要根据配置文件读取manifest下的节点信息
+规则如下：
+
+{显示名称}#{节点路径}#{过滤器}
+
+节点路径是采用x-path的方式查找
+
+过滤器为空为不启用
+
+在存在多个相同路径节点的情况下使用过滤器，过滤器根据属性的name判断，返回value的值
+
+例如多个meta-data节点统计并存那么可以这样查找
+FacebookId#/manifest/application/meta-data#com.facebook.sdk.ApplicationId
