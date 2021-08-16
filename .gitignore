@@ -1,8 +1,8 @@
 
 Temp
 Library
-bin/Release
-bin/Debug
+aabViewer/bin/Release
+aabViewer/bin/Debug
 Release
 .vs
 obj
