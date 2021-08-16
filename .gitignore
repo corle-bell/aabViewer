@@ -1,0 +1,11 @@
+
+Temp
+Library
+bin/Release
+bin/Debug
+Release
+.vs
+obj
+.vsconfig
+*.csproj
+*.sln
