@@ -9,3 +9,4 @@ obj
 .vsconfig
 *.csproj
 *.sln
+aabViewer/bin/Debug/aabViewer.exe
