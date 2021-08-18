@@ -61,6 +61,18 @@ namespace aabViewer
                 MessageBox.Show("配置文件丢失，请检查配置文件!");
             }
 
+            this.AllowDrop = true;
+
+
+
+            this.dataGridView1.DragEnter += this.Form1_DragEnter;
+            this.flowLayoutPanel2.DragEnter += this.Form1_DragEnter;
+            this.DragEnter += this.Form1_DragEnter;
+
+
+            this.dataGridView1.DragDrop += this.Form1_DragDrop;
+            this.flowLayoutPanel2.DragDrop += this.Form1_DragDrop;
+            this.DragDrop += this.Form1_DragDrop;
         }
 
         private void ExecAabCheck()
@@ -75,10 +87,18 @@ namespace aabViewer
             string cmd = string.Format("java -jar bundletool-all-1.8.0.jar dump manifest --bundle  {0}", filePath);
             string xmlData = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + CmdTools.Exec(cmd);
 
+            Console.WriteLine(cmd);
             Console.WriteLine(xmlData);
 
             XmlDocument doc = new XmlDocument();
-            doc.LoadXml(xmlData);
+            try
+            {
+                doc.LoadXml(xmlData);
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
 
             XmlNamespaceManager nsp = new XmlNamespaceManager(doc.NameTable);
             nsp.AddNamespace("android", "http://schemas.android.com/apk/res/android");
@@ -159,14 +179,24 @@ namespace aabViewer
             //执行指令
             string ret = CmdTools.Exec(cmd);
             Console.WriteLine("生成:"+ret);
+
             //安装指令
             cmd = string.Format("java -jar bundletool-all-1.8.0.jar install-apks --apks={0}", outPath);
             ret = CmdTools.Exec(cmd);
-            Console.WriteLine("安装:" + ret);
+
+            if(ret.Length!=0)
+            {
+                MessageBox.Show("生成失败:"+ret);
+                return;
+            }
 
             if(ret.Length==0)
             {
                 MessageBox.Show("安装成功!");
+            }
+            else
+            {
+                MessageBox.Show("安装失败"+ret);
             }
         }
 
@@ -191,6 +221,29 @@ namespace aabViewer
             openFileDialog.Filter = "KeyStore文件(*.keystore,*.jks)|*.keystore;*.jks";
             text_key_path.Text = openFileDialog.FileName;
         }
+
+        private void Form1_DragDrop(object sender, DragEventArgs e)
+        {
+            string path = ((System.Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString();
+            
+            if(path.Contains(".aab"))
+            {
+                text_aab_path.Text = path;
+                ExecAabCheck();
+            }
+            else if (path.Contains(".jks") || path.Contains(".keystore"))
+            {
+                text_key_path.Text = path;
+            }
+        }
+
+        private void Form1_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Link;
+            else e.Effect = DragDropEffects.None;
+        }
+
 
     }
 
