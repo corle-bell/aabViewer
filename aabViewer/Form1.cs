@@ -180,17 +180,18 @@ namespace aabViewer
             //执行指令
             string ret = CmdTools.Exec(cmd);
             Console.WriteLine("生成:"+ret);
+            Console.WriteLine(cmd);
+            if (ret.Length != 0)
+            {
+                MessageBox.Show("生成失败:" + ret);
+                return;
+            }
 
             //安装指令
             cmd = string.Format("java -jar bundletool-all-1.8.0.jar install-apks --apks=\"{0}\"", outPath);
             ret = CmdTools.Exec(cmd);
 
-            if(ret.Length!=0)
-            {
-                MessageBox.Show("生成失败:"+ret);
-                return;
-            }
-
+           
             if(ret.Length==0)
             {
                 MessageBox.Show("安装成功!");
