@@ -84,7 +84,7 @@ namespace aabViewer
             }
           
             string filePath = text_aab_path.Text;
-            string cmd = string.Format("java -jar bundletool-all-1.8.0.jar dump manifest --bundle  {0}", filePath);
+            string cmd = string.Format("java -jar bundletool-all-1.8.0.jar dump manifest --bundle \"{0}\"", filePath);
             string xmlData = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + CmdTools.Exec(cmd);
 
             Console.WriteLine(cmd);
@@ -165,7 +165,7 @@ namespace aabViewer
             //string cmd = "java - jar bundletool-all-1.8.0.jar build - apks--bundle ={0} --output ={1} --ks ={2} --ks - pass = pass:{3} --ks - key - alias ={4} --key - pass = pass:{5} --device - spec ={6}";
 
             //根据连接手机的设备创建apks的指令
-            string cmd = "java -jar bundletool-all-1.8.0.jar build-apks --bundle={0} --output={1} --ks={2} --ks-pass=pass:{3} --ks-key-alias={4} --key-pass=pass:{5} --connected-device";
+            string cmd = "java -jar bundletool-all-1.8.0.jar build-apks --bundle=\"{0}\" --output=\"{1}\" --ks=\"{2}\" --ks-pass=pass:{3} --ks-key-alias={4} --key-pass=pass:{5} --connected-device";
             outPath += "temp.apks";
 
 
@@ -176,12 +176,13 @@ namespace aabViewer
 
             //填充志林该参数
             cmd = string.Format(cmd, text_aab_path.Text, outPath, text_key_path.Text, text_pass.Text, text_alias.Text, text_key_pass.Text);
+  
             //执行指令
             string ret = CmdTools.Exec(cmd);
             Console.WriteLine("生成:"+ret);
 
             //安装指令
-            cmd = string.Format("java -jar bundletool-all-1.8.0.jar install-apks --apks={0}", outPath);
+            cmd = string.Format("java -jar bundletool-all-1.8.0.jar install-apks --apks=\"{0}\"", outPath);
             ret = CmdTools.Exec(cmd);
 
             if(ret.Length!=0)
@@ -202,14 +203,14 @@ namespace aabViewer
 
         private void btn_base_hash_Click(object sender, EventArgs e)
         {
-            string cmd = "keytool -exportcert -alias {0} -storepass {1} -keypass {2} -keystore {3} | openssl sha1 -binary | openssl base64";
+            string cmd = "keytool -exportcert -alias {0} -storepass {1} -keypass {2} -keystore \"{3}\" | openssl sha1 -binary | openssl base64";
             cmd = string.Format(cmd, text_alias.Text, text_pass.Text, text_key_pass.Text, text_key_path.Text);
             text_hash_result.Text = CmdTools.Exec(cmd);
         }
 
         private void btn_sha1_Click(object sender, EventArgs e)
         {
-            string cmd = "keytool -list -alias {0} -storepass {1} -keypass {2} -keystore {3}";
+            string cmd = "keytool -list -alias {0} -storepass {1} -keypass {2} -keystore \"{3}\"";
             cmd = string.Format(cmd, text_alias.Text, text_pass.Text, text_key_pass.Text, text_key_path.Text);
             text_hash_result.Text = CmdTools.Exec(cmd);
         }
