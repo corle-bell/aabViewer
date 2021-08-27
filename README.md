@@ -3,7 +3,7 @@
 使用之前需要有java环境。
 如果需要使用签名base64功能需要安装 openssl 并且配置环境变量。
 
-v1.0
+**v1.0**
 可以查看内容有
 版本号
 包名
@@ -15,7 +15,7 @@ facebookid
 可以生成签名base64hash值
 sha1指纹
 
-v2.0
+**v2.0**
 需要根据配置文件读取manifest下的节点信息
 规则如下：
 
@@ -29,3 +29,11 @@ v2.0
 
 例如多个meta-data节点统计并存那么可以这样查找
 FacebookId#/manifest/application/meta-data#com.facebook.sdk.ApplicationId
+
+
+**v2.1**
+增加了拖拽功能和安装失败的提示
+可以把拖拽签名文件和aab直接拖入程序内
+
+**v2.2**
+修复了路径存在空格导致无法解析和安装的问题
