@@ -16,10 +16,31 @@ namespace aabViewer
             p.StartInfo.RedirectStandardInput = true;
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.RedirectStandardError = true;
             p.StartInfo.Arguments = "/c " + _text;//“/C”表示执行完命令后马上退出 
             p.Start();//启动程序  
             string sOutput = p.StandardOutput.ReadToEnd();
             return sOutput;
         }
+
+        public static string Exec(string _text, ref string _error)
+        {
+            System.Diagnostics.Process p = new System.Diagnostics.Process();
+            p.StartInfo.FileName = "cmd.exe";
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.RedirectStandardInput = true;
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.RedirectStandardError = true;
+            p.StartInfo.Arguments = "/c " + _text;//“/C”表示执行完命令后马上退出 
+            p.Start();//启动程序  
+            string sOutput = p.StandardOutput.ReadToEnd();
+            if (_error != null)
+            {
+                _error = p.StandardError.ReadToEnd();
+            }
+            return sOutput;
+        }
+
     }
 }

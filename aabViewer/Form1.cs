@@ -18,6 +18,7 @@ namespace aabViewer
     public partial class Form1 : Form
     {
         public List<ConfigNode> configNodes = new List<ConfigNode>();
+        public string logPath = "";
         public Form1(string [] args)
         {
             InitializeComponent();
@@ -29,14 +30,14 @@ namespace aabViewer
                 text_aab_path.Text = args[0];
                 ExecAabCheck();
             }
-            
+
         }
 
         private void Init()
         {
             string configPath = Environment.CurrentDirectory.ToString() + "/Config/data.ini";
-
-            if(File.Exists(configPath))
+            logPath = Environment.CurrentDirectory.ToString() + "/log.txt";
+            if (File.Exists(configPath))
             {
                 string[] data = File.ReadAllLines(configPath);
 
@@ -82,13 +83,13 @@ namespace aabViewer
                 MessageBox.Show("文件不存在!");
                 return;
             }
-          
+
+            string error = "";
             string filePath = text_aab_path.Text;
             string cmd = string.Format("java -jar bundletool-all-1.8.0.jar dump manifest --bundle \"{0}\"", filePath);
-            string xmlData = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + CmdTools.Exec(cmd);
+            string xmlData = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + CmdTools.Exec(cmd, ref error);
 
             Console.WriteLine(cmd);
-            Console.WriteLine(xmlData);
 
             XmlDocument doc = new XmlDocument();
             try
@@ -161,35 +162,40 @@ namespace aabViewer
             }
 
 
-            // {0} aab路径 {1}输出路径 {2}keystroe路径 {3}秘钥密码 {4}秘钥别名 {5}秘钥别名密码 {6}配置文件路径
-            //string cmd = "java - jar bundletool-all-1.8.0.jar build - apks--bundle ={0} --output ={1} --ks ={2} --ks - pass = pass:{3} --ks - key - alias ={4} --key - pass = pass:{5} --device - spec ={6}";
-
-            //根据连接手机的设备创建apks的指令
-            string cmd = "java -jar bundletool-all-1.8.0.jar build-apks --bundle=\"{0}\" --output=\"{1}\" --ks=\"{2}\" --ks-pass=pass:{3} --ks-key-alias={4} --key-pass=pass:{5} --connected-device";
             outPath += "temp.apks";
-
-
             if (File.Exists(outPath))
             {
                 File.Delete(outPath);
             }
+            // {0} aab路径 {1}输出路径 {2}keystroe路径 {3}秘钥密码 {4}秘钥别名 {5}秘钥别名密码 {6}配置文件路径
+            //string cmd = "java - jar bundletool-all-1.8.0.jar build - apks--bundle ={0} --output ={1} --ks ={2} --ks - pass = pass:{3} --ks - key - alias ={4} --key - pass = pass:{5} --device - spec ={6}";
 
-            //填充志林该参数
-            cmd = string.Format(cmd, text_aab_path.Text, outPath, text_key_path.Text, text_pass.Text, text_alias.Text, text_key_pass.Text);
-  
+
+            string cmd = create_install_cmd(outPath);
+
             //执行指令
-            string ret = CmdTools.Exec(cmd);
-            Console.WriteLine("生成:"+ret);
+            string error = "";
+            string ret = CmdTools.Exec(cmd, ref error);
             Console.WriteLine(cmd);
-            if (ret.Length != 0)
+
+            if (!File.Exists(outPath))
             {
-                MessageBox.Show("生成失败:" + ret);
+                WriteLog("Create Error: " + error);
+                WriteLog("Create Ret: " + ret);
+                
+                MessageBox.Show("生成失败!");
                 return;
+            }
+            else
+            {
+                if (ret.Length > 0) MessageBox.Show("Info:" + ret);
+                if(error.Length>0) MessageBox.Show("Info:" + error);
             }
 
             //安装指令
+            error = "";
             cmd = string.Format("java -jar bundletool-all-1.8.0.jar install-apks --apks=\"{0}\"", outPath);
-            ret = CmdTools.Exec(cmd);
+            ret = CmdTools.Exec(cmd, ref error);
 
            
             if(ret.Length==0)
@@ -198,7 +204,34 @@ namespace aabViewer
             }
             else
             {
-                MessageBox.Show("安装失败"+ret);
+                WriteLog("Install Error: " + error);
+                WriteLog("Install Ret: " + ret);
+
+                MessageBox.Show("安装失败!");
+            }
+        }
+
+        private string create_install_cmd(string outPath)
+        {
+            string _key_path = text_key_path.Text;
+            string _alias_pass = text_pass.Text;
+            string _key_alias = text_alias.Text;
+            string _key_pass = text_key_pass.Text;
+
+            if (!File.Exists(_key_path))
+            {
+                _key_path = Environment.CurrentDirectory.ToString() + "/Config/debug.keystore";
+                _alias_pass = "android";
+                _key_pass = "android";
+                _key_alias = "androiddebugkey";
+            }
+
+            {
+                //根据连接手机的设备创建apks的指令
+                string cmd = "java -jar bundletool-all-1.8.0.jar build-apks --bundle=\"{0}\" --output=\"{1}\" --ks=\"{2}\" --ks-pass=pass:{3} --ks-key-alias={4} --key-pass=pass:{5} --connected-device";
+                //填充志林该参数
+                cmd = string.Format(cmd, text_aab_path.Text, outPath, _key_path, _alias_pass, _key_alias, _key_pass);
+                return cmd;
             }
         }
 
@@ -224,6 +257,8 @@ namespace aabViewer
             text_key_path.Text = openFileDialog.FileName;
         }
 
+       
+
         private void Form1_DragDrop(object sender, DragEventArgs e)
         {
             string path = ((System.Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString();
@@ -246,7 +281,16 @@ namespace aabViewer
             else e.Effect = DragDropEffects.None;
         }
 
+        private void WriteLog(string _txt)
+        {
+            Console.WriteLine(_txt);
+            File.AppendAllText(logPath, "\r\n" + GetTime() + _txt);
+        }
 
+        private string GetTime()
+        {
+            return System.DateTime.Now.ToString()+" ";
+        }
     }
 
     public class ConfigNode
