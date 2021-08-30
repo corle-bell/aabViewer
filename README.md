@@ -1,10 +1,11 @@
 # aabViewer
-软件功能都是通过调用命令行工具处理的。
-使用之前需要有java环境。
-如果需要使用签名base64功能需要安装 openssl 并且配置环境变量。
-v2.3之后的包中移除了谷歌的库，可以在这里[下载](https://github.com/google/bundletool/releases)
-如果想了解build-tools具体的使用可以点击[这里](https://developer.android.com/studio/command-line/bundletool)
-配置文件中的xml节点的配置是xpath语法，如果想了解更多可以点击[这里](https://www.w3school.com.cn/xpath/xpath_syntax.asp)
+
+ - 软件功能都是通过调用命令行工具处理的。
+ - 使用之前需要有java环境。
+ - 如果需要使用签名base64功能需要安装 openssl 并且配置环境变量。
+ - v2.3之后的包中移除了谷歌的库，可以在这里[==下载 #00BCD4==](https://github.com/google/bundletool/releases)
+ - 如果想了解build-tools具体的使用可以点击[==这里 #00BCD4==](https://developer.android.com/studio/command-line/bundletool)
+ - 配置文件中的xml节点的配置是xpath语法，如果想了解更多可以点击[==这里 #00BCD4==](https://www.w3school.com.cn/xpath/xpath_syntax.asp)
 
 ### v1.0
 可以查看内容有
