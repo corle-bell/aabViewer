@@ -10,7 +10,8 @@ using System.Windows.Forms;
 using System.Xml.XPath;
 using System.Xml;
 using System.IO;
-
+using Ionic.Zip;
+using System.Text.RegularExpressions;
 namespace aabViewer
 {
    
@@ -19,6 +20,7 @@ namespace aabViewer
     {
         public List<ConfigNode> configNodes = new List<ConfigNode>();
         public string logPath = "";
+        public string lastParse;
         public Form1(string [] args)
         {
             InitializeComponent();
@@ -31,6 +33,7 @@ namespace aabViewer
                 ExecAabCheck();
             }
 
+            
         }
 
         private void Init()
@@ -89,6 +92,8 @@ namespace aabViewer
             string cmd = string.Format("java -jar bundletool-all-1.8.0.jar dump manifest --bundle \"{0}\"", filePath);
             string xmlData = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + CmdTools.Exec(cmd, ref error);
 
+            
+
             Console.WriteLine(cmd);
 
             XmlDocument doc = new XmlDocument();
@@ -112,7 +117,16 @@ namespace aabViewer
                 {
                     XmlNode t = doc.SelectSingleNode(tmp.path, nsp);
                     string text = t != null ? t.Value : "不存在";
-                    this.dataGridView1.Rows[i].Cells[1].Value = text;
+
+                    if(text.StartsWith("@string/"))
+                    {
+                        var s_value = GetStringValue(text, filePath);
+                        this.dataGridView1.Rows[i].Cells[1].Value = s_value;
+                    }
+                    else
+                    {
+                        this.dataGridView1.Rows[i].Cells[1].Value = text;
+                    }
                 }
                 else
                 {
@@ -130,10 +144,30 @@ namespace aabViewer
                 }
             }
 
+            using (ZipFile zip = ZipFile.Read(text_aab_path.Text))
+            {
+                MemoryStream outputStream = new MemoryStream();
+                ZipEntry e = zip["base/res/mipmap-xxxhdpi-v4/app_icon.png"];
+                e.Extract(outputStream);
 
-            
+                Image img = Image.FromStream(outputStream);
+                this.pictureBox1.BackgroundImage = img;
+                this.pictureBox1.BackgroundImageLayout = ImageLayout.Stretch;
+            }
+
         }
 
+        private string GetStringValue(string _key, string _abbPath)
+        {
+            string t_key = _key.Replace("@", "");
+            string _cmd_string_name = string.Format("java -jar bundletool-all-1.8.0.jar dump resources --bundle \"{0}\" --resource={1} --values true", _abbPath, t_key);
+            var ret = CmdTools.Exec(_cmd_string_name);
+
+            foreach (Match match in Regex.Matches(ret, "\"([^\"]*)\""))
+                ret = match.ToString();
+
+            return ret.Replace("\"", "");
+        }
 
         private void button1_Click(object sender, EventArgs e)
         {
