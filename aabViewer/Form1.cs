@@ -21,6 +21,7 @@ namespace aabViewer
         public List<ConfigNode> configNodes = new List<ConfigNode>();
         public string logPath = "";
         public string lastParse;
+        public string jarPath;
         public Form1(string [] args)
         {
             InitializeComponent();
@@ -32,14 +33,16 @@ namespace aabViewer
                 text_aab_path.Text = args[0];
                 ExecAabCheck();
             }
-
-            
         }
 
         private void Init()
         {
-            string configPath = Environment.CurrentDirectory.ToString() + "/Config/data.ini";
-            logPath = Environment.CurrentDirectory.ToString() + "/log.txt";
+            string str = GetCurrentPath();
+
+            string configPath = str + "Config/data.ini";
+            logPath = str + "log.txt";
+            jarPath = str + "bundletool-all-1.8.0.jar";
+
             if (File.Exists(configPath))
             {
                 string[] data = File.ReadAllLines(configPath);
@@ -89,7 +92,7 @@ namespace aabViewer
 
             string error = "";
             string filePath = text_aab_path.Text;
-            string cmd = string.Format("java -jar bundletool-all-1.8.0.jar dump manifest --bundle \"{0}\"", filePath);
+            string cmd = string.Format("java -jar \"{0}\" dump manifest --bundle \"{1}\"", jarPath, filePath);
             string xmlData = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + CmdTools.Exec(cmd, ref error);
 
             
@@ -160,7 +163,7 @@ namespace aabViewer
         private string GetStringValue(string _key, string _abbPath)
         {
             string t_key = _key.Replace("@", "");
-            string _cmd_string_name = string.Format("java -jar bundletool-all-1.8.0.jar dump resources --bundle \"{0}\" --resource={1} --values true", _abbPath, t_key);
+            string _cmd_string_name = string.Format("java -jar \"{0}\" dump resources --bundle \"{1}\" --resource={2} --values true", jarPath,  _abbPath, t_key);
             var ret = CmdTools.Exec(_cmd_string_name);
 
             foreach (Match match in Regex.Matches(ret, "\"([^\"]*)\""))
@@ -183,7 +186,7 @@ namespace aabViewer
         private void btn_install_Click(object sender, EventArgs e)
         {
             //设置apks输出路径
-            string outPath = Environment.CurrentDirectory.ToString() + "/Temp/";
+            string outPath = GetCurrentPath() + "Temp/";
 
             if (!File.Exists(text_aab_path.Text))
             {
@@ -201,6 +204,7 @@ namespace aabViewer
             {
                 File.Delete(outPath);
             }
+
             // {0} aab路径 {1}输出路径 {2}keystroe路径 {3}秘钥密码 {4}秘钥别名 {5}秘钥别名密码 {6}配置文件路径
             //string cmd = "java - jar bundletool-all-1.8.0.jar build - apks--bundle ={0} --output ={1} --ks ={2} --ks - pass = pass:{3} --ks - key - alias ={4} --key - pass = pass:{5} --device - spec ={6}";
 
@@ -228,7 +232,7 @@ namespace aabViewer
 
             //安装指令
             error = "";
-            cmd = string.Format("java -jar bundletool-all-1.8.0.jar install-apks --apks=\"{0}\"", outPath);
+            cmd = string.Format("java -jar \"{0}\" install-apks --apks=\"{1}\"", jarPath, outPath);
             ret = CmdTools.Exec(cmd, ref error);
 
            
@@ -254,7 +258,7 @@ namespace aabViewer
 
             if (!File.Exists(_key_path))
             {
-                _key_path = Environment.CurrentDirectory.ToString() + "/Config/debug.keystore";
+                _key_path = GetCurrentPath() + "Config/debug.keystore";
                 _alias_pass = "android";
                 _key_pass = "android";
                 _key_alias = "androiddebugkey";
@@ -262,9 +266,9 @@ namespace aabViewer
 
             {
                 //根据连接手机的设备创建apks的指令
-                string cmd = "java -jar bundletool-all-1.8.0.jar build-apks --bundle=\"{0}\" --output=\"{1}\" --ks=\"{2}\" --ks-pass=pass:{3} --ks-key-alias={4} --key-pass=pass:{5} --connected-device";
+                string cmd = "java -jar \"{0}\" build-apks --bundle=\"{1}\" --output=\"{2}\" --ks=\"{3}\" --ks-pass=pass:{4} --ks-key-alias={5} --key-pass=pass:{6} --connected-device";
                 //填充志林该参数
-                cmd = string.Format(cmd, text_aab_path.Text, outPath, _key_path, _alias_pass, _key_alias, _key_pass);
+                cmd = string.Format(cmd, jarPath, text_aab_path.Text, outPath, _key_path, _alias_pass, _key_alias, _key_pass);
                 return cmd;
             }
         }
@@ -324,6 +328,12 @@ namespace aabViewer
         private string GetTime()
         {
             return System.DateTime.Now.ToString()+" ";
+        }
+
+        private string GetCurrentPath()
+        {
+            string str = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName.Replace("aabViewer.exe", "");
+            return str;
         }
     }
 
