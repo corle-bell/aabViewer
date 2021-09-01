@@ -46,3 +46,7 @@ FacebookId#/manifest/application/meta-data#com.facebook.sdk.ApplicationId
 在没有输入签名文件的时候使用配置文件中的默认签名安装
 增加了输出日志 在生成以及安装存在错误是会输出到根目录的log.txt
 移除了Relase中的 bundletool-all-1.8.0.jar，可以从谷歌的[github](https://github.com/google/bundletool/releases)上下载,或者下载v2.3之前的版本里面有。
+
+### v2.4
+在读取manifest节点下的值是string.xml的key的话 现在会直接转化为目标值
+增加了读取icon的功能
