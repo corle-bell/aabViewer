@@ -4,8 +4,6 @@ Library
 aabViewer/bin/Release
 aabViewer/bin/Debug
 Release
-.vs
 obj
+.vs
 .vsconfig
-*.csproj
-*.sln

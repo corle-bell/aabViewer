@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1321
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aabViewer", "aabViewer\aabViewer.csproj", "{F872F8C3-53B6-4379-B011-AD7E9E2ACBE8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F872F8C3-53B6-4379-B011-AD7E9E2ACBE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F872F8C3-53B6-4379-B011-AD7E9E2ACBE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F872F8C3-53B6-4379-B011-AD7E9E2ACBE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F872F8C3-53B6-4379-B011-AD7E9E2ACBE8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3E2C7C9B-468F-46F3-B282-6C664EF573DE}
+	EndGlobalSection
+EndGlobal
