@@ -58,6 +58,11 @@
             this.value = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.菜单ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.环境监测ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.配置说明ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanel2.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel10.SuspendLayout();
@@ -67,6 +72,7 @@
             this.panel14.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // button_file_select
@@ -305,10 +311,10 @@
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.key,
             this.value});
-            this.dataGridView1.Location = new System.Drawing.Point(12, 12);
+            this.dataGridView1.Location = new System.Drawing.Point(12, 27);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 23;
-            this.dataGridView1.Size = new System.Drawing.Size(838, 397);
+            this.dataGridView1.Size = new System.Drawing.Size(838, 382);
             this.dataGridView1.TabIndex = 8;
             // 
             // key
@@ -325,11 +331,52 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(717, 33);
+            this.pictureBox1.Location = new System.Drawing.Point(725, 40);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(111, 116);
             this.pictureBox1.TabIndex = 9;
             this.pictureBox1.TabStop = false;
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.菜单ToolStripMenuItem,
+            this.关于ToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(876, 25);
+            this.menuStrip1.TabIndex = 10;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // 菜单ToolStripMenuItem
+            // 
+            this.菜单ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.环境监测ToolStripMenuItem,
+            this.配置说明ToolStripMenuItem});
+            this.菜单ToolStripMenuItem.Name = "菜单ToolStripMenuItem";
+            this.菜单ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
+            this.菜单ToolStripMenuItem.Text = "菜单";
+            // 
+            // 环境监测ToolStripMenuItem
+            // 
+            this.环境监测ToolStripMenuItem.Name = "环境监测ToolStripMenuItem";
+            this.环境监测ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.环境监测ToolStripMenuItem.Text = "环境监测";
+            this.环境监测ToolStripMenuItem.Click += new System.EventHandler(this.环境监测ToolStripMenuItem_Click);
+            // 
+            // 关于ToolStripMenuItem
+            // 
+            this.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem";
+            this.关于ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
+            this.关于ToolStripMenuItem.Text = "关于";
+            this.关于ToolStripMenuItem.Click += new System.EventHandler(this.关于ToolStripMenuItem_Click);
+            // 
+            // 配置说明ToolStripMenuItem
+            // 
+            this.配置说明ToolStripMenuItem.Name = "配置说明ToolStripMenuItem";
+            this.配置说明ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.配置说明ToolStripMenuItem.Text = "配置说明";
+            this.配置说明ToolStripMenuItem.Click += new System.EventHandler(this.配置说明ToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -347,7 +394,9 @@
             this.Controls.Add(this.flowLayoutPanel2);
             this.Controls.Add(this.btn_install);
             this.Controls.Add(this.button_file_select);
+            this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "AABViewer";
             this.flowLayoutPanel2.ResumeLayout(false);
@@ -365,7 +414,10 @@
             this.panel14.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -400,6 +452,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn value;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem 菜单ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 环境监测ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 关于ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 配置说明ToolStripMenuItem;
     }
 }
 

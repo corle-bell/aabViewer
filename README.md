@@ -7,6 +7,8 @@
  - 如果想了解build-tools具体的使用可以点击[这里](https://developer.android.com/studio/command-line/bundletool)
  - 配置文件中的xml节点的配置是xpath语法，如果想了解更多可以点击[这里 ](https://www.w3school.com.cn/xpath/xpath_syntax.asp)
 
+
+
 ### v1.0
 可以查看内容有
 版本号
@@ -50,3 +52,6 @@ FacebookId#/manifest/application/meta-data#com.facebook.sdk.ApplicationId
 ### v2.4
 在读取manifest节点下的值是string.xml的key的话 现在会直接转化为目标值
 增加了读取icon的功能
+
+### v2.5
+集成了Openssl工具在程序内，增加了运行环境的检测

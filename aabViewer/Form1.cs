@@ -22,13 +22,14 @@ namespace aabViewer
         public string logPath = "";
         public string lastParse;
         public string jarPath;
+        public const string verion = "v2.5";
         public Form1(string [] args)
         {
             InitializeComponent();
 
             Init();
 
-            if (args.Length>0)
+            if (CheckEnvironment(false) && args.Length>0)
             {
                 text_aab_path.Text = args[0];
                 ExecAabCheck();
@@ -275,8 +276,9 @@ namespace aabViewer
 
         private void btn_base_hash_Click(object sender, EventArgs e)
         {
-            string cmd = "keytool -exportcert -alias {0} -storepass {1} -keypass {2} -keystore \"{3}\" | openssl sha1 -binary | openssl base64";
-            cmd = string.Format(cmd, text_alias.Text, text_pass.Text, text_key_pass.Text, text_key_path.Text);
+            string openssl = GetCurrentPath() + "openssl.exe";            
+            string cmd = "keytool -exportcert -alias {0} -storepass {1} -keypass {2} -keystore \"{3}\" | \"{4}\" sha1 -binary | \"{4}\" base64";            
+            cmd = string.Format(cmd, text_alias.Text, text_pass.Text, text_key_pass.Text, text_key_path.Text, openssl);
             text_hash_result.Text = CmdTools.Exec(cmd);
         }
 
@@ -334,6 +336,61 @@ namespace aabViewer
         {
             string str = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName.Replace("aabViewer.exe", "");
             return str;
+        }
+
+        private void 环境监测ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(CheckEnvironment(true))
+            {
+                MessageBox.Show("运行环境完整!");
+            }
+        }
+
+        private bool CheckEnvironment(bool isForce=false)
+        {
+            string doneFile = GetCurrentPath() + "Config/init.txt";
+            if(File.Exists(doneFile) && !isForce)
+            {
+                return true;
+            }
+            string ret = "";
+            string openssl = GetCurrentPath() + "openssl.exe";
+            if(!File.Exists(openssl))
+            {
+                ret += "\r\n缺少OpenSSL";
+            }
+            string error = "";
+            string java = CmdTools.Exec("java -version", ref error);
+            if(!error.Contains("Java(TM) SE Runtime Environment"))
+            {
+                ret += "\r\n缺少Java环境";
+                WriteLog("Java：" + java + error);
+            }
+            if (!File.Exists(jarPath))
+            {
+                ret += "\r\n缺少 bundletool-all-1.8.0.jar";
+            }
+
+            if(ret!="")
+            {
+                MessageBox.Show("运行环境监测失败:"+ret);
+                return false;
+            }
+            else
+            {
+                File.WriteAllText(GetCurrentPath() + "Config/init.txt", "Done");
+                return true;
+            }
+        }
+
+        private void 关于ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("AbbViewer "+ verion);
+        }
+
+        private void 配置说明ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BrowserHelper.OpenDefaultBrowserUrl("https://github.com/corle-bell/aabViewer");
         }
     }
 
