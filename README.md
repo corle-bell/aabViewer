@@ -55,3 +55,6 @@ FacebookId#/manifest/application/meta-data#com.facebook.sdk.ApplicationId
 
 ### v2.5
 集成了Openssl工具在程序内，增加了运行环境的检测
+
+### v2.6
+增加了连接设备信息的界面，调整UI布局

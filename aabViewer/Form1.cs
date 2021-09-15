@@ -34,7 +34,10 @@ namespace aabViewer
                 text_aab_path.Text = args[0];
                 ExecAabCheck();
             }
+
+            GetPhoneInfo();
         }
+
 
         private void Init()
         {
@@ -391,6 +394,37 @@ namespace aabViewer
         private void 配置说明ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             BrowserHelper.OpenDefaultBrowserUrl("https://github.com/corle-bell/aabViewer");
+        }
+
+        private void GetPhoneInfo(bool isInit=true)
+        {
+            string brand = CmdTools.Exec("adb -d shell getprop ro.product.brand");
+            string model = CmdTools.Exec("adb -d shell getprop ro.product.model");
+            string sys_ver = CmdTools.Exec("adb shell getprop ro.build.version.release");
+           
+            this.text_model.Text = string.Format("{0} {1}", brand, model);
+            this.text_version.Text = string.Format("Android {0}", sys_ver);
+
+
+            if(brand==null)
+            {
+                this.label_status.Text = "未连接";
+
+                if (!isInit) MessageBox.Show("未找到设备!");
+            }
+            else
+            {
+                this.label_status.ForeColor = Color.Green;
+                this.label_status.Text = "已连接";
+
+                if (!isInit) MessageBox.Show("已连接到 "+this.text_model.Text);
+            }
+            
+        }
+
+        private void 连接手机ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GetPhoneInfo(false);
         }
     }
 

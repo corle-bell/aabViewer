@@ -58,11 +58,17 @@
             this.value = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.label1 = new System.Windows.Forms.Label();
+            this.text_model = new System.Windows.Forms.TextBox();
+            this.label_status = new System.Windows.Forms.Label();
+            this.text_version = new System.Windows.Forms.TextBox();
             this.菜单ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.环境监测ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.配置说明ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.连接手机ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.flowLayoutPanel2.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel10.SuspendLayout();
@@ -73,11 +79,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // button_file_select
             // 
-            this.button_file_select.Location = new System.Drawing.Point(746, 414);
+            this.button_file_select.Location = new System.Drawing.Point(746, 423);
             this.button_file_select.Name = "button_file_select";
             this.button_file_select.Size = new System.Drawing.Size(104, 31);
             this.button_file_select.TabIndex = 0;
@@ -100,6 +107,7 @@
             this.flowLayoutPanel2.AllowDrop = true;
             this.flowLayoutPanel2.AutoScroll = true;
             this.flowLayoutPanel2.BackColor = System.Drawing.Color.SeaShell;
+            this.flowLayoutPanel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.flowLayoutPanel2.Controls.Add(this.panel9);
             this.flowLayoutPanel2.Controls.Add(this.panel10);
             this.flowLayoutPanel2.Controls.Add(this.panel11);
@@ -112,6 +120,7 @@
             // 
             // panel9
             // 
+            this.panel9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel9.Controls.Add(this.text_alias);
             this.panel9.Controls.Add(this.label9);
             this.panel9.Location = new System.Drawing.Point(3, 3);
@@ -131,7 +140,7 @@
             this.label9.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label9.Location = new System.Drawing.Point(3, 11);
+            this.label9.Location = new System.Drawing.Point(3, 10);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(47, 19);
             this.label9.TabIndex = 1;
@@ -139,6 +148,7 @@
             // 
             // panel10
             // 
+            this.panel10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel10.Controls.Add(this.text_key_pass);
             this.panel10.Controls.Add(this.label10);
             this.panel10.Location = new System.Drawing.Point(250, 3);
@@ -158,7 +168,7 @@
             this.label10.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label10.Location = new System.Drawing.Point(3, 11);
+            this.label10.Location = new System.Drawing.Point(3, 10);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(85, 19);
             this.label10.TabIndex = 1;
@@ -166,6 +176,7 @@
             // 
             // panel11
             // 
+            this.panel11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel11.Controls.Add(this.text_pass);
             this.panel11.Controls.Add(this.label11);
             this.panel11.Location = new System.Drawing.Point(535, 3);
@@ -185,7 +196,7 @@
             this.label11.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label11.Location = new System.Drawing.Point(3, 11);
+            this.label11.Location = new System.Drawing.Point(3, 10);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(47, 19);
             this.label11.TabIndex = 1;
@@ -193,6 +204,7 @@
             // 
             // panel12
             // 
+            this.panel12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel12.Controls.Add(this.text_hash_result);
             this.panel12.Controls.Add(this.label12);
             this.panel12.Location = new System.Drawing.Point(3, 51);
@@ -212,7 +224,7 @@
             this.label12.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label12.Location = new System.Drawing.Point(3, 11);
+            this.label12.Location = new System.Drawing.Point(3, 10);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(85, 19);
             this.label12.TabIndex = 1;
@@ -220,6 +232,7 @@
             // 
             // panel13
             // 
+            this.panel13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel13.Controls.Add(this.text_key_path);
             this.panel13.Controls.Add(this.label13);
             this.panel13.Location = new System.Drawing.Point(3, 99);
@@ -239,7 +252,7 @@
             this.label13.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label13.Location = new System.Drawing.Point(3, 11);
+            this.label13.Location = new System.Drawing.Point(3, 10);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(85, 19);
             this.label13.TabIndex = 1;
@@ -278,6 +291,7 @@
             // panel14
             // 
             this.panel14.BackColor = System.Drawing.Color.SeaShell;
+            this.panel14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel14.Controls.Add(this.text_aab_path);
             this.panel14.Controls.Add(this.label14);
             this.panel14.Location = new System.Drawing.Point(12, 415);
@@ -289,7 +303,7 @@
             // 
             this.text_aab_path.Location = new System.Drawing.Point(94, 11);
             this.text_aab_path.Name = "text_aab_path";
-            this.text_aab_path.Size = new System.Drawing.Size(631, 21);
+            this.text_aab_path.Size = new System.Drawing.Size(622, 21);
             this.text_aab_path.TabIndex = 2;
             // 
             // label14
@@ -297,7 +311,7 @@
             this.label14.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label14.Location = new System.Drawing.Point(3, 11);
+            this.label14.Location = new System.Drawing.Point(3, 10);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(77, 19);
             this.label14.TabIndex = 1;
@@ -311,10 +325,10 @@
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.key,
             this.value});
-            this.dataGridView1.Location = new System.Drawing.Point(12, 27);
+            this.dataGridView1.Location = new System.Drawing.Point(12, 69);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 23;
-            this.dataGridView1.Size = new System.Drawing.Size(838, 382);
+            this.dataGridView1.Size = new System.Drawing.Size(838, 340);
             this.dataGridView1.TabIndex = 8;
             // 
             // key
@@ -331,11 +345,85 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(725, 40);
+            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox1.Location = new System.Drawing.Point(697, 82);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(111, 116);
             this.pictureBox1.TabIndex = 9;
             this.pictureBox1.TabStop = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.Location = new System.Drawing.Point(3, 8);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(75, 14);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "设备信息:";
+            // 
+            // text_model
+            // 
+            this.text_model.Location = new System.Drawing.Point(84, 7);
+            this.text_model.Name = "text_model";
+            this.text_model.Size = new System.Drawing.Size(145, 21);
+            this.text_model.TabIndex = 13;
+            // 
+            // label_status
+            // 
+            this.label_status.AutoSize = true;
+            this.label_status.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label_status.ForeColor = System.Drawing.Color.Red;
+            this.label_status.Location = new System.Drawing.Point(623, 8);
+            this.label_status.Name = "label_status";
+            this.label_status.Size = new System.Drawing.Size(67, 14);
+            this.label_status.TabIndex = 14;
+            this.label_status.Text = "连接状态";
+            // 
+            // text_version
+            // 
+            this.text_version.Location = new System.Drawing.Point(236, 7);
+            this.text_version.Name = "text_version";
+            this.text_version.Size = new System.Drawing.Size(145, 21);
+            this.text_version.TabIndex = 15;
+            // 
+            // 菜单ToolStripMenuItem
+            // 
+            this.菜单ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.环境监测ToolStripMenuItem,
+            this.配置说明ToolStripMenuItem,
+            this.连接手机ToolStripMenuItem});
+            this.菜单ToolStripMenuItem.Name = "菜单ToolStripMenuItem";
+            this.菜单ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
+            this.菜单ToolStripMenuItem.Text = "菜单";
+            // 
+            // 环境监测ToolStripMenuItem
+            // 
+            this.环境监测ToolStripMenuItem.Name = "环境监测ToolStripMenuItem";
+            this.环境监测ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.环境监测ToolStripMenuItem.Text = "环境监测";
+            this.环境监测ToolStripMenuItem.Click += new System.EventHandler(this.环境监测ToolStripMenuItem_Click);
+            // 
+            // 配置说明ToolStripMenuItem
+            // 
+            this.配置说明ToolStripMenuItem.Name = "配置说明ToolStripMenuItem";
+            this.配置说明ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.配置说明ToolStripMenuItem.Text = "配置说明";
+            this.配置说明ToolStripMenuItem.Click += new System.EventHandler(this.配置说明ToolStripMenuItem_Click);
+            // 
+            // 连接手机ToolStripMenuItem
+            // 
+            this.连接手机ToolStripMenuItem.Name = "连接手机ToolStripMenuItem";
+            this.连接手机ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.连接手机ToolStripMenuItem.Text = "连接手机";
+            this.连接手机ToolStripMenuItem.Click += new System.EventHandler(this.连接手机ToolStripMenuItem_Click);
+            // 
+            // 关于ToolStripMenuItem
+            // 
+            this.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem";
+            this.关于ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
+            this.关于ToolStripMenuItem.Text = "关于";
+            this.关于ToolStripMenuItem.Click += new System.EventHandler(this.关于ToolStripMenuItem_Click);
             // 
             // menuStrip1
             // 
@@ -348,35 +436,18 @@
             this.menuStrip1.TabIndex = 10;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // 菜单ToolStripMenuItem
+            // panel1
             // 
-            this.菜单ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.环境监测ToolStripMenuItem,
-            this.配置说明ToolStripMenuItem});
-            this.菜单ToolStripMenuItem.Name = "菜单ToolStripMenuItem";
-            this.菜单ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
-            this.菜单ToolStripMenuItem.Text = "菜单";
-            // 
-            // 环境监测ToolStripMenuItem
-            // 
-            this.环境监测ToolStripMenuItem.Name = "环境监测ToolStripMenuItem";
-            this.环境监测ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.环境监测ToolStripMenuItem.Text = "环境监测";
-            this.环境监测ToolStripMenuItem.Click += new System.EventHandler(this.环境监测ToolStripMenuItem_Click);
-            // 
-            // 关于ToolStripMenuItem
-            // 
-            this.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem";
-            this.关于ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
-            this.关于ToolStripMenuItem.Text = "关于";
-            this.关于ToolStripMenuItem.Click += new System.EventHandler(this.关于ToolStripMenuItem_Click);
-            // 
-            // 配置说明ToolStripMenuItem
-            // 
-            this.配置说明ToolStripMenuItem.Name = "配置说明ToolStripMenuItem";
-            this.配置说明ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.配置说明ToolStripMenuItem.Text = "配置说明";
-            this.配置说明ToolStripMenuItem.Click += new System.EventHandler(this.配置说明ToolStripMenuItem_Click);
+            this.panel1.BackColor = System.Drawing.Color.AliceBlue;
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.label_status);
+            this.panel1.Controls.Add(this.text_version);
+            this.panel1.Controls.Add(this.text_model);
+            this.panel1.Location = new System.Drawing.Point(12, 28);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(838, 35);
+            this.panel1.TabIndex = 16;
             // 
             // Form1
             // 
@@ -385,6 +456,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Snow;
             this.ClientSize = new System.Drawing.Size(876, 691);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.panel14);
@@ -416,6 +488,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -452,11 +526,17 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn value;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox text_model;
+        private System.Windows.Forms.Label label_status;
+        private System.Windows.Forms.TextBox text_version;
         private System.Windows.Forms.ToolStripMenuItem 菜单ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 环境监测ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 关于ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 配置说明ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 连接手机ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 关于ToolStripMenuItem;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 
