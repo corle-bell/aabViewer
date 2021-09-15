@@ -279,7 +279,8 @@ namespace aabViewer
 
         private void btn_base_hash_Click(object sender, EventArgs e)
         {
-            string openssl = GetCurrentPath() + "openssl.exe";            
+            string openssl = GetCurrentPath() + "openssl.exe";
+            openssl = "openssl.exe";
             string cmd = "keytool -exportcert -alias {0} -storepass {1} -keypass {2} -keystore \"{3}\" | \"{4}\" sha1 -binary | \"{4}\" base64";            
             cmd = string.Format(cmd, text_alias.Text, text_pass.Text, text_key_pass.Text, text_key_path.Text, openssl);
             text_hash_result.Text = CmdTools.Exec(cmd);
@@ -406,8 +407,9 @@ namespace aabViewer
             this.text_version.Text = string.Format("Android {0}", sys_ver);
 
 
-            if(brand==null)
+            if(brand=="")
             {
+                this.label_status.ForeColor = Color.Red;
                 this.label_status.Text = "未连接";
 
                 if (!isInit) MessageBox.Show("未找到设备!");

@@ -57,4 +57,4 @@ FacebookId#/manifest/application/meta-data#com.facebook.sdk.ApplicationId
 集成了Openssl工具在程序内，增加了运行环境的检测
 
 ### v2.6
-增加了连接设备信息的界面，调整UI布局
+增加了连接设备信息的界面，调整UI布局,内置Openssl行不通我又给删掉了。。
