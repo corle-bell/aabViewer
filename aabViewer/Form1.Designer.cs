@@ -69,6 +69,7 @@
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btn_install_part = new System.Windows.Forms.Button();
             this.flowLayoutPanel2.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel10.SuspendLayout();
@@ -96,9 +97,10 @@
             // 
             this.btn_install.Location = new System.Drawing.Point(12, 478);
             this.btn_install.Name = "btn_install";
+            this.btn_install.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.btn_install.Size = new System.Drawing.Size(104, 31);
             this.btn_install.TabIndex = 2;
-            this.btn_install.Text = "安装";
+            this.btn_install.Text = "device模式安装";
             this.btn_install.UseVisualStyleBackColor = true;
             this.btn_install.Click += new System.EventHandler(this.btn_install_Click);
             // 
@@ -260,7 +262,7 @@
             // 
             // btn_base_hash
             // 
-            this.btn_base_hash.Location = new System.Drawing.Point(132, 478);
+            this.btn_base_hash.Location = new System.Drawing.Point(248, 478);
             this.btn_base_hash.Name = "btn_base_hash";
             this.btn_base_hash.Size = new System.Drawing.Size(104, 31);
             this.btn_base_hash.TabIndex = 4;
@@ -270,7 +272,7 @@
             // 
             // btn_sha1
             // 
-            this.btn_sha1.Location = new System.Drawing.Point(253, 478);
+            this.btn_sha1.Location = new System.Drawing.Point(358, 478);
             this.btn_sha1.Name = "btn_sha1";
             this.btn_sha1.Size = new System.Drawing.Size(104, 31);
             this.btn_sha1.TabIndex = 5;
@@ -280,7 +282,7 @@
             // 
             // btn_select_key
             // 
-            this.btn_select_key.Location = new System.Drawing.Point(374, 478);
+            this.btn_select_key.Location = new System.Drawing.Point(468, 478);
             this.btn_select_key.Name = "btn_select_key";
             this.btn_select_key.Size = new System.Drawing.Size(104, 31);
             this.btn_select_key.TabIndex = 6;
@@ -449,6 +451,16 @@
             this.panel1.Size = new System.Drawing.Size(838, 35);
             this.panel1.TabIndex = 16;
             // 
+            // btn_install_part
+            // 
+            this.btn_install_part.Location = new System.Drawing.Point(124, 478);
+            this.btn_install_part.Name = "btn_install_part";
+            this.btn_install_part.Size = new System.Drawing.Size(118, 31);
+            this.btn_install_part.TabIndex = 17;
+            this.btn_install_part.Text = "universal模式安装";
+            this.btn_install_part.UseVisualStyleBackColor = true;
+            this.btn_install_part.Click += new System.EventHandler(this.btn_install_part_Click);
+            // 
             // Form1
             // 
             this.AllowDrop = true;
@@ -456,6 +468,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Snow;
             this.ClientSize = new System.Drawing.Size(876, 691);
+            this.Controls.Add(this.btn_install_part);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.dataGridView1);
@@ -537,6 +550,7 @@
         private System.Windows.Forms.ToolStripMenuItem 关于ToolStripMenuItem;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button btn_install_part;
     }
 }
 

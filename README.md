@@ -58,3 +58,6 @@ FacebookId#/manifest/application/meta-data#com.facebook.sdk.ApplicationId
 
 ### v2.6
 增加了连接设备信息的界面，调整UI布局,内置Openssl行不通我又给删掉了。。
+
+### v2.7
+增加了universal模式安装。某些无法安装的设备可以使用这个来安装

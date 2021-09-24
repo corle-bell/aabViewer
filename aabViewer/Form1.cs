@@ -14,7 +14,7 @@ using Ionic.Zip;
 using System.Text.RegularExpressions;
 namespace aabViewer
 {
-   
+    
 
     public partial class Form1 : Form
     {
@@ -74,8 +74,6 @@ namespace aabViewer
 
             this.AllowDrop = true;
 
-
-
             this.dataGridView1.DragEnter += this.Form1_DragEnter;
             this.flowLayoutPanel2.DragEnter += this.Form1_DragEnter;
             this.DragEnter += this.Form1_DragEnter;
@@ -99,7 +97,10 @@ namespace aabViewer
             string cmd = string.Format("java -jar \"{0}\" dump manifest --bundle \"{1}\"", jarPath, filePath);
             string xmlData = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + CmdTools.Exec(cmd, ref error);
 
-            
+            if(error.Length>0)
+            {
+                WriteLog(error);
+            }
 
             Console.WriteLine(cmd);
 
@@ -189,6 +190,16 @@ namespace aabViewer
 
         private void btn_install_Click(object sender, EventArgs e)
         {
+            InstallApk(true);
+        }
+
+        private void btn_install_part_Click(object sender, EventArgs e)
+        {
+            InstallApk(false);
+        }
+
+        private void InstallApk(bool createForCnnectDevices)
+        {
             //设置apks输出路径
             string outPath = GetCurrentPath() + "Temp/";
 
@@ -213,7 +224,7 @@ namespace aabViewer
             //string cmd = "java - jar bundletool-all-1.8.0.jar build - apks--bundle ={0} --output ={1} --ks ={2} --ks - pass = pass:{3} --ks - key - alias ={4} --key - pass = pass:{5} --device - spec ={6}";
 
 
-            string cmd = create_install_cmd(outPath);
+            string cmd = create_install_cmd(outPath, createForCnnectDevices);
 
             //执行指令
             string error = "";
@@ -224,14 +235,14 @@ namespace aabViewer
             {
                 WriteLog("Create Error: " + error);
                 WriteLog("Create Ret: " + ret);
-                
+
                 MessageBox.Show("生成失败!");
                 return;
             }
             else
             {
                 if (ret.Length > 0) MessageBox.Show("Info:" + ret);
-                if(error.Length>0) MessageBox.Show("Info:" + error);
+                if (error.Length > 0) MessageBox.Show("Info:" + error);
             }
 
             //安装指令
@@ -239,8 +250,8 @@ namespace aabViewer
             cmd = string.Format("java -jar \"{0}\" install-apks --apks=\"{1}\"", jarPath, outPath);
             ret = CmdTools.Exec(cmd, ref error);
 
-           
-            if(ret.Length==0)
+
+            if (ret.Length == 0)
             {
                 MessageBox.Show("安装成功!");
             }
@@ -253,7 +264,7 @@ namespace aabViewer
             }
         }
 
-        private string create_install_cmd(string outPath)
+        private string create_install_cmd(string outPath, bool createForCnnectDevices=true)
         {
             string _key_path = text_key_path.Text;
             string _alias_pass = text_pass.Text;
@@ -270,9 +281,9 @@ namespace aabViewer
 
             {
                 //根据连接手机的设备创建apks的指令
-                string cmd = "java -jar \"{0}\" build-apks --bundle=\"{1}\" --output=\"{2}\" --ks=\"{3}\" --ks-pass=pass:{4} --ks-key-alias={5} --key-pass=pass:{6} --connected-device";
+                string cmd = "java -jar \"{0}\" build-apks --bundle=\"{1}\" --output=\"{2}\" --ks=\"{3}\" --ks-pass=pass:{4} --ks-key-alias={5} --key-pass=pass:{6} {7}";                
                 //填充志林该参数
-                cmd = string.Format(cmd, jarPath, text_aab_path.Text, outPath, _key_path, _alias_pass, _key_alias, _key_pass);
+                cmd = string.Format(cmd, jarPath, text_aab_path.Text, outPath, _key_path, _alias_pass, _key_alias, _key_pass, createForCnnectDevices?"--connected-device":"--mode=universal");
                 return cmd;
             }
         }
@@ -280,8 +291,8 @@ namespace aabViewer
         private void btn_base_hash_Click(object sender, EventArgs e)
         {
             string openssl = GetCurrentPath() + "openssl.exe";
-            openssl = "openssl.exe";
-            string cmd = "keytool -exportcert -alias {0} -storepass {1} -keypass {2} -keystore \"{3}\" | \"{4}\" sha1 -binary | \"{4}\" base64";            
+            openssl = "openssl";
+            string cmd = "keytool -exportcert -alias {0} -storepass {1} -keypass {2} -keystore \"{3}\" | {4} sha1 -binary | {4} base64";            
             cmd = string.Format(cmd, text_alias.Text, text_pass.Text, text_key_pass.Text, text_key_path.Text, openssl);
             text_hash_result.Text = CmdTools.Exec(cmd);
         }
@@ -428,6 +439,61 @@ namespace aabViewer
         {
             GetPhoneInfo(false);
         }
+
+
+
+        protected override void WndProc(ref Message m)
+        {
+            try
+            {
+                if (m.Msg == UsbMessage.WM_DEVICECHANGE)
+                {
+                    switch (m.WParam.ToInt32())
+                    {
+                        case UsbMessage.WM_DEVICECHANGE:
+                            Console.WriteLine("USB change");
+                            break;
+                        case UsbMessage.DBT_DEVICEARRIVAL://U盘插入   
+                            Console.WriteLine("DBT_DEVICEARRIVAL");
+                            break;
+                        case UsbMessage.DBT_CONFIGCHANGECANCELED:
+                            break;
+                        case UsbMessage.DBT_CONFIGCHANGED:
+                            break;
+                        case UsbMessage.DBT_CUSTOMEVENT:
+                            break;
+                        case UsbMessage.DBT_DEVICEQUERYREMOVE:
+                            break;
+                        case UsbMessage.DBT_DEVICEQUERYREMOVEFAILED:
+                            break;
+                        case UsbMessage.DBT_DEVICEREMOVECOMPLETE:   //U盘卸载
+                            Console.WriteLine("DBT_DEVICEREMOVECOMPLETE");
+                            break;
+                        case UsbMessage.DBT_DEVICEREMOVEPENDING:
+                            Console.WriteLine("DBT_DEVICEREMOVEPENDING");
+                            break;
+                        case UsbMessage.DBT_DEVICETYPESPECIFIC:
+                            break;
+                        case UsbMessage.DBT_DEVNODES_CHANGED: //手机插入时响应
+                            GetPhoneInfo(true);
+                            break;
+                        case UsbMessage.DBT_QUERYCHANGECONFIG:
+                            break;
+                        case UsbMessage.DBT_USERDEFINED:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            base.WndProc(ref m);
+        }
+
+        
     }
 
     public class ConfigNode
@@ -435,5 +501,22 @@ namespace aabViewer
         public string name;
         public string path;
         public string filter_name;
+    }
+
+    public class UsbMessage
+    {
+        public const int WM_DEVICECHANGE = 0x219;
+        public const int DBT_DEVICEARRIVAL = 0x8000;
+        public const int DBT_CONFIGCHANGECANCELED = 0x0019;
+        public const int DBT_CONFIGCHANGED = 0x0018;
+        public const int DBT_CUSTOMEVENT = 0x8006;
+        public const int DBT_DEVICEQUERYREMOVE = 0x8001;
+        public const int DBT_DEVICEQUERYREMOVEFAILED = 0x8002;
+        public const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
+        public const int DBT_DEVICEREMOVEPENDING = 0x8003;
+        public const int DBT_DEVICETYPESPECIFIC = 0x8005;
+        public const int DBT_DEVNODES_CHANGED = 0x0007;
+        public const int DBT_QUERYCHANGECONFIG = 0x0017;
+        public const int DBT_USERDEFINED = 0xFFFF;
     }
 }
