@@ -70,6 +70,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btn_install_part = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.flowLayoutPanel2.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel10.SuspendLayout();
@@ -282,7 +283,7 @@
             // 
             // btn_select_key
             // 
-            this.btn_select_key.Location = new System.Drawing.Point(468, 478);
+            this.btn_select_key.Location = new System.Drawing.Point(578, 478);
             this.btn_select_key.Name = "btn_select_key";
             this.btn_select_key.Size = new System.Drawing.Size(104, 31);
             this.btn_select_key.TabIndex = 6;
@@ -461,6 +462,16 @@
             this.btn_install_part.UseVisualStyleBackColor = true;
             this.btn_install_part.Click += new System.EventHandler(this.btn_install_part_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(468, 478);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(104, 31);
+            this.button1.TabIndex = 19;
+            this.button1.Text = "md5";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
             // Form1
             // 
             this.AllowDrop = true;
@@ -468,6 +479,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Snow;
             this.ClientSize = new System.Drawing.Size(876, 691);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btn_install_part);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.pictureBox1);
@@ -481,6 +493,7 @@
             this.Controls.Add(this.button_file_select);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "AABViewer";
@@ -551,6 +564,7 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btn_install_part;
+        private System.Windows.Forms.Button button1;
     }
 }
 

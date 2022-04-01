@@ -22,20 +22,57 @@ namespace aabViewer
         public string logPath = "";
         public string lastParse;
         public string jarPath;
-        public const string verion = "v2.5";
+        public const string verion = "v2.8";
+
+        public Task installTask;
+        public Task parseTask;
+
+        private Timer InitAab = new Timer();
         public Form1(string [] args)
         {
-            InitializeComponent();
+            this.IsMdiContainer = true;
 
+            InitializeComponent();
+            ChangeMidBackStyle();
             Init();
 
             if (CheckEnvironment(false) && args.Length>0)
             {
-                text_aab_path.Text = args[0];
-                ExecAabCheck();
+                text_aab_path.Text = args[0];   
+               
+
+                InitAab.Tick += new EventHandler(Call);
+                InitAab.Interval = 500;
+                InitAab.Enabled = true;
             }
 
             GetPhoneInfo();
+
+            
+        }
+
+        private void Call(object sender, EventArgs e)
+        {
+            ExecAabCheck();
+
+            InitAab.Stop();
+        }
+
+        private void ChangeMidBackStyle()
+        {
+            //更改Mdi背景样式
+            MdiClient mctMdi = new MdiClient();
+            foreach (Control conMid in this.Controls)
+            {
+                //得到Mdi
+                if (conMid.GetType().ToString() == "System.Windows.Forms.MdiClient")
+                {
+                    mctMdi = (System.Windows.Forms.MdiClient)conMid;
+                    //改变背景颜色
+                    mctMdi.BackColor = Color.FromArgb(255, 255, 250);
+                    break;
+                }
+            }
         }
 
 
@@ -92,76 +129,101 @@ namespace aabViewer
                 return;
             }
 
+
             string error = "";
             string filePath = text_aab_path.Text;
             string cmd = string.Format("java -jar \"{0}\" dump manifest --bundle \"{1}\"", jarPath, filePath);
-            string xmlData = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + CmdTools.Exec(cmd, ref error);
+            string xmlData = "";
 
-            if(error.Length>0)
-            {
-                WriteLog(error);
-            }
+            LoadingForm.ShowLoading(this);
 
-            Console.WriteLine(cmd);
+            TaskScheduler ui = TaskScheduler.FromCurrentSynchronizationContext();
+            parseTask = Task.Run(() => {
 
-            XmlDocument doc = new XmlDocument();
-            try
-            {
-                doc.LoadXml(xmlData);
-            }
-            catch(Exception e)
-            {
-                MessageBox.Show(e.ToString());
-            }
+                LoadingForm.PerformStep("开始解析数据~~~");
 
-            XmlNamespaceManager nsp = new XmlNamespaceManager(doc.NameTable);
-            nsp.AddNamespace("android", "http://schemas.android.com/apk/res/android");
+                xmlData = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + CmdTools.Exec(cmd, ref error);
 
 
-            for(int i=0; i<configNodes.Count; i++)
-            {
-                ConfigNode tmp = configNodes[i];
-                if(tmp.filter_name=="")
+                LoadingForm.PerformStep("获取ICON ~~~");
+
+                using (ZipFile zip = ZipFile.Read(text_aab_path.Text))
                 {
-                    XmlNode t = doc.SelectSingleNode(tmp.path, nsp);
-                    string text = t != null ? t.Value : "不存在";
+                    MemoryStream outputStream = new MemoryStream();
+                    ZipEntry e = zip["base/res/mipmap-xxxhdpi-v4/app_icon.png"];
+                    e.Extract(outputStream);
 
-                    if(text.StartsWith("@string/"))
+                    Image img = Image.FromStream(outputStream);
+
+                    pictureBox1.Invoke(new Action(() => pictureBox1.BackgroundImage = img));
+                    pictureBox1.Invoke(new Action(() => pictureBox1.BackgroundImageLayout = ImageLayout.Stretch));
+
+                }
+
+                parseTask = null;
+            }).ContinueWith(m =>
+            {
+                LoadingForm.HideLoading();
+
+                if (error.Length > 0)
+                {
+                    WriteLog(error);
+                }
+
+                XmlDocument doc = new XmlDocument();
+                try
+                {
+                    doc.LoadXml(xmlData);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.ToString());
+                }
+
+                XmlNamespaceManager nsp = new XmlNamespaceManager(doc.NameTable);
+                nsp.AddNamespace("android", "http://schemas.android.com/apk/res/android");
+
+
+                for (int i = 0; i < configNodes.Count; i++)
+                {
+                    ConfigNode tmp = configNodes[i];
+                    if (tmp.filter_name == "")
                     {
-                        var s_value = GetStringValue(text, filePath);
-                        this.dataGridView1.Rows[i].Cells[1].Value = s_value;
+                        XmlNode t = doc.SelectSingleNode(tmp.path, nsp);
+                        string text = t != null ? t.Value : "不存在";
+
+                        if (text.StartsWith("@string/"))
+                        {
+                            var s_value = GetStringValue(text, filePath);
+                            this.dataGridView1.Rows[i].Cells[1].Value = s_value;
+                        }
+                        else
+                        {
+                            this.dataGridView1.Rows[i].Cells[1].Value = text;
+                        }
                     }
                     else
                     {
+                        string text = "none";
+                        XmlNodeList nodes = doc.SelectNodes(tmp.path, nsp);
+                        foreach (XmlNode item in nodes)
+                        {
+                            string title = item.SelectSingleNode("@android:name", nsp).Value;
+                            if (title == tmp.filter_name)
+                            {
+                                text = item.SelectSingleNode("@android:value", nsp).Value;
+                            }
+                        }
                         this.dataGridView1.Rows[i].Cells[1].Value = text;
                     }
                 }
-                else
-                {
-                    string text = "none";
-                    XmlNodeList nodes = doc.SelectNodes(tmp.path, nsp);
-                    foreach (XmlNode item in nodes)
-                    {
-                        string title = item.SelectSingleNode("@android:name", nsp).Value;
-                        if (title == tmp.filter_name)
-                        {
-                            text = item.SelectSingleNode("@android:value", nsp).Value;
-                        }
-                    }
-                    this.dataGridView1.Rows[i].Cells[1].Value = text;
-                }
-            }
 
-            using (ZipFile zip = ZipFile.Read(text_aab_path.Text))
-            {
-                MemoryStream outputStream = new MemoryStream();
-                ZipEntry e = zip["base/res/mipmap-xxxhdpi-v4/app_icon.png"];
-                e.Extract(outputStream);
+                
+            }, ui);
 
-                Image img = Image.FromStream(outputStream);
-                this.pictureBox1.BackgroundImage = img;
-                this.pictureBox1.BackgroundImageLayout = ImageLayout.Stretch;
-            }
+           
+
+            
 
         }
 
@@ -190,12 +252,37 @@ namespace aabViewer
 
         private void btn_install_Click(object sender, EventArgs e)
         {
-            InstallApk(true);
+            if(installTask==null)
+            {
+                LoadingForm.ShowLoading(this);
+
+                TaskScheduler ui = TaskScheduler.FromCurrentSynchronizationContext();
+                installTask = Task.Run(()=> { 
+                    InstallApk(true);
+                    installTask = null;
+                }).ContinueWith(m =>
+                {
+                    LoadingForm.HideLoading();
+                }, ui);
+
+            }
         }
 
         private void btn_install_part_Click(object sender, EventArgs e)
         {
-            InstallApk(false);
+            if (installTask == null)
+            {
+                LoadingForm.ShowLoading(this);
+
+                TaskScheduler ui = TaskScheduler.FromCurrentSynchronizationContext();
+                installTask = Task.Run(() => {
+                    InstallApk(false);
+                    installTask = null;
+                }).ContinueWith(m =>
+                {
+                    LoadingForm.HideLoading();
+                }, ui);
+            }
         }
 
         private void InstallApk(bool createForCnnectDevices)
@@ -208,6 +295,8 @@ namespace aabViewer
                 MessageBox.Show("文件不存在!");
                 return;
             }
+
+
             if (!Directory.Exists(outPath))
             {
                 Directory.CreateDirectory(outPath);
@@ -223,7 +312,7 @@ namespace aabViewer
             // {0} aab路径 {1}输出路径 {2}keystroe路径 {3}秘钥密码 {4}秘钥别名 {5}秘钥别名密码 {6}配置文件路径
             //string cmd = "java - jar bundletool-all-1.8.0.jar build - apks--bundle ={0} --output ={1} --ks ={2} --ks - pass = pass:{3} --ks - key - alias ={4} --key - pass = pass:{5} --device - spec ={6}";
 
-
+            LoadingForm.PerformStep("正在生成apks~~~~~");
             string cmd = create_install_cmd(outPath, createForCnnectDevices);
 
             //执行指令
@@ -244,6 +333,8 @@ namespace aabViewer
                 if (ret.Length > 0) MessageBox.Show("Info:" + ret);
                 if (error.Length > 0) MessageBox.Show("Info:" + error);
             }
+
+            LoadingForm.PerformStep("开始进行安装~~~~~");
 
             //安装指令
             error = "";
@@ -301,7 +392,15 @@ namespace aabViewer
         {
             string cmd = "keytool -list -alias {0} -storepass {1} -keypass {2} -keystore \"{3}\"";
             cmd = string.Format(cmd, text_alias.Text, text_pass.Text, text_key_pass.Text, text_key_path.Text);
-            text_hash_result.Text = CmdTools.Exec(cmd);
+            text_hash_result.Text = FormatForKeyWord(CmdTools.Exec(cmd), "SHA1");
+        }
+
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            string cmd = "keytool -list -v -storepass {0} -keystore \"{1}\"";
+            cmd = string.Format(cmd, text_pass.Text, text_key_path.Text);
+            text_hash_result.Text = FormatForKeyWord(CmdTools.Exec(cmd), "MD5");
         }
 
         private void btn_select_key_Click(object sender, EventArgs e)
@@ -312,7 +411,19 @@ namespace aabViewer
             text_key_path.Text = openFileDialog.FileName;
         }
 
-       
+        private string FormatForKeyWord(string result, string key)
+        {
+            string[] arr = result.Split(new char[] { '\n', '\r' });
+            for(int i=0; i<arr.Length; i++)
+            {
+                var ss = arr[i];
+                if(ss.Contains(key))
+                {
+                    return ss;
+                }
+            }
+            return "none";
+        }
 
         private void Form1_DragDrop(object sender, DragEventArgs e)
         {
@@ -410,28 +521,44 @@ namespace aabViewer
 
         private void GetPhoneInfo(bool isInit=true)
         {
-            string brand = CmdTools.Exec("adb -d shell getprop ro.product.brand");
-            string model = CmdTools.Exec("adb -d shell getprop ro.product.model");
-            string sys_ver = CmdTools.Exec("adb shell getprop ro.build.version.release");
+            string brand="";
+            string model="";
+            string sys_ver="";
+            TaskScheduler ui = TaskScheduler.FromCurrentSynchronizationContext();
+            installTask = Task.Run(() => {
+
+                 brand = CmdTools.Exec("adb -d shell getprop ro.product.brand");
+                 model = CmdTools.Exec("adb -d shell getprop ro.product.model");
+                 sys_ver = CmdTools.Exec("adb shell getprop ro.build.version.release");
+
+                installTask = null;
+
+            }).ContinueWith(m =>
+            {
+                this.text_model.Text = string.Format("{0} {1}", brand, model);
+                this.text_version.Text = string.Format("Android {0}", sys_ver);
+
+                if (brand == "")
+                {
+                    this.label_status.ForeColor = Color.Red;
+                    this.label_status.Text = "未连接";
+
+                    if (!isInit) MessageBox.Show("未找到设备!");
+                }
+                else
+                {
+                    this.label_status.ForeColor = Color.Green;
+                    this.label_status.Text = "已连接";
+
+                    if (!isInit) MessageBox.Show("已连接到 " + this.text_model.Text);
+                }
+            }, ui);
+            
            
-            this.text_model.Text = string.Format("{0} {1}", brand, model);
-            this.text_version.Text = string.Format("Android {0}", sys_ver);
+            
 
 
-            if(brand=="")
-            {
-                this.label_status.ForeColor = Color.Red;
-                this.label_status.Text = "未连接";
-
-                if (!isInit) MessageBox.Show("未找到设备!");
-            }
-            else
-            {
-                this.label_status.ForeColor = Color.Green;
-                this.label_status.Text = "已连接";
-
-                if (!isInit) MessageBox.Show("已连接到 "+this.text_model.Text);
-            }
+           
             
         }
 
@@ -493,7 +620,11 @@ namespace aabViewer
             base.WndProc(ref m);
         }
 
-        
+        private void fontDialog1_Apply(object sender, EventArgs e)
+        {
+
+        }
+
     }
 
     public class ConfigNode
