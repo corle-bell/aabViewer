@@ -61,3 +61,8 @@ FacebookId#/manifest/application/meta-data#com.facebook.sdk.ApplicationId
 
 ### v2.7
 增加了universal模式安装。某些无法安装的设备可以使用这个来安装
+
+### v2.8
+解析,安装 aab和 获取手机信息改为了异步操作。
+增加了一个loading界面
+增加了获取签名文件MD5值的功能 
