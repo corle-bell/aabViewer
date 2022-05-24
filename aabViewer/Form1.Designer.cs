@@ -66,11 +66,13 @@
             this.环境监测ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.配置说明ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.连接手机ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.保存Key配置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btn_install_part = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.flowLayoutPanel2.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel10.SuspendLayout();
@@ -395,7 +397,8 @@
             this.菜单ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.环境监测ToolStripMenuItem,
             this.配置说明ToolStripMenuItem,
-            this.连接手机ToolStripMenuItem});
+            this.连接手机ToolStripMenuItem,
+            this.保存Key配置ToolStripMenuItem});
             this.菜单ToolStripMenuItem.Name = "菜单ToolStripMenuItem";
             this.菜单ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.菜单ToolStripMenuItem.Text = "菜单";
@@ -403,23 +406,30 @@
             // 环境监测ToolStripMenuItem
             // 
             this.环境监测ToolStripMenuItem.Name = "环境监测ToolStripMenuItem";
-            this.环境监测ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.环境监测ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.环境监测ToolStripMenuItem.Text = "环境监测";
             this.环境监测ToolStripMenuItem.Click += new System.EventHandler(this.环境监测ToolStripMenuItem_Click);
             // 
             // 配置说明ToolStripMenuItem
             // 
             this.配置说明ToolStripMenuItem.Name = "配置说明ToolStripMenuItem";
-            this.配置说明ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.配置说明ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.配置说明ToolStripMenuItem.Text = "配置说明";
             this.配置说明ToolStripMenuItem.Click += new System.EventHandler(this.配置说明ToolStripMenuItem_Click);
             // 
             // 连接手机ToolStripMenuItem
             // 
             this.连接手机ToolStripMenuItem.Name = "连接手机ToolStripMenuItem";
-            this.连接手机ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.连接手机ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.连接手机ToolStripMenuItem.Text = "连接手机";
             this.连接手机ToolStripMenuItem.Click += new System.EventHandler(this.连接手机ToolStripMenuItem_Click);
+            // 
+            // 保存Key配置ToolStripMenuItem
+            // 
+            this.保存Key配置ToolStripMenuItem.Name = "保存Key配置ToolStripMenuItem";
+            this.保存Key配置ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.保存Key配置ToolStripMenuItem.Text = "保存Key配置";
+            this.保存Key配置ToolStripMenuItem.Click += new System.EventHandler(this.保存Key配置ToolStripMenuItem_Click);
             // 
             // 关于ToolStripMenuItem
             // 
@@ -472,6 +482,15 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(697, 484);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(153, 20);
+            this.comboBox1.TabIndex = 21;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
             // Form1
             // 
             this.AllowDrop = true;
@@ -479,6 +498,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Snow;
             this.ClientSize = new System.Drawing.Size(876, 691);
+            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btn_install_part);
             this.Controls.Add(this.panel1);
@@ -565,6 +585,8 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btn_install_part;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ToolStripMenuItem 保存Key配置ToolStripMenuItem;
     }
 }
 

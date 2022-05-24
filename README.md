@@ -2,7 +2,6 @@
 
  - 软件功能都是通过调用命令行工具处理的。
  - 使用之前需要有java环境。
- - 如果需要使用签名base64功能需要安装 openssl 并且配置环境变量(v2.5后版本已经内置openssl)。
  - v2.3之后的包中移除了谷歌的库，可以在这里[下载](https://github.com/google/bundletool/releases)
  - 如果想了解build-tools具体的使用可以点击[这里](https://developer.android.com/studio/command-line/bundletool)
  - 配置文件中的xml节点的配置是xpath语法，如果想了解更多可以点击[这里 ](https://www.w3school.com.cn/xpath/xpath_syntax.asp)
@@ -66,3 +65,7 @@ FacebookId#/manifest/application/meta-data#com.facebook.sdk.ApplicationId
 解析,安装 aab和 获取手机信息改为了异步操作。
 增加了一个loading界面
 增加了获取签名文件MD5值的功能 
+
+### v2.9
+增加了签名管理功能
+修改了缓存更新的机制，如果不重启应用 不更换aab就不会更新apks的缓存

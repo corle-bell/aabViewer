@@ -19,13 +19,17 @@ namespace aabViewer
     public partial class Form1 : Form
     {
         public List<ConfigNode> configNodes = new List<ConfigNode>();
+        public List<KeyNode> keyNodes = new List<KeyNode>();
         public string logPath = "";
         public string lastParse;
         public string jarPath;
-        public const string verion = "v2.8";
+        public string keyConfigPath = "";
+        public const string verion = "v2.9";
 
         public Task installTask;
         public Task parseTask;
+
+        private bool needUpdateApks;
 
         private Timer InitAab = new Timer();
         public Form1(string [] args)
@@ -48,7 +52,7 @@ namespace aabViewer
 
             GetPhoneInfo();
 
-            
+           
         }
 
         private void Call(object sender, EventArgs e)
@@ -75,6 +79,59 @@ namespace aabViewer
             }
         }
 
+        #region KeyConfigs
+        private void CreateDefaultKeys()
+        {
+            AddKeys("测试签名", GetCurrentPath() + "Config/debug.keystore", "android", "androiddebugkey", "android");
+            SaveKeyConfigs();
+        }
+
+        private void AddKeys(string _name, string _path, string _pass, string _alias, string _alias_pass)
+        {
+            for (int i = 0; i < keyNodes.Count; i++)
+            {
+                if (_alias.Trim().Equals(keyNodes[i].alias.Trim()))
+                {
+                    return;
+                }
+            }
+
+            var key = new KeyNode();
+            key.name = _name;
+            key.path = _path;
+            key.password = _pass;
+            key.alias = _alias;
+            key.alias_password = _alias_pass;
+
+            keyNodes.Add(key);
+
+            this.comboBox1.Items.Add(key.name);
+        }
+
+        private void SaveKeyConfigs()
+        {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < keyNodes.Count; i++)
+            {
+                builder.AppendLine(keyNodes[i].Format());
+            }
+            File.WriteAllText(keyConfigPath, builder.ToString());
+        }
+
+        private void LoadKeyConfig()
+        {
+            string[] data = File.ReadAllLines(keyConfigPath);
+            for (int i = 0; i < data.Length; i++)
+            {
+                var key = new KeyNode().Init(data[i]);
+                keyNodes.Add(key);
+                this.comboBox1.Items.Add(key.name);
+            }
+
+            this.comboBox1.SelectedIndex = 0;
+        }
+
+        #endregion
 
         private void Init()
         {
@@ -83,6 +140,16 @@ namespace aabViewer
             string configPath = str + "Config/data.ini";
             logPath = str + "log.txt";
             jarPath = str + "bundletool-all-1.8.0.jar";
+            keyConfigPath = str+ "Config/keys.ini";
+
+            if(!File.Exists(keyConfigPath))
+            {
+                CreateDefaultKeys();
+            }
+            else
+            {
+                LoadKeyConfig();
+            }
 
             if (File.Exists(configPath))
             {
@@ -221,9 +288,9 @@ namespace aabViewer
                 
             }, ui);
 
-           
 
-            
+            needUpdateApks = true;
+
 
         }
 
@@ -285,6 +352,7 @@ namespace aabViewer
             }
         }
 
+        #region ApkInstall
         private void InstallApk(bool createForCnnectDevices)
         {
             //设置apks输出路径
@@ -304,7 +372,7 @@ namespace aabViewer
 
 
             outPath += "temp.apks";
-            if (File.Exists(outPath))
+            if (File.Exists(outPath) && needUpdateApks)
             {
                 File.Delete(outPath);
             }
@@ -312,27 +380,36 @@ namespace aabViewer
             // {0} aab路径 {1}输出路径 {2}keystroe路径 {3}秘钥密码 {4}秘钥别名 {5}秘钥别名密码 {6}配置文件路径
             //string cmd = "java - jar bundletool-all-1.8.0.jar build - apks--bundle ={0} --output ={1} --ks ={2} --ks - pass = pass:{3} --ks - key - alias ={4} --key - pass = pass:{5} --device - spec ={6}";
 
-            LoadingForm.PerformStep("正在生成apks~~~~~");
-            string cmd = create_install_cmd(outPath, createForCnnectDevices);
-
-            //执行指令
+            string cmd = "";
             string error = "";
-            string ret = CmdTools.Exec(cmd, ref error);
-            Console.WriteLine(cmd);
-
-            if (!File.Exists(outPath))
+            string ret = "";
+            if (needUpdateApks)
             {
-                WriteLog("Create Error: " + error);
-                WriteLog("Create Ret: " + ret);
+                LoadingForm.PerformStep("正在生成apks~~~~~");
+                cmd = create_install_cmd(outPath, createForCnnectDevices);
 
-                MessageBox.Show("生成失败!");
-                return;
+                //执行指令
+                error = "";
+                ret = CmdTools.Exec(cmd, ref error);
+                Console.WriteLine(cmd);
+
+                if (!File.Exists(outPath))
+                {
+                    WriteLog("Create Error: " + error);
+                    WriteLog("Create Ret: " + ret);
+
+                    MessageBox.Show("生成失败!");
+                    return;
+                }
+                else
+                {
+                    if (ret.Length > 0) MessageBox.Show("Info:" + ret);
+                    if (error.Length > 0) MessageBox.Show("Info:" + error);
+                }
+
+                needUpdateApks = false;
             }
-            else
-            {
-                if (ret.Length > 0) MessageBox.Show("Info:" + ret);
-                if (error.Length > 0) MessageBox.Show("Info:" + error);
-            }
+            
 
             LoadingForm.PerformStep("开始进行安装~~~~~");
 
@@ -378,6 +455,7 @@ namespace aabViewer
                 return cmd;
             }
         }
+        #endregion 
 
         private void btn_base_hash_Click(object sender, EventArgs e)
         {
@@ -447,6 +525,7 @@ namespace aabViewer
             else e.Effect = DragDropEffects.None;
         }
 
+        #region Tool Fun
         private void WriteLog(string _txt)
         {
             Console.WriteLine(_txt);
@@ -455,7 +534,7 @@ namespace aabViewer
 
         private string GetTime()
         {
-            return System.DateTime.Now.ToString()+" ";
+            return System.DateTime.Now.ToString() + " ";
         }
 
         private string GetCurrentPath()
@@ -464,30 +543,24 @@ namespace aabViewer
             return str;
         }
 
-        private void 环境监测ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if(CheckEnvironment(true))
-            {
-                MessageBox.Show("运行环境完整!");
-            }
-        }
 
-        private bool CheckEnvironment(bool isForce=false)
+
+        private bool CheckEnvironment(bool isForce = false)
         {
             string doneFile = GetCurrentPath() + "Config/init.txt";
-            if(File.Exists(doneFile) && !isForce)
+            if (File.Exists(doneFile) && !isForce)
             {
                 return true;
             }
             string ret = "";
             string openssl = GetCurrentPath() + "openssl.exe";
-            if(!File.Exists(openssl))
+            if (!File.Exists(openssl))
             {
                 ret += "\r\n缺少OpenSSL";
             }
             string error = "";
             string java = CmdTools.Exec("java -version", ref error);
-            if(!error.Contains("Java(TM) SE Runtime Environment"))
+            if (!error.Contains("Java(TM) SE Runtime Environment"))
             {
                 ret += "\r\n缺少Java环境";
                 WriteLog("Java：" + java + error);
@@ -497,9 +570,9 @@ namespace aabViewer
                 ret += "\r\n缺少 bundletool-all-1.8.0.jar";
             }
 
-            if(ret!="")
+            if (ret != "")
             {
-                MessageBox.Show("运行环境监测失败:"+ret);
+                MessageBox.Show("运行环境监测失败:" + ret);
                 return false;
             }
             else
@@ -508,10 +581,18 @@ namespace aabViewer
                 return true;
             }
         }
-
+        #endregion
+        #region Command
+        private void 环境监测ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (CheckEnvironment(true))
+            {
+                MessageBox.Show("运行环境完整!");
+            }
+        }
         private void 关于ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("AbbViewer "+ verion);
+            MessageBox.Show("AbbViewer " + verion);
         }
 
         private void 配置说明ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -519,17 +600,32 @@ namespace aabViewer
             BrowserHelper.OpenDefaultBrowserUrl("https://github.com/corle-bell/aabViewer");
         }
 
-        private void GetPhoneInfo(bool isInit=true)
+
+
+        private void 连接手机ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string brand="";
-            string model="";
-            string sys_ver="";
+            GetPhoneInfo(false);
+        }
+
+        private void 保存Key配置ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddKeys(text_alias.Text, text_key_path.Text, text_key_pass.Text, text_alias.Text, text_key_pass.Text);
+            SaveKeyConfigs();
+        }
+        #endregion
+
+        #region PhoneInfo
+        private void GetPhoneInfo(bool isInit = true)
+        {
+            string brand = "";
+            string model = "";
+            string sys_ver = "";
             TaskScheduler ui = TaskScheduler.FromCurrentSynchronizationContext();
             installTask = Task.Run(() => {
 
-                 brand = CmdTools.Exec("adb -d shell getprop ro.product.brand");
-                 model = CmdTools.Exec("adb -d shell getprop ro.product.model");
-                 sys_ver = CmdTools.Exec("adb shell getprop ro.build.version.release");
+                brand = CmdTools.Exec("adb -d shell getprop ro.product.brand");
+                model = CmdTools.Exec("adb -d shell getprop ro.product.model");
+                sys_ver = CmdTools.Exec("adb shell getprop ro.build.version.release");
 
                 installTask = null;
 
@@ -553,22 +649,9 @@ namespace aabViewer
                     if (!isInit) MessageBox.Show("已连接到 " + this.text_model.Text);
                 }
             }, ui);
-            
-           
-            
 
 
-           
-            
         }
-
-        private void 连接手机ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            GetPhoneInfo(false);
-        }
-
-
-
         protected override void WndProc(ref Message m)
         {
             try
@@ -619,12 +702,21 @@ namespace aabViewer
             }
             base.WndProc(ref m);
         }
+        #endregion
 
         private void fontDialog1_Apply(object sender, EventArgs e)
         {
 
         }
 
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var key = keyNodes[this.comboBox1.SelectedIndex];
+            text_key_path.Text = key.path;
+            text_pass.Text = key.password;
+            text_alias.Text = key.alias;
+            text_key_pass.Text = key.alias_password;
+        }
     }
 
     public class ConfigNode
@@ -632,6 +724,31 @@ namespace aabViewer
         public string name;
         public string path;
         public string filter_name;
+    }
+
+    public class KeyNode
+    {
+        public string name;
+        public string path;
+        public string alias;
+        public string password;
+        public string alias_password;
+
+        public string Format()
+        {
+            return $"{name}#{path}#{password}#{alias}#{alias_password}";
+        }
+
+        public KeyNode Init(string _data)
+        {
+            string[] arr = _data.Split(new char[] { '#' });
+            name = arr[0];
+            path = arr[1];
+            password = arr[2];
+            alias = arr[3];
+            alias_password = arr[4];
+            return this;
+        }
     }
 
     public class UsbMessage
