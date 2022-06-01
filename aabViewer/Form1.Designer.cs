@@ -73,6 +73,7 @@
             this.btn_install_part = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.清理缓存ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanel2.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel10.SuspendLayout();
@@ -398,7 +399,8 @@
             this.环境监测ToolStripMenuItem,
             this.配置说明ToolStripMenuItem,
             this.连接手机ToolStripMenuItem,
-            this.保存Key配置ToolStripMenuItem});
+            this.保存Key配置ToolStripMenuItem,
+            this.清理缓存ToolStripMenuItem});
             this.菜单ToolStripMenuItem.Name = "菜单ToolStripMenuItem";
             this.菜单ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.菜单ToolStripMenuItem.Text = "菜单";
@@ -490,6 +492,13 @@
             this.comboBox1.Size = new System.Drawing.Size(153, 20);
             this.comboBox1.TabIndex = 21;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
+            // 清理缓存ToolStripMenuItem
+            // 
+            this.清理缓存ToolStripMenuItem.Name = "清理缓存ToolStripMenuItem";
+            this.清理缓存ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.清理缓存ToolStripMenuItem.Text = "清理缓存";
+            this.清理缓存ToolStripMenuItem.Click += new System.EventHandler(this.清理缓存ToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -587,6 +596,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.ToolStripMenuItem 保存Key配置ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 清理缓存ToolStripMenuItem;
     }
 }
 

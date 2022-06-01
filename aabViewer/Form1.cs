@@ -717,6 +717,11 @@ namespace aabViewer
             text_alias.Text = key.alias;
             text_key_pass.Text = key.alias_password;
         }
+
+        private void 清理缓存ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            needUpdateApks = true;
+        }
     }
 
     public class ConfigNode
