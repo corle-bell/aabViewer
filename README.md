@@ -69,3 +69,7 @@ FacebookId#/manifest/application/meta-data#com.facebook.sdk.ApplicationId
 ### v2.9
 增加了签名管理功能
 修改了缓存更新的机制，如果不重启应用 不更换aab就不会更新apks的缓存
+
+### v3.0
+增加了签名创建功能
+修改了环境检测的流程
