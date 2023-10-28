@@ -24,7 +24,7 @@ namespace aabViewer
         public string lastParse;
         public string jarPath;
         public string keyConfigPath = "";
-        public const string verion = "v2.9";
+        public const string verion = "v3.0";
 
         public Task installTask;
         public Task parseTask;
@@ -86,13 +86,13 @@ namespace aabViewer
             SaveKeyConfigs();
         }
 
-        private void AddKeys(string _name, string _path, string _pass, string _alias, string _alias_pass)
+        public bool AddKeys(string _name, string _path, string _pass, string _alias, string _alias_pass)
         {
             for (int i = 0; i < keyNodes.Count; i++)
             {
                 if (_alias.Trim().Equals(keyNodes[i].alias.Trim()))
                 {
-                    return;
+                    return false;
                 }
             }
 
@@ -106,9 +106,10 @@ namespace aabViewer
             keyNodes.Add(key);
 
             this.comboBox1.Items.Add(key.name);
+            return true;
         }
 
-        private void SaveKeyConfigs()
+        public void SaveKeyConfigs()
         {
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < keyNodes.Count; i++)
@@ -526,7 +527,7 @@ namespace aabViewer
         }
 
         #region Tool Fun
-        private void WriteLog(string _txt)
+        public void WriteLog(string _txt)
         {
             Console.WriteLine(_txt);
             File.AppendAllText(logPath, "\r\n" + GetTime() + _txt);
@@ -553,14 +554,9 @@ namespace aabViewer
                 return true;
             }
             string ret = "";
-            string openssl = GetCurrentPath() + "openssl.exe";
-            if (!File.Exists(openssl))
-            {
-                ret += "\r\n缺少OpenSSL";
-            }
             string error = "";
             string java = CmdTools.Exec("java -version", ref error);
-            if (!error.Contains("Java(TM) SE Runtime Environment"))
+            if (error.Contains("不是内部或外部命令"))
             {
                 ret += "\r\n缺少Java环境";
                 WriteLog("Java：" + java + error);
@@ -721,6 +717,13 @@ namespace aabViewer
         private void 清理缓存ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             needUpdateApks = true;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            SignCreator sc = new SignCreator();
+            sc.root = this;
+            sc.ShowDialog();
         }
     }
 
