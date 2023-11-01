@@ -16,39 +16,45 @@ namespace aabViewer
         {
             InitializeComponent();
 
-            Init();
         }
 
-        private void Init()
+        public SignCreator Init(Form1 _root)
         {
-            //别名
-            textBox1.Text = "sdf";
+            root = _root;
 
-            //密码
-            textBox2.Text = "000000";
+            if(root.SignTemplete.Count>0)
+            {
+                //别名
+                textBox1.Text = root.SignTemplete[0];
 
-            //有效期
-            textBox3.Text = "25";
+                //密码
+                textBox2.Text = root.SignTemplete[1];
 
-            //名称
-            textBox4.Text = "sdf";
+                //有效期
+                textBox3.Text = root.SignTemplete[2];
 
-            //组织机构
-            textBox5.Text = "badman";
+                //名称
+                textBox4.Text = root.SignTemplete[3];
 
-            //组织名称
-            textBox6.Text = "badman";
+                //组织机构
+                textBox5.Text = root.SignTemplete[4];
 
-            //城市
-            textBox7.Text = "sjz";
+                //组织名称
+                textBox6.Text = root.SignTemplete[5];
 
-            //省份
-            textBox8.Text = "hb";
+                //城市
+                textBox7.Text = root.SignTemplete[6];
 
-            //国家代码
-            textBox9.Text = "86";
+                //省份
+                textBox8.Text = root.SignTemplete[7];
+
+                //国家代码
+                textBox9.Text = root.SignTemplete[8];
+            }
 
             this.checkBox1.Checked = true;
+
+            return this;
         }
 
         private void SignCreator_Load(object sender, EventArgs e)

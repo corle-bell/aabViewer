@@ -73,3 +73,8 @@ FacebookId#/manifest/application/meta-data#com.facebook.sdk.ApplicationId
 ### v3.0
 增加了签名创建功能
 修改了环境检测的流程
+
+### v3.1
+增加了签名创建的自定义模板
+增加了移除签名功能
+优化UI布局

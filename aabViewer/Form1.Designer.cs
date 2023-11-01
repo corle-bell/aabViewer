@@ -75,6 +75,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.flowLayoutPanel2.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel10.SuspendLayout();
@@ -90,9 +91,9 @@
             // 
             // button_file_select
             // 
-            this.button_file_select.Location = new System.Drawing.Point(665, 421);
+            this.button_file_select.Location = new System.Drawing.Point(535, 8);
             this.button_file_select.Name = "button_file_select";
-            this.button_file_select.Size = new System.Drawing.Size(87, 31);
+            this.button_file_select.Size = new System.Drawing.Size(64, 31);
             this.button_file_select.TabIndex = 0;
             this.button_file_select.Text = "选择文件";
             this.button_file_select.UseVisualStyleBackColor = true;
@@ -100,7 +101,7 @@
             // 
             // btn_install
             // 
-            this.btn_install.Location = new System.Drawing.Point(12, 478);
+            this.btn_install.Location = new System.Drawing.Point(605, 8);
             this.btn_install.Name = "btn_install";
             this.btn_install.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.btn_install.Size = new System.Drawing.Size(104, 31);
@@ -120,9 +121,15 @@
             this.flowLayoutPanel2.Controls.Add(this.panel11);
             this.flowLayoutPanel2.Controls.Add(this.panel12);
             this.flowLayoutPanel2.Controls.Add(this.panel13);
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(12, 515);
+            this.flowLayoutPanel2.Controls.Add(this.btn_base_hash);
+            this.flowLayoutPanel2.Controls.Add(this.btn_sha1);
+            this.flowLayoutPanel2.Controls.Add(this.button1);
+            this.flowLayoutPanel2.Controls.Add(this.comboBox1);
+            this.flowLayoutPanel2.Controls.Add(this.button2);
+            this.flowLayoutPanel2.Controls.Add(this.button3);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(12, 469);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(848, 164);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(848, 235);
             this.flowLayoutPanel2.TabIndex = 3;
             // 
             // panel9
@@ -242,6 +249,7 @@
             this.panel13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel13.Controls.Add(this.text_key_path);
             this.panel13.Controls.Add(this.label13);
+            this.panel13.Controls.Add(this.btn_select_key);
             this.panel13.Location = new System.Drawing.Point(3, 99);
             this.panel13.Name = "panel13";
             this.panel13.Size = new System.Drawing.Size(773, 42);
@@ -251,7 +259,7 @@
             // 
             this.text_key_path.Location = new System.Drawing.Point(94, 11);
             this.text_key_path.Name = "text_key_path";
-            this.text_key_path.Size = new System.Drawing.Size(670, 21);
+            this.text_key_path.Size = new System.Drawing.Size(560, 21);
             this.text_key_path.TabIndex = 2;
             // 
             // label13
@@ -267,7 +275,7 @@
             // 
             // btn_base_hash
             // 
-            this.btn_base_hash.Location = new System.Drawing.Point(248, 478);
+            this.btn_base_hash.Location = new System.Drawing.Point(3, 147);
             this.btn_base_hash.Name = "btn_base_hash";
             this.btn_base_hash.Size = new System.Drawing.Size(104, 31);
             this.btn_base_hash.TabIndex = 4;
@@ -277,7 +285,7 @@
             // 
             // btn_sha1
             // 
-            this.btn_sha1.Location = new System.Drawing.Point(358, 478);
+            this.btn_sha1.Location = new System.Drawing.Point(113, 147);
             this.btn_sha1.Name = "btn_sha1";
             this.btn_sha1.Size = new System.Drawing.Size(104, 31);
             this.btn_sha1.TabIndex = 5;
@@ -287,7 +295,7 @@
             // 
             // btn_select_key
             // 
-            this.btn_select_key.Location = new System.Drawing.Point(578, 478);
+            this.btn_select_key.Location = new System.Drawing.Point(660, 5);
             this.btn_select_key.Name = "btn_select_key";
             this.btn_select_key.Size = new System.Drawing.Size(104, 31);
             this.btn_select_key.TabIndex = 6;
@@ -301,16 +309,19 @@
             this.panel14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel14.Controls.Add(this.text_aab_path);
             this.panel14.Controls.Add(this.label14);
+            this.panel14.Controls.Add(this.button_file_select);
+            this.panel14.Controls.Add(this.btn_install_part);
+            this.panel14.Controls.Add(this.btn_install);
             this.panel14.Location = new System.Drawing.Point(12, 415);
             this.panel14.Name = "panel14";
-            this.panel14.Size = new System.Drawing.Size(637, 42);
+            this.panel14.Size = new System.Drawing.Size(838, 48);
             this.panel14.TabIndex = 7;
             // 
             // text_aab_path
             // 
-            this.text_aab_path.Location = new System.Drawing.Point(94, 11);
+            this.text_aab_path.Location = new System.Drawing.Point(107, 14);
             this.text_aab_path.Name = "text_aab_path";
-            this.text_aab_path.Size = new System.Drawing.Size(531, 21);
+            this.text_aab_path.Size = new System.Drawing.Size(422, 21);
             this.text_aab_path.TabIndex = 2;
             // 
             // label14
@@ -318,7 +329,7 @@
             this.label14.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label14.Location = new System.Drawing.Point(3, 10);
+            this.label14.Location = new System.Drawing.Point(-1, 16);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(77, 19);
             this.label14.TabIndex = 1;
@@ -474,7 +485,7 @@
             // 
             // btn_install_part
             // 
-            this.btn_install_part.Location = new System.Drawing.Point(124, 478);
+            this.btn_install_part.Location = new System.Drawing.Point(715, 8);
             this.btn_install_part.Name = "btn_install_part";
             this.btn_install_part.Size = new System.Drawing.Size(118, 31);
             this.btn_install_part.TabIndex = 17;
@@ -484,7 +495,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(468, 478);
+            this.button1.Location = new System.Drawing.Point(223, 147);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(104, 31);
             this.button1.TabIndex = 19;
@@ -495,21 +506,33 @@
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(697, 484);
+            this.comboBox1.Location = new System.Drawing.Point(333, 147);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(153, 20);
+            this.comboBox1.Size = new System.Drawing.Size(135, 20);
             this.comboBox1.TabIndex = 21;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(758, 421);
+            this.button2.BackColor = System.Drawing.Color.YellowGreen;
+            this.button2.Location = new System.Drawing.Point(474, 147);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(87, 31);
             this.button2.TabIndex = 23;
             this.button2.Text = "创建签名";
-            this.button2.UseVisualStyleBackColor = true;
+            this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button3
+            // 
+            this.button3.BackColor = System.Drawing.Color.OrangeRed;
+            this.button3.Location = new System.Drawing.Point(567, 147);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(107, 31);
+            this.button3.TabIndex = 24;
+            this.button3.Text = "从列表移除签名";
+            this.button3.UseVisualStyleBackColor = false;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // Form1
             // 
@@ -517,21 +540,12 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Snow;
-            this.ClientSize = new System.Drawing.Size(876, 691);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.btn_install_part);
+            this.ClientSize = new System.Drawing.Size(876, 716);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.panel14);
-            this.Controls.Add(this.btn_select_key);
-            this.Controls.Add(this.btn_sha1);
-            this.Controls.Add(this.btn_base_hash);
             this.Controls.Add(this.flowLayoutPanel2);
-            this.Controls.Add(this.btn_install);
-            this.Controls.Add(this.button_file_select);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
@@ -610,6 +624,7 @@
         private System.Windows.Forms.ToolStripMenuItem 保存Key配置ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 清理缓存ToolStripMenuItem;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
     }
 }
 

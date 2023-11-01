@@ -12,6 +12,8 @@ using System.Xml;
 using System.IO;
 using Ionic.Zip;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
+
 namespace aabViewer
 {
     
@@ -20,11 +22,13 @@ namespace aabViewer
     {
         public List<ConfigNode> configNodes = new List<ConfigNode>();
         public List<KeyNode> keyNodes = new List<KeyNode>();
+        public List<string> SignTemplete = new List<string>();
         public string logPath = "";
         public string lastParse;
         public string jarPath;
         public string keyConfigPath = "";
-        public const string verion = "v3.0";
+        public const string verion = "v3.1";
+        
 
         public Task installTask;
         public Task parseTask;
@@ -132,6 +136,12 @@ namespace aabViewer
             this.comboBox1.SelectedIndex = 0;
         }
 
+        private void LoadSignConfig(string path)
+        {
+            string[] data = File.ReadAllLines(path);
+            string[] arr = data[0].Split(new char[] { '#' });
+            SignTemplete.AddRange(arr);
+        }
         #endregion
 
         private void Init()
@@ -142,8 +152,14 @@ namespace aabViewer
             logPath = str + "log.txt";
             jarPath = str + "bundletool-all-1.8.0.jar";
             keyConfigPath = str+ "Config/keys.ini";
+            string signConfigPath = str + "Config/sign.ini";
 
-            if(!File.Exists(keyConfigPath))
+            if(File.Exists(signConfigPath))
+            {
+                LoadSignConfig(signConfigPath);
+            }
+
+            if (!File.Exists(keyConfigPath))
             {
                 CreateDefaultKeys();
             }
@@ -721,9 +737,19 @@ namespace aabViewer
 
         private void button2_Click(object sender, EventArgs e)
         {
-            SignCreator sc = new SignCreator();
-            sc.root = this;
+            SignCreator sc = new SignCreator().Init(this);
             sc.ShowDialog();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            int id = this.comboBox1.SelectedIndex;
+            keyNodes.RemoveAt(id);
+            this.comboBox1.Items.RemoveAt(id);
+
+            id = id >= keyNodes.Count ? keyNodes.Count-1 : id;
+            if(id>=0) this.comboBox1.SelectedIndex = id;
+            SaveKeyConfigs();
         }
     }
 
