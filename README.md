@@ -78,3 +78,7 @@ FacebookId#/manifest/application/meta-data#com.facebook.sdk.ApplicationId
 增加了签名创建的自定义模板
 增加了移除签名功能
 优化UI布局
+
+==配置文件路径：Config/sign.ini
+别名#密码#期限#名字#组织机构#组织机构名称#市#省#国家代码 #FF5722==
+
