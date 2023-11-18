@@ -754,8 +754,8 @@ namespace aabViewer
 
         private void button4_Click(object sender, EventArgs e)
         {
-            string cmd = "keytool -list -v -alias {0} -storepass {1} -keystore \"{2}\" -keypass {1}";
-            cmd = string.Format(cmd, text_alias.Text, text_pass.Text, text_key_path.Text);
+            string cmd = "keytool -list -v -storepass {0} -keystore \"{1}\"";
+            cmd = string.Format(cmd, text_pass.Text, text_key_path.Text);
 
             var ret = CmdTools.Exec(cmd);
             MessageBox.Show(ret);
