@@ -70,14 +70,19 @@ namespace aabViewer
                 return;
             }
 
+
+            int day = int.Parse(textBox3.Text);
+            int year = day * 365;
+
             SaveFileDialog fileDialog = new SaveFileDialog();            
             fileDialog.Filter = "签名文件(*.keystore)|*.keystore;";
 
             if(fileDialog.ShowDialog()==DialogResult.OK)
             {
+
                 string path = fileDialog.FileName;
                 string dname = $"\"CN={textBox4.Text},OU={textBox5.Text},O={textBox6.Text},L={textBox7.Text},ST={textBox8.Text},C={textBox9.Text}\"";
-                string cmd = $"keytool -genkey -alias {textBox1.Text} -keypass {textBox2.Text} -validity {textBox3.Text} -keystore {path} -storepass {textBox2.Text} -dname {dname}";
+                string cmd = $"keytool -genkey -alias {textBox1.Text} -keypass {textBox2.Text} -validity {year} -keystore {path} -storepass {textBox2.Text} -dname {dname}";
 
                 WinformTools.Log(cmd);
 

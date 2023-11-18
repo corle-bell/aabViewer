@@ -47,12 +47,17 @@
             this.panel13 = new System.Windows.Forms.Panel();
             this.text_key_path = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
+            this.btn_select_key = new System.Windows.Forms.Button();
             this.btn_base_hash = new System.Windows.Forms.Button();
             this.btn_sha1 = new System.Windows.Forms.Button();
-            this.btn_select_key = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.panel14 = new System.Windows.Forms.Panel();
             this.text_aab_path = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
+            this.btn_install_part = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.key = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.value = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -71,11 +76,7 @@
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.btn_install_part = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
             this.flowLayoutPanel2.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel10.SuspendLayout();
@@ -124,6 +125,7 @@
             this.flowLayoutPanel2.Controls.Add(this.btn_base_hash);
             this.flowLayoutPanel2.Controls.Add(this.btn_sha1);
             this.flowLayoutPanel2.Controls.Add(this.button1);
+            this.flowLayoutPanel2.Controls.Add(this.button4);
             this.flowLayoutPanel2.Controls.Add(this.comboBox1);
             this.flowLayoutPanel2.Controls.Add(this.button2);
             this.flowLayoutPanel2.Controls.Add(this.button3);
@@ -273,6 +275,16 @@
             this.label13.TabIndex = 1;
             this.label13.Text = "文件路径";
             // 
+            // btn_select_key
+            // 
+            this.btn_select_key.Location = new System.Drawing.Point(660, 5);
+            this.btn_select_key.Name = "btn_select_key";
+            this.btn_select_key.Size = new System.Drawing.Size(104, 31);
+            this.btn_select_key.TabIndex = 6;
+            this.btn_select_key.Text = "选择签名文件";
+            this.btn_select_key.UseVisualStyleBackColor = true;
+            this.btn_select_key.Click += new System.EventHandler(this.btn_select_key_Click);
+            // 
             // btn_base_hash
             // 
             this.btn_base_hash.Location = new System.Drawing.Point(3, 147);
@@ -293,15 +305,46 @@
             this.btn_sha1.UseVisualStyleBackColor = true;
             this.btn_sha1.Click += new System.EventHandler(this.btn_sha1_Click);
             // 
-            // btn_select_key
+            // button1
             // 
-            this.btn_select_key.Location = new System.Drawing.Point(660, 5);
-            this.btn_select_key.Name = "btn_select_key";
-            this.btn_select_key.Size = new System.Drawing.Size(104, 31);
-            this.btn_select_key.TabIndex = 6;
-            this.btn_select_key.Text = "选择签名文件";
-            this.btn_select_key.UseVisualStyleBackColor = true;
-            this.btn_select_key.Click += new System.EventHandler(this.btn_select_key_Click);
+            this.button1.Location = new System.Drawing.Point(223, 147);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(104, 31);
+            this.button1.TabIndex = 19;
+            this.button1.Text = "md5";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(443, 147);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(135, 20);
+            this.comboBox1.TabIndex = 21;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.Color.YellowGreen;
+            this.button2.Location = new System.Drawing.Point(584, 147);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(87, 31);
+            this.button2.TabIndex = 23;
+            this.button2.Text = "创建签名";
+            this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button3
+            // 
+            this.button3.BackColor = System.Drawing.Color.OrangeRed;
+            this.button3.Location = new System.Drawing.Point(677, 147);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(107, 31);
+            this.button3.TabIndex = 24;
+            this.button3.Text = "从列表移除签名";
+            this.button3.UseVisualStyleBackColor = false;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // panel14
             // 
@@ -334,6 +377,16 @@
             this.label14.Size = new System.Drawing.Size(77, 19);
             this.label14.TabIndex = 1;
             this.label14.Text = "aab路径";
+            // 
+            // btn_install_part
+            // 
+            this.btn_install_part.Location = new System.Drawing.Point(715, 8);
+            this.btn_install_part.Name = "btn_install_part";
+            this.btn_install_part.Size = new System.Drawing.Size(118, 31);
+            this.btn_install_part.TabIndex = 17;
+            this.btn_install_part.Text = "universal模式安装";
+            this.btn_install_part.UseVisualStyleBackColor = true;
+            this.btn_install_part.Click += new System.EventHandler(this.btn_install_part_Click);
             // 
             // dataGridView1
             // 
@@ -483,56 +536,15 @@
             this.panel1.Size = new System.Drawing.Size(838, 35);
             this.panel1.TabIndex = 16;
             // 
-            // btn_install_part
+            // button4
             // 
-            this.btn_install_part.Location = new System.Drawing.Point(715, 8);
-            this.btn_install_part.Name = "btn_install_part";
-            this.btn_install_part.Size = new System.Drawing.Size(118, 31);
-            this.btn_install_part.TabIndex = 17;
-            this.btn_install_part.Text = "universal模式安装";
-            this.btn_install_part.UseVisualStyleBackColor = true;
-            this.btn_install_part.Click += new System.EventHandler(this.btn_install_part_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(223, 147);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(104, 31);
-            this.button1.TabIndex = 19;
-            this.button1.Text = "md5";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(333, 147);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(135, 20);
-            this.comboBox1.TabIndex = 21;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-            // 
-            // button2
-            // 
-            this.button2.BackColor = System.Drawing.Color.YellowGreen;
-            this.button2.Location = new System.Drawing.Point(474, 147);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(87, 31);
-            this.button2.TabIndex = 23;
-            this.button2.Text = "创建签名";
-            this.button2.UseVisualStyleBackColor = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // button3
-            // 
-            this.button3.BackColor = System.Drawing.Color.OrangeRed;
-            this.button3.Location = new System.Drawing.Point(567, 147);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(107, 31);
-            this.button3.TabIndex = 24;
-            this.button3.Text = "从列表移除签名";
-            this.button3.UseVisualStyleBackColor = false;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.button4.Location = new System.Drawing.Point(333, 147);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(104, 31);
+            this.button4.TabIndex = 25;
+            this.button4.Text = "查看信息";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // Form1
             // 
@@ -625,6 +637,7 @@
         private System.Windows.Forms.ToolStripMenuItem 清理缓存ToolStripMenuItem;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
     }
 }
 

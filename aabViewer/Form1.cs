@@ -27,7 +27,7 @@ namespace aabViewer
         public string lastParse;
         public string jarPath;
         public string keyConfigPath = "";
-        public const string verion = "v3.1";
+        public const string verion = "v3.1.1";
         
 
         public Task installTask;
@@ -750,6 +750,15 @@ namespace aabViewer
             id = id >= keyNodes.Count ? keyNodes.Count-1 : id;
             if(id>=0) this.comboBox1.SelectedIndex = id;
             SaveKeyConfigs();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            string cmd = "keytool -list -v -alias {0} -storepass {1} -keystore \"{2}\" -keypass {1}";
+            cmd = string.Format(cmd, text_alias.Text, text_pass.Text, text_key_path.Text);
+
+            var ret = CmdTools.Exec(cmd);
+            MessageBox.Show(ret);
         }
     }
 
