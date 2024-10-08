@@ -98,6 +98,6 @@ FacebookId#/manifest/application/meta-data#com.facebook.sdk.ApplicationId
 
 ### v3.1.2
 
-增加查看log的按钮
-增加快速打开缓存目录的按钮
-增加了查看AndroidManifest的功能
+增加查看log的按钮  
+增加快速打开缓存目录的按钮  
+增加了查看AndroidManifest的功能  
