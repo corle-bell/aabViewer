@@ -135,21 +135,53 @@ namespace aabViewer
             }
         }
 
-        
-
-        /*public static void TipBox(Form root, string _info)
+        public static void OpenFile(string filePath)
         {
-            HZH_Controls.Forms.FrmTips.ShowTips(root, _info, 800, true, ContentAlignment.TopLeft, null, HZH_Controls.Forms.TipsSizeMode.Large);            
+            if (File.Exists(filePath))
+            {
+                System.Diagnostics.Process.Start(filePath);
+            }
         }
 
-        public static DialogResult ShowTipDialog(Form root, string _info)
+        public static bool GetJavaHome(out string error)
         {
-            return HZH_Controls.Forms.FrmDialog.ShowDialog(root, _info);
+            bool isJava = false;
+            error = "";
+            ProcessStartInfo psi = new ProcessStartInfo
+            {
+                FileName = "java",
+                Arguments = "-version",
+                RedirectStandardError = true,
+                UseShellExecute = false
+            };
+
+            try
+            {
+                Process process = Process.Start(psi);
+                process.WaitForExit();
+                isJava = true;
+            }
+            catch (Exception e)
+            {
+                error = e.ToString();
+            }
+            return isJava;
         }
 
-        public static DialogResult ShowDialog(Form root, string _info)
-        {
-            return HZH_Controls.Forms.FrmDialog.ShowDialog(root, _info, "提示", true);
-        }*/
-    }
+
+            /*public static void TipBox(Form root, string _info)
+            {
+                HZH_Controls.Forms.FrmTips.ShowTips(root, _info, 800, true, ContentAlignment.TopLeft, null, HZH_Controls.Forms.TipsSizeMode.Large);            
+            }
+
+            public static DialogResult ShowTipDialog(Form root, string _info)
+            {
+                return HZH_Controls.Forms.FrmDialog.ShowDialog(root, _info);
+            }
+
+            public static DialogResult ShowDialog(Form root, string _info)
+            {
+                return HZH_Controls.Forms.FrmDialog.ShowDialog(root, _info, "提示", true);
+            }*/
+        }
 }

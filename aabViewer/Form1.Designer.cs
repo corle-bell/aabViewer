@@ -51,6 +51,7 @@
             this.btn_base_hash = new System.Windows.Forms.Button();
             this.btn_sha1 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -62,7 +63,6 @@
             this.key = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.value = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.text_model = new System.Windows.Forms.TextBox();
             this.label_status = new System.Windows.Forms.Label();
@@ -76,7 +76,10 @@
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.button4 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.查看LogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.查看缓存目录ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanel2.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel10.SuspendLayout();
@@ -85,9 +88,9 @@
             this.panel13.SuspendLayout();
             this.panel14.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // button_file_select
@@ -315,6 +318,16 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(333, 147);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(104, 31);
+            this.button4.TabIndex = 25;
+            this.button4.Text = "查看信息";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
@@ -396,7 +409,7 @@
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.key,
             this.value});
-            this.dataGridView1.Location = new System.Drawing.Point(12, 69);
+            this.dataGridView1.Location = new System.Drawing.Point(12, 63);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 23;
             this.dataGridView1.Size = new System.Drawing.Size(838, 340);
@@ -413,15 +426,6 @@
             this.value.HeaderText = "数值";
             this.value.Name = "value";
             this.value.Width = 300;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(697, 82);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(111, 116);
-            this.pictureBox1.TabIndex = 9;
-            this.pictureBox1.TabStop = false;
             // 
             // label1
             // 
@@ -465,7 +469,9 @@
             this.配置说明ToolStripMenuItem,
             this.连接手机ToolStripMenuItem,
             this.保存Key配置ToolStripMenuItem,
-            this.清理缓存ToolStripMenuItem});
+            this.清理缓存ToolStripMenuItem,
+            this.查看LogToolStripMenuItem,
+            this.查看缓存目录ToolStripMenuItem});
             this.菜单ToolStripMenuItem.Name = "菜单ToolStripMenuItem";
             this.菜单ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.菜单ToolStripMenuItem.Text = "菜单";
@@ -473,35 +479,35 @@
             // 环境监测ToolStripMenuItem
             // 
             this.环境监测ToolStripMenuItem.Name = "环境监测ToolStripMenuItem";
-            this.环境监测ToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.环境监测ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.环境监测ToolStripMenuItem.Text = "环境监测";
             this.环境监测ToolStripMenuItem.Click += new System.EventHandler(this.环境监测ToolStripMenuItem_Click);
             // 
             // 配置说明ToolStripMenuItem
             // 
             this.配置说明ToolStripMenuItem.Name = "配置说明ToolStripMenuItem";
-            this.配置说明ToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.配置说明ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.配置说明ToolStripMenuItem.Text = "配置说明";
             this.配置说明ToolStripMenuItem.Click += new System.EventHandler(this.配置说明ToolStripMenuItem_Click);
             // 
             // 连接手机ToolStripMenuItem
             // 
             this.连接手机ToolStripMenuItem.Name = "连接手机ToolStripMenuItem";
-            this.连接手机ToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.连接手机ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.连接手机ToolStripMenuItem.Text = "连接手机";
             this.连接手机ToolStripMenuItem.Click += new System.EventHandler(this.连接手机ToolStripMenuItem_Click);
             // 
             // 保存Key配置ToolStripMenuItem
             // 
             this.保存Key配置ToolStripMenuItem.Name = "保存Key配置ToolStripMenuItem";
-            this.保存Key配置ToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.保存Key配置ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.保存Key配置ToolStripMenuItem.Text = "保存Key配置";
             this.保存Key配置ToolStripMenuItem.Click += new System.EventHandler(this.保存Key配置ToolStripMenuItem_Click);
             // 
             // 清理缓存ToolStripMenuItem
             // 
             this.清理缓存ToolStripMenuItem.Name = "清理缓存ToolStripMenuItem";
-            this.清理缓存ToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.清理缓存ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.清理缓存ToolStripMenuItem.Text = "清理缓存";
             this.清理缓存ToolStripMenuItem.Click += new System.EventHandler(this.清理缓存ToolStripMenuItem_Click);
             // 
@@ -536,15 +542,38 @@
             this.panel1.Size = new System.Drawing.Size(838, 35);
             this.panel1.TabIndex = 16;
             // 
-            // button4
+            // button5
             // 
-            this.button4.Location = new System.Drawing.Point(333, 147);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(104, 31);
-            this.button4.TabIndex = 25;
-            this.button4.Text = "查看信息";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.button5.Location = new System.Drawing.Point(697, 217);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(111, 35);
+            this.button5.TabIndex = 18;
+            this.button5.Text = "查看manifest";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox1.Location = new System.Drawing.Point(697, 82);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(111, 116);
+            this.pictureBox1.TabIndex = 9;
+            this.pictureBox1.TabStop = false;
+            // 
+            // 查看LogToolStripMenuItem
+            // 
+            this.查看LogToolStripMenuItem.Name = "查看LogToolStripMenuItem";
+            this.查看LogToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.查看LogToolStripMenuItem.Text = "查看Log";
+            this.查看LogToolStripMenuItem.Click += new System.EventHandler(this.查看LogToolStripMenuItem_Click);
+            // 
+            // 查看缓存目录ToolStripMenuItem
+            // 
+            this.查看缓存目录ToolStripMenuItem.Name = "查看缓存目录ToolStripMenuItem";
+            this.查看缓存目录ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.查看缓存目录ToolStripMenuItem.Text = "查看缓存目录";
+            this.查看缓存目录ToolStripMenuItem.Click += new System.EventHandler(this.查看缓存目录ToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -553,6 +582,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Snow;
             this.ClientSize = new System.Drawing.Size(876, 716);
+            this.Controls.Add(this.button5);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.dataGridView1);
@@ -578,11 +608,11 @@
             this.panel14.ResumeLayout(false);
             this.panel14.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -638,6 +668,9 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.ToolStripMenuItem 查看LogToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 查看缓存目录ToolStripMenuItem;
     }
 }
 

@@ -27,8 +27,9 @@ namespace aabViewer
         public string lastParse;
         public string jarPath;
         public string keyConfigPath = "";
-        public const string verion = "v3.1.1";
-        
+        public const string verion = "v3.1.2";
+
+        public string manifestContent;
 
         public Task installTask;
         public Task parseTask;
@@ -228,6 +229,7 @@ namespace aabViewer
 
                 xmlData = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + CmdTools.Exec(cmd, ref error);
 
+                manifestContent = xmlData;
 
                 LoadingForm.PerformStep("获取ICON ~~~");
 
@@ -571,11 +573,10 @@ namespace aabViewer
             }
             string ret = "";
             string error = "";
-            string java = CmdTools.Exec("java -version", ref error);
-            if (error.Contains("不是内部或外部命令"))
+            if (!WinformTools.GetJavaHome(out error))
             {
                 ret += "\r\n缺少Java环境";
-                WriteLog("Java：" + java + error);
+                WriteLog("Java：" + error);
             }
             if (!File.Exists(jarPath))
             {
@@ -759,6 +760,22 @@ namespace aabViewer
 
             var ret = CmdTools.Exec(cmd);
             MessageBox.Show(ret);
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            ScrollTextBox sc = new ScrollTextBox();
+            sc.Show(manifestContent);
+        }
+
+        private void 查看LogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WinformTools.OpenFile(GetCurrentPath() + "/log.txt");
+        }
+
+        private void 查看缓存目录ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WinformTools.OpenFolder(Path.Combine(GetCurrentPath(), "Temp"));
         }
     }
 
