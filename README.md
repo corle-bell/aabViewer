@@ -101,3 +101,17 @@ FacebookId#/manifest/application/meta-data#com.facebook.sdk.ApplicationId
 增加查看log的按钮  
 增加快速打开缓存目录的按钮  
 增加了查看AndroidManifest的功能  
+
+
+
+## v4.0.0
+
+增加了查看Apk的功能 
+
+增加了直接运行应用的功能
+
+修改了界面布局 
+
+修改了图标 
+
+重构了代码结构
