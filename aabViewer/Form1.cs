@@ -193,7 +193,6 @@ namespace aabViewer
         {
             var ToolsPath = WinformTools.GetParentPath(WinformTools.GetCurrentPath(), 2);
             ToolsPath = Path.Combine(ToolsPath, "Tools");
-
             WinformTools.CheckAndCopy(Define.jarPath, Path.Combine(ToolsPath, Define.BundleToolFile), $"缺少{Define.BundleToolFile}");
             WinformTools.CheckAndCopy(Define.aaptPath, Path.Combine(ToolsPath, Define.AAPTFile), $"缺少{Define.AAPTFile}");
         }

@@ -172,9 +172,16 @@ namespace aabViewer
         public static string GetParentPath(string path, int backTimes=1)
         {
             var ret = path;
-            for(int i=0; i< backTimes+1; i++)
+            try
             {
-                ret = Directory.GetParent(ret).FullName;
+                for (int i = 0; i < backTimes + 1; i++)
+                {
+                    ret = Directory.GetParent(ret).FullName;
+                }
+            }
+            catch(Exception e)
+            {
+                return ret;
             }
             return ret;
         }
