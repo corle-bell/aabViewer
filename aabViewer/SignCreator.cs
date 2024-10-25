@@ -94,8 +94,8 @@ namespace aabViewer
 
                 if (!File.Exists(path))
                 {
-                    root.WriteLog("Create Error: " + error);
-                    root.WriteLog("Create Ret: " + ret);
+                    WinformTools.WriteLog("Create Error: " + error);
+                    WinformTools.WriteLog("Create Ret: " + ret);
 
                     MessageBox.Show("生成失败!");
                     return;
@@ -108,7 +108,7 @@ namespace aabViewer
                         root.SaveKeyConfigs();
                     }
 
-                    root.WriteLog("Create Ret: " + ret);
+                    WinformTools.WriteLog("Create Ret: " + ret);
                     MessageBox.Show("生成结束!");                    
                 }
 

@@ -73,13 +73,14 @@
             this.连接手机ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.保存Key配置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.清理缓存ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.查看LogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.查看缓存目录ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.panel1 = new System.Windows.Forms.Panel();
             this.button5 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.查看LogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.查看缓存目录ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button6 = new System.Windows.Forms.Button();
             this.flowLayoutPanel2.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel10.SuspendLayout();
@@ -95,7 +96,7 @@
             // 
             // button_file_select
             // 
-            this.button_file_select.Location = new System.Drawing.Point(535, 8);
+            this.button_file_select.Location = new System.Drawing.Point(475, 8);
             this.button_file_select.Name = "button_file_select";
             this.button_file_select.Size = new System.Drawing.Size(64, 31);
             this.button_file_select.TabIndex = 0;
@@ -105,7 +106,7 @@
             // 
             // btn_install
             // 
-            this.btn_install.Location = new System.Drawing.Point(605, 8);
+            this.btn_install.Location = new System.Drawing.Point(545, 8);
             this.btn_install.Name = "btn_install";
             this.btn_install.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.btn_install.Size = new System.Drawing.Size(104, 31);
@@ -363,6 +364,7 @@
             // 
             this.panel14.BackColor = System.Drawing.Color.SeaShell;
             this.panel14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel14.Controls.Add(this.button6);
             this.panel14.Controls.Add(this.text_aab_path);
             this.panel14.Controls.Add(this.label14);
             this.panel14.Controls.Add(this.button_file_select);
@@ -375,9 +377,9 @@
             // 
             // text_aab_path
             // 
-            this.text_aab_path.Location = new System.Drawing.Point(107, 14);
+            this.text_aab_path.Location = new System.Drawing.Point(73, 14);
             this.text_aab_path.Name = "text_aab_path";
-            this.text_aab_path.Size = new System.Drawing.Size(422, 21);
+            this.text_aab_path.Size = new System.Drawing.Size(396, 21);
             this.text_aab_path.TabIndex = 2;
             // 
             // label14
@@ -393,9 +395,9 @@
             // 
             // btn_install_part
             // 
-            this.btn_install_part.Location = new System.Drawing.Point(715, 8);
+            this.btn_install_part.Location = new System.Drawing.Point(655, 8);
             this.btn_install_part.Name = "btn_install_part";
-            this.btn_install_part.Size = new System.Drawing.Size(118, 31);
+            this.btn_install_part.Size = new System.Drawing.Size(116, 31);
             this.btn_install_part.TabIndex = 17;
             this.btn_install_part.Text = "universal模式安装";
             this.btn_install_part.UseVisualStyleBackColor = true;
@@ -479,37 +481,51 @@
             // 环境监测ToolStripMenuItem
             // 
             this.环境监测ToolStripMenuItem.Name = "环境监测ToolStripMenuItem";
-            this.环境监测ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.环境监测ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.环境监测ToolStripMenuItem.Text = "环境监测";
             this.环境监测ToolStripMenuItem.Click += new System.EventHandler(this.环境监测ToolStripMenuItem_Click);
             // 
             // 配置说明ToolStripMenuItem
             // 
             this.配置说明ToolStripMenuItem.Name = "配置说明ToolStripMenuItem";
-            this.配置说明ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.配置说明ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.配置说明ToolStripMenuItem.Text = "配置说明";
             this.配置说明ToolStripMenuItem.Click += new System.EventHandler(this.配置说明ToolStripMenuItem_Click);
             // 
             // 连接手机ToolStripMenuItem
             // 
             this.连接手机ToolStripMenuItem.Name = "连接手机ToolStripMenuItem";
-            this.连接手机ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.连接手机ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.连接手机ToolStripMenuItem.Text = "连接手机";
             this.连接手机ToolStripMenuItem.Click += new System.EventHandler(this.连接手机ToolStripMenuItem_Click);
             // 
             // 保存Key配置ToolStripMenuItem
             // 
             this.保存Key配置ToolStripMenuItem.Name = "保存Key配置ToolStripMenuItem";
-            this.保存Key配置ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.保存Key配置ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.保存Key配置ToolStripMenuItem.Text = "保存Key配置";
             this.保存Key配置ToolStripMenuItem.Click += new System.EventHandler(this.保存Key配置ToolStripMenuItem_Click);
             // 
             // 清理缓存ToolStripMenuItem
             // 
             this.清理缓存ToolStripMenuItem.Name = "清理缓存ToolStripMenuItem";
-            this.清理缓存ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.清理缓存ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.清理缓存ToolStripMenuItem.Text = "清理缓存";
             this.清理缓存ToolStripMenuItem.Click += new System.EventHandler(this.清理缓存ToolStripMenuItem_Click);
+            // 
+            // 查看LogToolStripMenuItem
+            // 
+            this.查看LogToolStripMenuItem.Name = "查看LogToolStripMenuItem";
+            this.查看LogToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.查看LogToolStripMenuItem.Text = "查看Log";
+            this.查看LogToolStripMenuItem.Click += new System.EventHandler(this.查看LogToolStripMenuItem_Click);
+            // 
+            // 查看缓存目录ToolStripMenuItem
+            // 
+            this.查看缓存目录ToolStripMenuItem.Name = "查看缓存目录ToolStripMenuItem";
+            this.查看缓存目录ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.查看缓存目录ToolStripMenuItem.Text = "查看缓存目录";
+            this.查看缓存目录ToolStripMenuItem.Click += new System.EventHandler(this.查看缓存目录ToolStripMenuItem_Click);
             // 
             // 关于ToolStripMenuItem
             // 
@@ -561,19 +577,15 @@
             this.pictureBox1.TabIndex = 9;
             this.pictureBox1.TabStop = false;
             // 
-            // 查看LogToolStripMenuItem
+            // button6
             // 
-            this.查看LogToolStripMenuItem.Name = "查看LogToolStripMenuItem";
-            this.查看LogToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.查看LogToolStripMenuItem.Text = "查看Log";
-            this.查看LogToolStripMenuItem.Click += new System.EventHandler(this.查看LogToolStripMenuItem_Click);
-            // 
-            // 查看缓存目录ToolStripMenuItem
-            // 
-            this.查看缓存目录ToolStripMenuItem.Name = "查看缓存目录ToolStripMenuItem";
-            this.查看缓存目录ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.查看缓存目录ToolStripMenuItem.Text = "查看缓存目录";
-            this.查看缓存目录ToolStripMenuItem.Click += new System.EventHandler(this.查看缓存目录ToolStripMenuItem_Click);
+            this.button6.Location = new System.Drawing.Point(773, 8);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(60, 31);
+            this.button6.TabIndex = 18;
+            this.button6.Text = "运行";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // Form1
             // 
@@ -671,6 +683,7 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.ToolStripMenuItem 查看LogToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 查看缓存目录ToolStripMenuItem;
+        private System.Windows.Forms.Button button6;
     }
 }
 

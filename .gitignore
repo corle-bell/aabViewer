@@ -1,9 +1,8 @@
 
-Temp
-Library
-aabViewer/bin/Release
-aabViewer/bin/Debug
-Release
+/Temp
+/Library
+/aabViewer/bin
+/Release
 obj
 .vs
 .vsconfig

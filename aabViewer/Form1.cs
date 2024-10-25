@@ -13,6 +13,7 @@ using System.IO;
 using Ionic.Zip;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using System.Reflection;
 
 namespace aabViewer
 {
@@ -20,25 +21,69 @@ namespace aabViewer
 
     public partial class Form1 : Form
     {
-        public List<ConfigNode> configNodes = new List<ConfigNode>();
+       
         public List<KeyNode> keyNodes = new List<KeyNode>();
         public List<string> SignTemplete = new List<string>();
-        public string logPath = "";
-        public string lastParse;
-        public string jarPath;
-        public string keyConfigPath = "";
-        public const string verion = "v3.1.2";
+       
 
-        public string manifestContent;
+        public Task PhoneInfoTask;
 
-        public Task installTask;
-        public Task parseTask;
+        public bool needUpdateApks;
 
-        private bool needUpdateApks;
+        private Decoder decoderAAB;
+        private Decoder decoderAPK;
+
+        private bool isAAB = true;
+        public Decoder decoder
+        {
+            get
+            {
+                return isAAB ? decoderAAB : decoderAPK;
+            }
+        }
+
+        #region for decoder
+        public PictureBox IconImg => pictureBox1;
+        public DataGridView DataView => dataGridView1;
+
+        public string FilePath => text_aab_path.Text;
+
+        public string KeyPath => text_key_path.Text;
+        public string AliasPass => text_pass.Text;
+        public string KeyAlias => text_alias.Text;
+        public string KeyPass => text_key_pass.Text;
+
+        public string InstallButton_Left
+        {
+            get
+            {
+                return btn_install.Text;
+            }
+            set
+            {
+                btn_install.Text = value;
+            }
+        }
+
+        public string InstallButton_Right
+        {
+            get
+            {
+                return btn_install_part.Text;
+            }
+            set
+            {
+                btn_install_part.Text = value;
+            }
+        }
+
+        #endregion
+
 
         private Timer InitAab = new Timer();
         public Form1(string [] args)
         {
+
             this.IsMdiContainer = true;
 
             InitializeComponent();
@@ -56,13 +101,12 @@ namespace aabViewer
             }
 
             GetPhoneInfo();
-
            
         }
 
         private void Call(object sender, EventArgs e)
         {
-            ExecAabCheck();
+            DecodeFile();
 
             InitAab.Stop();
         }
@@ -87,7 +131,7 @@ namespace aabViewer
         #region KeyConfigs
         private void CreateDefaultKeys()
         {
-            AddKeys("测试签名", GetCurrentPath() + "Config/debug.keystore", "android", "androiddebugkey", "android");
+            AddKeys("测试签名", WinformTools.GetCurrentPath() + "Config/debug.keystore", "android", "androiddebugkey", "android");
             SaveKeyConfigs();
         }
 
@@ -121,12 +165,12 @@ namespace aabViewer
             {
                 builder.AppendLine(keyNodes[i].Format());
             }
-            File.WriteAllText(keyConfigPath, builder.ToString());
+            File.WriteAllText(Define.keyConfigPath, builder.ToString());
         }
 
         private void LoadKeyConfig()
         {
-            string[] data = File.ReadAllLines(keyConfigPath);
+            string[] data = File.ReadAllLines(Define.keyConfigPath);
             for (int i = 0; i < data.Length; i++)
             {
                 var key = new KeyNode().Init(data[i]);
@@ -145,22 +189,35 @@ namespace aabViewer
         }
         #endregion
 
+        private void CheckTools()
+        {
+            var ToolsPath = WinformTools.GetParentPath(WinformTools.GetCurrentPath(), 2);
+            ToolsPath = Path.Combine(ToolsPath, "Tools");
+
+            WinformTools.CheckAndCopy(Define.jarPath, Path.Combine(ToolsPath, Define.BundleToolFile), $"缺少{Define.BundleToolFile}");
+            WinformTools.CheckAndCopy(Define.aaptPath, Path.Combine(ToolsPath, Define.AAPTFile), $"缺少{Define.AAPTFile}");
+        }
+
+
         private void Init()
         {
-            string str = GetCurrentPath();
+            string str = WinformTools.GetCurrentPath();
 
-            string configPath = str + "Config/data.ini";
-            logPath = str + "log.txt";
-            jarPath = str + "bundletool-all-1.8.0.jar";
-            keyConfigPath = str+ "Config/keys.ini";
-            string signConfigPath = str + "Config/sign.ini";
 
-            if(File.Exists(signConfigPath))
+            Define.logPath = str + Define.LogFile;
+            Define.jarPath = str + Define.BundleToolFile;
+            Define.keyConfigPath = str + Define.KeysFile;
+            string signConfigPath = str + Define.SignFile;
+            Define.aaptPath = str + Define.AAPTFile;
+
+
+
+            if (File.Exists(signConfigPath))
             {
                 LoadSignConfig(signConfigPath);
             }
 
-            if (!File.Exists(keyConfigPath))
+            if (!File.Exists(Define.keyConfigPath))
             {
                 CreateDefaultKeys();
             }
@@ -169,30 +226,7 @@ namespace aabViewer
                 LoadKeyConfig();
             }
 
-            if (File.Exists(configPath))
-            {
-                string[] data = File.ReadAllLines(configPath);
-
-                configNodes = new List<ConfigNode>();
-
-                int index = 0;
-                for (int i = 0; i < data.Length; i++)
-                {
-                    string[] _split_data = data[i].Split(new char[] { '#' });
-                    ConfigNode tmp = new ConfigNode();
-                    tmp.name = _split_data[0];
-                    tmp.path = _split_data[1];
-                    tmp.filter_name = _split_data[2];
-                    configNodes.Add(tmp);
-
-                    index = this.dataGridView1.Rows.Add();
-                    this.dataGridView1.Rows[index].Cells[0].Value = tmp.name;
-                }
-            }
-            else
-            {
-                MessageBox.Show("配置文件丢失，请检查配置文件!");
-            }
+            CheckTools();
 
             this.AllowDrop = true;
 
@@ -204,9 +238,21 @@ namespace aabViewer
             this.dataGridView1.DragDrop += this.Form1_DragDrop;
             this.flowLayoutPanel2.DragDrop += this.Form1_DragDrop;
             this.DragDrop += this.Form1_DragDrop;
+
+
+            for (int i = 0; i < 10; i++)
+            {
+                dataGridView1.Rows.Add();
+            }
+
+            decoderAAB = new Decoder_AAB();
+            decoderAPK = new Decoder_APK();
+
+            decoderAAB.Init(this);
+            decoderAPK.Init(this);
         }
 
-        private void ExecAabCheck()
+        private void DecodeFile()
         {
             if(!File.Exists(text_aab_path.Text))
             {
@@ -214,271 +260,39 @@ namespace aabViewer
                 return;
             }
 
+            isAAB = Path.GetExtension(text_aab_path.Text).ToLower().Contains("aab");
 
-            string error = "";
-            string filePath = text_aab_path.Text;
-            string cmd = string.Format("java -jar \"{0}\" dump manifest --bundle \"{1}\"", jarPath, filePath);
-            string xmlData = "";
+            decoder.SwitchUI(this);
 
-            LoadingForm.ShowLoading(this);
-
-            TaskScheduler ui = TaskScheduler.FromCurrentSynchronizationContext();
-            parseTask = Task.Run(() => {
-
-                LoadingForm.PerformStep("开始解析数据~~~");
-
-                xmlData = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + CmdTools.Exec(cmd, ref error);
-
-                manifestContent = xmlData;
-
-                LoadingForm.PerformStep("获取ICON ~~~");
-
-                using (ZipFile zip = ZipFile.Read(text_aab_path.Text))
-                {
-                    MemoryStream outputStream = new MemoryStream();
-                    ZipEntry e = zip["base/res/mipmap-xxxhdpi-v4/app_icon.png"];
-                    e.Extract(outputStream);
-
-                    Image img = Image.FromStream(outputStream);
-
-                    pictureBox1.Invoke(new Action(() => pictureBox1.BackgroundImage = img));
-                    pictureBox1.Invoke(new Action(() => pictureBox1.BackgroundImageLayout = ImageLayout.Stretch));
-
-                }
-
-                parseTask = null;
-            }).ContinueWith(m =>
-            {
-                LoadingForm.HideLoading();
-
-                if (error.Length > 0)
-                {
-                    WriteLog(error);
-                }
-
-                XmlDocument doc = new XmlDocument();
-                try
-                {
-                    doc.LoadXml(xmlData);
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.ToString());
-                }
-
-                XmlNamespaceManager nsp = new XmlNamespaceManager(doc.NameTable);
-                nsp.AddNamespace("android", "http://schemas.android.com/apk/res/android");
-
-
-                for (int i = 0; i < configNodes.Count; i++)
-                {
-                    ConfigNode tmp = configNodes[i];
-                    if (tmp.filter_name == "")
-                    {
-                        XmlNode t = doc.SelectSingleNode(tmp.path, nsp);
-                        string text = t != null ? t.Value : "不存在";
-
-                        if (text.StartsWith("@string/"))
-                        {
-                            var s_value = GetStringValue(text, filePath);
-                            this.dataGridView1.Rows[i].Cells[1].Value = s_value;
-                        }
-                        else
-                        {
-                            this.dataGridView1.Rows[i].Cells[1].Value = text;
-                        }
-                    }
-                    else
-                    {
-                        string text = "none";
-                        XmlNodeList nodes = doc.SelectNodes(tmp.path, nsp);
-                        foreach (XmlNode item in nodes)
-                        {
-                            string title = item.SelectSingleNode("@android:name", nsp).Value;
-                            if (title == tmp.filter_name)
-                            {
-                                text = item.SelectSingleNode("@android:value", nsp).Value;
-                            }
-                        }
-                        this.dataGridView1.Rows[i].Cells[1].Value = text;
-                    }
-                }
-
-                
-            }, ui);
-
-
-            needUpdateApks = true;
-
+            decoder.Decode(this);
 
         }
 
-        private string GetStringValue(string _key, string _abbPath)
-        {
-            string t_key = _key.Replace("@", "");
-            string _cmd_string_name = string.Format("java -jar \"{0}\" dump resources --bundle \"{1}\" --resource={2} --values true", jarPath,  _abbPath, t_key);
-            var ret = CmdTools.Exec(_cmd_string_name);
-
-            foreach (Match match in Regex.Matches(ret, "\"([^\"]*)\""))
-                ret = match.ToString();
-
-            return ret.Replace("\"", "");
-        }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Console.WriteLine(Environment.CurrentDirectory.ToString());
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.ShowDialog();
-            openFileDialog.Filter = "AAB文件(*.aab)|*.aab;";
+            openFileDialog.Filter = "*.aab|*.apk;";
             text_aab_path.Text = openFileDialog.FileName;
 
-            ExecAabCheck();
+            DecodeFile();
         }
 
         private void btn_install_Click(object sender, EventArgs e)
         {
-            if(installTask==null)
-            {
-                LoadingForm.ShowLoading(this);
-
-                TaskScheduler ui = TaskScheduler.FromCurrentSynchronizationContext();
-                installTask = Task.Run(()=> { 
-                    InstallApk(true);
-                    installTask = null;
-                }).ContinueWith(m =>
-                {
-                    LoadingForm.HideLoading();
-                }, ui);
-
-            }
+            decoder.Install(true, this);
         }
 
         private void btn_install_part_Click(object sender, EventArgs e)
         {
-            if (installTask == null)
-            {
-                LoadingForm.ShowLoading(this);
-
-                TaskScheduler ui = TaskScheduler.FromCurrentSynchronizationContext();
-                installTask = Task.Run(() => {
-                    InstallApk(false);
-                    installTask = null;
-                }).ContinueWith(m =>
-                {
-                    LoadingForm.HideLoading();
-                }, ui);
-            }
+            decoder.Install(false, this);
         }
 
-        #region ApkInstall
-        private void InstallApk(bool createForCnnectDevices)
-        {
-            //设置apks输出路径
-            string outPath = GetCurrentPath() + "Temp/";
-
-            if (!File.Exists(text_aab_path.Text))
-            {
-                MessageBox.Show("文件不存在!");
-                return;
-            }
-
-
-            if (!Directory.Exists(outPath))
-            {
-                Directory.CreateDirectory(outPath);
-            }
-
-
-            outPath += "temp.apks";
-            if (File.Exists(outPath) && needUpdateApks)
-            {
-                File.Delete(outPath);
-            }
-
-            // {0} aab路径 {1}输出路径 {2}keystroe路径 {3}秘钥密码 {4}秘钥别名 {5}秘钥别名密码 {6}配置文件路径
-            //string cmd = "java - jar bundletool-all-1.8.0.jar build - apks--bundle ={0} --output ={1} --ks ={2} --ks - pass = pass:{3} --ks - key - alias ={4} --key - pass = pass:{5} --device - spec ={6}";
-
-            string cmd = "";
-            string error = "";
-            string ret = "";
-            if (needUpdateApks)
-            {
-                LoadingForm.PerformStep("正在生成apks~~~~~");
-                cmd = create_install_cmd(outPath, createForCnnectDevices);
-
-                //执行指令
-                error = "";
-                ret = CmdTools.Exec(cmd, ref error);
-                Console.WriteLine(cmd);
-
-                if (!File.Exists(outPath))
-                {
-                    WriteLog("Create Error: " + error);
-                    WriteLog("Create Ret: " + ret);
-
-                    MessageBox.Show("生成失败!");
-                    return;
-                }
-                else
-                {
-                    if (ret.Length > 0) MessageBox.Show("Info:" + ret);
-                    if (error.Length > 0) MessageBox.Show("Info:" + error);
-                }
-
-                needUpdateApks = false;
-            }
-            
-
-            LoadingForm.PerformStep("开始进行安装~~~~~");
-
-            //安装指令
-            error = "";
-            cmd = string.Format("java -jar \"{0}\" install-apks --apks=\"{1}\"", jarPath, outPath);
-            ret = CmdTools.Exec(cmd, ref error);
-
-
-            if (ret.Length == 0)
-            {
-                MessageBox.Show("安装成功!");
-            }
-            else
-            {
-                WriteLog("Install Error: " + error);
-                WriteLog("Install Ret: " + ret);
-
-                MessageBox.Show("安装失败!");
-            }
-        }
-
-        private string create_install_cmd(string outPath, bool createForCnnectDevices=true)
-        {
-            string _key_path = text_key_path.Text;
-            string _alias_pass = text_pass.Text;
-            string _key_alias = text_alias.Text;
-            string _key_pass = text_key_pass.Text;
-
-            if (!File.Exists(_key_path))
-            {
-                _key_path = GetCurrentPath() + "Config/debug.keystore";
-                _alias_pass = "android";
-                _key_pass = "android";
-                _key_alias = "androiddebugkey";
-            }
-
-            {
-                //根据连接手机的设备创建apks的指令
-                string cmd = "java -jar \"{0}\" build-apks --bundle=\"{1}\" --output=\"{2}\" --ks=\"{3}\" --ks-pass=pass:{4} --ks-key-alias={5} --key-pass=pass:{6} {7}";                
-                //填充志林该参数
-                cmd = string.Format(cmd, jarPath, text_aab_path.Text, outPath, _key_path, _alias_pass, _key_alias, _key_pass, createForCnnectDevices?"--connected-device":"--mode=universal");
-                return cmd;
-            }
-        }
-        #endregion 
-
+     
         private void btn_base_hash_Click(object sender, EventArgs e)
         {
-            string openssl = GetCurrentPath() + "openssl.exe";
+            string openssl = WinformTools.GetCurrentPath() + "openssl.exe";
             openssl = "openssl";
             string cmd = "keytool -exportcert -alias {0} -storepass {1} -keypass {2} -keystore \"{3}\" | {4} sha1 -binary | {4} base64";            
             cmd = string.Format(cmd, text_alias.Text, text_pass.Text, text_key_pass.Text, text_key_path.Text, openssl);
@@ -525,13 +339,13 @@ namespace aabViewer
         private void Form1_DragDrop(object sender, DragEventArgs e)
         {
             string path = ((System.Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString();
-            
-            if(path.Contains(".aab"))
+            var pathExt = Path.GetExtension(path).ToLower();
+            if(pathExt.Contains(".aab")| pathExt.Contains(".apk"))
             {
                 text_aab_path.Text = path;
-                ExecAabCheck();
+                DecodeFile();
             }
-            else if (path.Contains(".jks") || path.Contains(".keystore"))
+            else if (pathExt.Contains(".jks") || pathExt.Contains(".keystore"))
             {
                 text_key_path.Text = path;
             }
@@ -545,28 +359,12 @@ namespace aabViewer
         }
 
         #region Tool Fun
-        public void WriteLog(string _txt)
-        {
-            Console.WriteLine(_txt);
-            File.AppendAllText(logPath, "\r\n" + GetTime() + _txt);
-        }
-
-        private string GetTime()
-        {
-            return System.DateTime.Now.ToString() + " ";
-        }
-
-        private string GetCurrentPath()
-        {
-            string str = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName.Replace("aabViewer.exe", "");
-            return str;
-        }
-
+        
 
 
         private bool CheckEnvironment(bool isForce = false)
         {
-            string doneFile = GetCurrentPath() + "Config/init.txt";
+            string doneFile = WinformTools.GetCurrentPath() + "Config/init.txt";
             if (File.Exists(doneFile) && !isForce)
             {
                 return true;
@@ -576,9 +374,9 @@ namespace aabViewer
             if (!WinformTools.GetJavaHome(out error))
             {
                 ret += "\r\n缺少Java环境";
-                WriteLog("Java：" + error);
+                WinformTools.WriteLog("Java：" + error);
             }
-            if (!File.Exists(jarPath))
+            if (!File.Exists(Define.jarPath))
             {
                 ret += "\r\n缺少 bundletool-all-1.8.0.jar";
             }
@@ -590,7 +388,7 @@ namespace aabViewer
             }
             else
             {
-                File.WriteAllText(GetCurrentPath() + "Config/init.txt", "Done");
+                File.WriteAllText(WinformTools.GetCurrentPath() + "Config/init.txt", "Done");
                 return true;
             }
         }
@@ -605,7 +403,7 @@ namespace aabViewer
         }
         private void 关于ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("AbbViewer " + verion);
+            MessageBox.Show("AbbViewer " + Define.verion);
         }
 
         private void 配置说明ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -634,13 +432,13 @@ namespace aabViewer
             string model = "";
             string sys_ver = "";
             TaskScheduler ui = TaskScheduler.FromCurrentSynchronizationContext();
-            installTask = Task.Run(() => {
+            PhoneInfoTask = Task.Run(() => {
 
                 brand = CmdTools.Exec("adb -d shell getprop ro.product.brand");
                 model = CmdTools.Exec("adb -d shell getprop ro.product.model");
                 sys_ver = CmdTools.Exec("adb shell getprop ro.build.version.release");
 
-                installTask = null;
+                PhoneInfoTask = null;
 
             }).ContinueWith(m =>
             {
@@ -765,66 +563,24 @@ namespace aabViewer
         private void button5_Click(object sender, EventArgs e)
         {
             ScrollTextBox sc = new ScrollTextBox();
-            sc.Show(manifestContent);
+            sc.Show(decoder.ManifestContent);
         }
 
         private void 查看LogToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WinformTools.OpenFile(GetCurrentPath() + "/log.txt");
+            WinformTools.OpenFile(WinformTools.GetCurrentPath() + "/log.txt");
         }
 
         private void 查看缓存目录ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            WinformTools.OpenFolder(Path.Combine(GetCurrentPath(), "Temp"));
+            WinformTools.OpenFolder(Path.Combine(WinformTools.GetCurrentPath(), "Temp"));
         }
-    }
 
-    public class ConfigNode
-    {
-        public string name;
-        public string path;
-        public string filter_name;
-    }
-
-    public class KeyNode
-    {
-        public string name;
-        public string path;
-        public string alias;
-        public string password;
-        public string alias_password;
-
-        public string Format()
+        private void button6_Click(object sender, EventArgs e)
         {
-            return $"{name}#{path}#{password}#{alias}#{alias_password}";
-        }
-
-        public KeyNode Init(string _data)
-        {
-            string[] arr = _data.Split(new char[] { '#' });
-            name = arr[0];
-            path = arr[1];
-            password = arr[2];
-            alias = arr[3];
-            alias_password = arr[4];
-            return this;
+            decoder.Run(this);
         }
     }
 
-    public class UsbMessage
-    {
-        public const int WM_DEVICECHANGE = 0x219;
-        public const int DBT_DEVICEARRIVAL = 0x8000;
-        public const int DBT_CONFIGCHANGECANCELED = 0x0019;
-        public const int DBT_CONFIGCHANGED = 0x0018;
-        public const int DBT_CUSTOMEVENT = 0x8006;
-        public const int DBT_DEVICEQUERYREMOVE = 0x8001;
-        public const int DBT_DEVICEQUERYREMOVEFAILED = 0x8002;
-        public const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
-        public const int DBT_DEVICEREMOVEPENDING = 0x8003;
-        public const int DBT_DEVICETYPESPECIFIC = 0x8005;
-        public const int DBT_DEVNODES_CHANGED = 0x0007;
-        public const int DBT_QUERYCHANGECONFIG = 0x0017;
-        public const int DBT_USERDEFINED = 0xFFFF;
-    }
+    
 }

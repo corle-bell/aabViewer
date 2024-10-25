@@ -74,8 +74,12 @@
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </Compile>
     <Compile Include="AndroidUtils.cs" />
-    <Compile Include="BrowserHelper.cs" />
-    <Compile Include="CmdTools.cs" />
+    <Compile Include="Utils\BrowserHelper.cs" />
+    <Compile Include="Utils\CmdTools.cs" />
+    <Compile Include="Decoder\Decoder.cs" />
+    <Compile Include="Decoder\Decoder_AAB.cs" />
+    <Compile Include="Decoder\Decoder_APK.cs" />
+    <Compile Include="Utils\Define.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,8 +106,8 @@
     <Compile Include="SignCreator.Designer.cs">
       <DependentUpon>SignCreator.cs</DependentUpon>
     </Compile>
-    <Compile Include="UsbMessage.cs" />
-    <Compile Include="WinformTools.cs" />
+    <Compile Include="Utils\UsbMessage.cs" />
+    <Compile Include="Utils\WinformTools.cs" />
     <EmbeddedResource Include="AboutBox1.resx">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </EmbeddedResource>
