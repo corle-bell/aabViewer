@@ -55,6 +55,9 @@
     <Reference Include="DotNetZip, Version=1.15.0.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetZip.1.15.0\lib\net40\DotNetZip.dll</HintPath>
     </Reference>
+    <Reference Include="LitJSON, Version=0.19.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LitJson.0.19.0\lib\net45\LitJSON.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -75,6 +78,7 @@
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </Compile>
     <Compile Include="AndroidUtils.cs" />
+    <Compile Include="Decoder\Decoder_XAPK.cs" />
     <Compile Include="Utils\BrowserHelper.cs" />
     <Compile Include="Utils\CmdTools.cs" />
     <Compile Include="Decoder\Decoder.cs" />

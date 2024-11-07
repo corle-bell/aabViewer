@@ -54,9 +54,13 @@ namespace aabViewer
 
         public override void Decode(Form1 view)
         {
+            DecodeByFile(view, view.FilePath);
+        }
 
+        public void DecodeByFile(Form1 view, string apkpath, Action callback=null)
+        {
             string error = "";
-            string filePath = view.FilePath;
+            string filePath = apkpath;
             string iconCmd = string.Format("dump badging \"{0}\"", filePath);
             string xmlCmd = string.Format("dump xmltree \"{0}\" AndroidManifest.xml", filePath);
             string xmlData = "";
@@ -106,7 +110,7 @@ namespace aabViewer
 
                 xmlData = CmdTools.ExecAppt(Define.aaptPath, xmlCmd, ref error);
 
-                
+
 
                 string[] lines = Regex.Split(xmlData, "\r\n|\n|\r");
                 AxmlLines.Clear();
@@ -123,7 +127,7 @@ namespace aabViewer
                 for (int i = 0; i < configNodes.Count; i++)
                 {
                     ConfigNode tmp = configNodes[i];
-                    
+
                     dataGridView1.Rows[i].Cells[0].Value = tmp.name;
                     dataGridView1.Rows[i].Cells[1].Value = GetValueString(tmp);
 
@@ -132,11 +136,13 @@ namespace aabViewer
                 PackageName = GetValueString("badging", "package: name=");
                 this.LauncherActivity = FindLauncherActivity();
 
+                callback?.Invoke();
             }, ui);
 
 
             view.needUpdateApks = true;
         }
+
         public override void Install(bool isRun, Form1 view)
         {
             if (installTask == null)

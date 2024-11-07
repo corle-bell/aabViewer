@@ -114,8 +114,12 @@ FacebookId#/manifest/application/meta-data#com.facebook.sdk.ApplicationId
 
 重构了代码结构
 
-
-
 ## v4.0.1
 
 修复了在分区根目录报错的问题
+
+
+
+## v4.0.2
+
+添加XAPK的解析器

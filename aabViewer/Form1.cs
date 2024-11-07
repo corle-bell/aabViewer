@@ -17,7 +17,13 @@ using System.Reflection;
 
 namespace aabViewer
 {
-    
+    public enum AFileType
+    {
+        APK,
+        AAB,
+        XAPK,
+        APKS
+    }
 
     public partial class Form1 : Form
     {
@@ -32,17 +38,29 @@ namespace aabViewer
 
         private Decoder decoderAAB;
         private Decoder decoderAPK;
+        private Decoder decoderXAPK;
 
-        private bool isAAB = true;
+        private AFileType fileType = AFileType.AAB;
         public Decoder decoder
         {
             get
             {
-                return isAAB ? decoderAAB : decoderAPK;
+                switch(fileType)
+                {
+                    case AFileType.AAB:
+                        return decoderAAB;
+                    case AFileType.APK:
+                        return decoderAPK;
+                    case AFileType.XAPK:
+                        return decoderXAPK;
+                    default:
+                        return decoderAPK;
+                }
             }
         }
 
         #region for decoder
+        public Decoder ApkDecoder => decoderAPK;
         public PictureBox IconImg => pictureBox1;
         public DataGridView DataView => dataGridView1;
 
@@ -246,9 +264,11 @@ namespace aabViewer
 
             decoderAAB = new Decoder_AAB();
             decoderAPK = new Decoder_APK();
+            decoderXAPK = new Decoder_XAPK();
 
             decoderAAB.Init(this);
             decoderAPK.Init(this);
+            decoderXAPK.Init(this);
         }
 
         private void DecodeFile()
@@ -259,7 +279,19 @@ namespace aabViewer
                 return;
             }
 
-            isAAB = Path.GetExtension(text_aab_path.Text).ToLower().Contains("aab");
+            string extName = Path.GetExtension(text_aab_path.Text).ToLower();
+            if(extName.Contains("aab"))
+            {
+                fileType = AFileType.AAB;
+            }
+            else if (extName.Contains("xapk"))
+            {
+                fileType = AFileType.XAPK;
+            }
+            else if (extName.Contains("apk"))
+            {
+                fileType = AFileType.APK;
+            }
 
             decoder.SwitchUI(this);
 
@@ -272,7 +304,6 @@ namespace aabViewer
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.ShowDialog();
-            openFileDialog.Filter = "*.aab|*.apk;";
             text_aab_path.Text = openFileDialog.FileName;
 
             DecodeFile();
@@ -339,7 +370,7 @@ namespace aabViewer
         {
             string path = ((System.Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString();
             var pathExt = Path.GetExtension(path).ToLower();
-            if(pathExt.Contains(".aab")| pathExt.Contains(".apk"))
+            if(pathExt.Contains(".aab") | pathExt.Contains(".apk") | pathExt.Contains(".xapk"))
             {
                 text_aab_path.Text = path;
                 DecodeFile();

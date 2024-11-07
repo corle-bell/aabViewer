@@ -138,6 +138,22 @@ namespace aabViewer
             }
         }
 
+        public static void DeleteFilesInDirectory(string directoryPath)
+        {
+            if (Directory.Exists(directoryPath))
+            {
+                foreach (string filePath in Directory.GetFiles(directoryPath))
+                {
+                    File.Delete(filePath);
+                }
+
+                foreach (string subdirectory in Directory.GetDirectories(directoryPath))
+                {
+                    DeleteFilesInDirectory(subdirectory);
+                }
+            }
+        }
+
         public static bool GetJavaHome(out string error)
         {
             bool isJava = false;
