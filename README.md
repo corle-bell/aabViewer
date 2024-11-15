@@ -118,8 +118,12 @@ FacebookId#/manifest/application/meta-data#com.facebook.sdk.ApplicationId
 
 修复了在分区根目录报错的问题
 
-
-
 ## v4.0.2
 
 添加XAPK的解析器
+
+
+
+## v4.0.3
+
+移除了DotNetZip,更改为.Net自带的压缩库。需要Framework4.5及以上。

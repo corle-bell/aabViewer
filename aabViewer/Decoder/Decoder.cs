@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
+using System.IO.Compression;
+using System.Drawing;
 
 namespace aabViewer
 {
@@ -33,6 +36,30 @@ namespace aabViewer
         public virtual void SwitchUI(Form1 view)
         {
 
+        }
+
+        public void SetIconFromZip(Form1 view, string filePath, string iconPath)
+        {
+            using (FileStream zipToOpen = new FileStream(filePath, FileMode.Open))
+            {
+                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Read))
+                {
+                    var zipArchiveEntry = archive.GetEntry(iconPath);
+
+                    if (zipArchiveEntry != null)
+                    {
+                        var outputStream = zipArchiveEntry.Open();
+
+                        Image img = Image.FromStream(outputStream);
+                        view.IconImg.Invoke(new Action(() => view.IconImg.BackgroundImage = img));
+                        view.IconImg.Invoke(new Action(() => view.IconImg.BackgroundImageLayout = ImageLayout.Stretch));
+                    }
+                    else
+                    {
+                        WinformTools.WriteLog($"Get Icon Fail {iconPath}");
+                    }
+                }
+            }
         }
 
         public virtual void Run(Form1 view)

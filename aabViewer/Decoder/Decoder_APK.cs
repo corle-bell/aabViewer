@@ -1,8 +1,8 @@
-﻿using Ionic.Zip;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -89,20 +89,8 @@ namespace aabViewer
 
                 LoadingForm.PerformStep("获取ICON ~~~");
 
-                using (ZipFile zip = ZipFile.Read(filePath))
-                {
-                    MemoryStream outputStream = new MemoryStream();
-                    zip.CaseSensitiveRetrieval = true;
-                    ZipEntry e = zip[iconPath];
-                    e.Extract(outputStream);
-
-                    Image img = Image.FromStream(outputStream);
-
-                    view.IconImg.Invoke(new Action(() => view.IconImg.BackgroundImage = img));
-                    view.IconImg.Invoke(new Action(() => view.IconImg.BackgroundImageLayout = ImageLayout.Stretch));
-
-                }
-
+                SetIconFromZip(view, filePath, iconPath);
+                
                 parseTask = null;
             }).ContinueWith(m =>
             {

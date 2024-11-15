@@ -10,7 +10,6 @@ using System.Windows.Forms;
 using System.Xml.XPath;
 using System.Xml;
 using System.IO;
-using Ionic.Zip;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using System.Reflection;

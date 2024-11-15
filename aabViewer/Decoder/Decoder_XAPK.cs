@@ -1,11 +1,11 @@
-﻿using Ionic.Zip;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
+using System.IO.Compression;
 
 namespace aabViewer
 {
@@ -50,14 +50,9 @@ namespace aabViewer
 
                 WinformTools.DeleteFilesInDirectory(CachePath);
 
-                using (ZipFile zip = ZipFile.Read(filePath))
-                {
-                    foreach (ZipEntry entry in zip)
-                    {
-                        entry.Extract(CachePath, ExtractExistingFileAction.OverwriteSilently);//解压文件，如果已存在就覆盖
-                    }
-                }
 
+                ZipFile.ExtractToDirectory(filePath, CachePath);
+        
                 ParseManifest();
 
 
