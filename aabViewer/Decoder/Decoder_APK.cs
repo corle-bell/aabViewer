@@ -160,7 +160,7 @@ namespace aabViewer
 
         private void Install(Form1 view, bool isRun)
         {
-            var cmd = $"adb install \"{view.FilePath}\"";
+            var cmd = $"adb install -r \"{view.FilePath}\"";
             var error = "";
             var result = CmdTools.Exec(cmd, ref error);
 
