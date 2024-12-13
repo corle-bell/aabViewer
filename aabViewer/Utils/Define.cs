@@ -62,7 +62,7 @@ namespace aabViewer
         public static string jarPath;
         public static string aaptPath;
         public static string keyConfigPath = "";
-        public const string verion = "v4.0.4";
+        public const string verion = "v4.0.5";
 
         public const string LogFile = "log.txt";
         public const string BundleToolFile = "bundletool-all-1.8.0.jar";

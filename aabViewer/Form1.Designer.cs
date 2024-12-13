@@ -56,6 +56,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.panel14 = new System.Windows.Forms.Panel();
+            this.button6 = new System.Windows.Forms.Button();
             this.text_aab_path = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.btn_install_part = new System.Windows.Forms.Button();
@@ -80,7 +81,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.button5 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.button6 = new System.Windows.Forms.Button();
+            this.清理进程ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanel2.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel10.SuspendLayout();
@@ -375,6 +376,16 @@
             this.panel14.Size = new System.Drawing.Size(838, 48);
             this.panel14.TabIndex = 7;
             // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(773, 8);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(60, 31);
+            this.button6.TabIndex = 18;
+            this.button6.Text = "运行";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
             // text_aab_path
             // 
             this.text_aab_path.Location = new System.Drawing.Point(73, 14);
@@ -473,7 +484,8 @@
             this.保存Key配置ToolStripMenuItem,
             this.清理缓存ToolStripMenuItem,
             this.查看LogToolStripMenuItem,
-            this.查看缓存目录ToolStripMenuItem});
+            this.查看缓存目录ToolStripMenuItem,
+            this.清理进程ToolStripMenuItem});
             this.菜单ToolStripMenuItem.Name = "菜单ToolStripMenuItem";
             this.菜单ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.菜单ToolStripMenuItem.Text = "菜单";
@@ -481,49 +493,49 @@
             // 环境监测ToolStripMenuItem
             // 
             this.环境监测ToolStripMenuItem.Name = "环境监测ToolStripMenuItem";
-            this.环境监测ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.环境监测ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.环境监测ToolStripMenuItem.Text = "环境监测";
             this.环境监测ToolStripMenuItem.Click += new System.EventHandler(this.环境监测ToolStripMenuItem_Click);
             // 
             // 配置说明ToolStripMenuItem
             // 
             this.配置说明ToolStripMenuItem.Name = "配置说明ToolStripMenuItem";
-            this.配置说明ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.配置说明ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.配置说明ToolStripMenuItem.Text = "配置说明";
             this.配置说明ToolStripMenuItem.Click += new System.EventHandler(this.配置说明ToolStripMenuItem_Click);
             // 
             // 连接手机ToolStripMenuItem
             // 
             this.连接手机ToolStripMenuItem.Name = "连接手机ToolStripMenuItem";
-            this.连接手机ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.连接手机ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.连接手机ToolStripMenuItem.Text = "连接手机";
             this.连接手机ToolStripMenuItem.Click += new System.EventHandler(this.连接手机ToolStripMenuItem_Click);
             // 
             // 保存Key配置ToolStripMenuItem
             // 
             this.保存Key配置ToolStripMenuItem.Name = "保存Key配置ToolStripMenuItem";
-            this.保存Key配置ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.保存Key配置ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.保存Key配置ToolStripMenuItem.Text = "保存Key配置";
             this.保存Key配置ToolStripMenuItem.Click += new System.EventHandler(this.保存Key配置ToolStripMenuItem_Click);
             // 
             // 清理缓存ToolStripMenuItem
             // 
             this.清理缓存ToolStripMenuItem.Name = "清理缓存ToolStripMenuItem";
-            this.清理缓存ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.清理缓存ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.清理缓存ToolStripMenuItem.Text = "清理缓存";
             this.清理缓存ToolStripMenuItem.Click += new System.EventHandler(this.清理缓存ToolStripMenuItem_Click);
             // 
             // 查看LogToolStripMenuItem
             // 
             this.查看LogToolStripMenuItem.Name = "查看LogToolStripMenuItem";
-            this.查看LogToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.查看LogToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.查看LogToolStripMenuItem.Text = "查看Log";
             this.查看LogToolStripMenuItem.Click += new System.EventHandler(this.查看LogToolStripMenuItem_Click);
             // 
             // 查看缓存目录ToolStripMenuItem
             // 
             this.查看缓存目录ToolStripMenuItem.Name = "查看缓存目录ToolStripMenuItem";
-            this.查看缓存目录ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.查看缓存目录ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.查看缓存目录ToolStripMenuItem.Text = "查看缓存目录";
             this.查看缓存目录ToolStripMenuItem.Click += new System.EventHandler(this.查看缓存目录ToolStripMenuItem_Click);
             // 
@@ -577,15 +589,12 @@
             this.pictureBox1.TabIndex = 9;
             this.pictureBox1.TabStop = false;
             // 
-            // button6
+            // 清理进程ToolStripMenuItem
             // 
-            this.button6.Location = new System.Drawing.Point(773, 8);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(60, 31);
-            this.button6.TabIndex = 18;
-            this.button6.Text = "运行";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
+            this.清理进程ToolStripMenuItem.Name = "清理进程ToolStripMenuItem";
+            this.清理进程ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.清理进程ToolStripMenuItem.Text = "清理进程";
+            this.清理进程ToolStripMenuItem.Click += new System.EventHandler(this.清理进程ToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -684,6 +693,7 @@
         private System.Windows.Forms.ToolStripMenuItem 查看LogToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 查看缓存目录ToolStripMenuItem;
         private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.ToolStripMenuItem 清理进程ToolStripMenuItem;
     }
 }
 

@@ -73,9 +73,9 @@ namespace aabViewer
 
                     LoadingForm.PerformStep("正在启动应用!");
 
-                    var cmd = $"adb shell am start {PackageName}/{LauncherActivity}";
+                    var cmd = $"shell am start {PackageName}/{LauncherActivity}";
                     var error = "";
-                    var result = CmdTools.Exec(cmd, ref error);
+                    var result = CmdTools.ExecAdb(cmd, ref error);
 
                     MessageBox.Show(result);
 

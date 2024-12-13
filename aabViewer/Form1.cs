@@ -145,6 +145,12 @@ namespace aabViewer
             }
         }
 
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            CmdTools.Clean();
+        }
+
         #region KeyConfigs
         private void CreateDefaultKeys()
         {
@@ -463,10 +469,17 @@ namespace aabViewer
             TaskScheduler ui = TaskScheduler.FromCurrentSynchronizationContext();
             PhoneInfoTask = Task.Run(() => {
 
-                brand = CmdTools.Exec("adb -d shell getprop ro.product.brand");
-                model = CmdTools.Exec("adb -d shell getprop ro.product.model");
-                sys_ver = CmdTools.Exec("adb shell getprop ro.build.version.release");
-
+                string error = "";
+                brand = CmdTools.ExecAdb("-d shell getprop ro.product.brand", ref error);
+                if(!string.IsNullOrEmpty(brand))
+                {
+                    model = CmdTools.ExecAdb("-d shell getprop ro.product.model", ref error);
+                }
+                if (!string.IsNullOrEmpty(model))
+                {
+                    sys_ver = CmdTools.ExecAdb("shell getprop ro.build.version.release", ref error);
+                }
+                
                 PhoneInfoTask = null;
 
             }).ContinueWith(m =>
@@ -608,6 +621,11 @@ namespace aabViewer
         private void button6_Click(object sender, EventArgs e)
         {
             decoder.Run(this);
+        }
+
+        private void 清理进程ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CmdTools.Clean();
         }
     }
 

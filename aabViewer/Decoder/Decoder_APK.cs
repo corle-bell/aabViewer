@@ -137,18 +137,19 @@ namespace aabViewer
             {
                 LoadingForm.ShowLoading(view);
 
+                bool _isRun = false;
                 TaskScheduler ui = TaskScheduler.FromCurrentSynchronizationContext();
                 installTask = Task.Run(() => {
 
                     LoadingForm.PerformStep("正在安装!");
 
-                    Install(view, isRun);
+                    _isRun = Install(view, isRun);
                     installTask = null;
                 }).ContinueWith(m =>
                 {
                     LoadingForm.HideLoading();
 
-                    if(isRun)
+                    if(_isRun)
                     {
                         Run(view);
                     }
@@ -158,11 +159,11 @@ namespace aabViewer
            
         }
 
-        private void Install(Form1 view, bool isRun)
+        private bool Install(Form1 view, bool isRun)
         {
-            var cmd = $"adb install -r \"{view.FilePath}\"";
+            var cmd = $"install -r \"{view.FilePath}\"";
             var error = "";
-            var result = CmdTools.Exec(cmd, ref error);
+            var result = CmdTools.ExecAdb(cmd, ref error);
 
             if(result.Contains("Success"))
             {
@@ -170,11 +171,13 @@ namespace aabViewer
                 {
                     MessageBox.Show("安装成功!");
                 }
+                return isRun;
             }
             else
             {
                 MessageBox.Show(result);
             }
+            return false;
         }
 
         private string FindLauncherActivity()
