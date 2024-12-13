@@ -104,14 +104,10 @@ FacebookId#/manifest/application/meta-data#com.facebook.sdk.ApplicationId
 
 ## v4.0.0
 
-增加了查看Apk的功能 
-
-增加了直接运行应用的功能
-
-修改了界面布局 
-
-修改了图标 
-
+增加了查看Apk的功能  
+增加了直接运行应用的功能  
+修改了界面布局  
+修改了图标  
 重构了代码结构
 
 ## v4.0.1
@@ -124,16 +120,18 @@ FacebookId#/manifest/application/meta-data#com.facebook.sdk.ApplicationId
 
 ## v4.0.3
 
-移除了DotNetZip,更改为.Net自带的压缩库。需要Framework4.5及以上。
+移除了DotNetZip,更改为.Net自带的压缩库  
+
+
+
+需要Framework4.5及以上。
 
 ## v4.0.4
 
 修复了某些机型无法覆盖安装的问题。
 
-
-
 ## v4.0.5
 
-adb改为直接调用
-优化安装并运行的流程
+adb改为直接调用  
+优化安装并运行的流程  
 增加清除进程功能,清理卡住的adb进程
