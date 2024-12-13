@@ -129,3 +129,11 @@ FacebookId#/manifest/application/meta-data#com.facebook.sdk.ApplicationId
 ## v4.0.4
 
 修复了某些机型无法覆盖安装的问题。
+
+
+
+## v4.0.5
+
+adb改为直接调用
+优化安装并运行的流程
+增加清除进程功能,清理卡住的adb进程
