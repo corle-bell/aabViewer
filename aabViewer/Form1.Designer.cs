@@ -76,12 +76,16 @@
             this.清理缓存ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.查看LogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.查看缓存目录ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.清理进程ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.打开LogcatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.panel1 = new System.Windows.Forms.Panel();
             this.button5 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.清理进程ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fireBaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.开启调试ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.关闭调试ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanel2.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel10.SuspendLayout();
@@ -424,7 +428,6 @@
             this.value});
             this.dataGridView1.Location = new System.Drawing.Point(12, 63);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowTemplate.Height = 23;
             this.dataGridView1.Size = new System.Drawing.Size(838, 340);
             this.dataGridView1.TabIndex = 8;
             // 
@@ -485,7 +488,8 @@
             this.清理缓存ToolStripMenuItem,
             this.查看LogToolStripMenuItem,
             this.查看缓存目录ToolStripMenuItem,
-            this.清理进程ToolStripMenuItem});
+            this.清理进程ToolStripMenuItem,
+            this.打开LogcatToolStripMenuItem});
             this.菜单ToolStripMenuItem.Name = "菜单ToolStripMenuItem";
             this.菜单ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.菜单ToolStripMenuItem.Text = "菜单";
@@ -539,6 +543,20 @@
             this.查看缓存目录ToolStripMenuItem.Text = "查看缓存目录";
             this.查看缓存目录ToolStripMenuItem.Click += new System.EventHandler(this.查看缓存目录ToolStripMenuItem_Click);
             // 
+            // 清理进程ToolStripMenuItem
+            // 
+            this.清理进程ToolStripMenuItem.Name = "清理进程ToolStripMenuItem";
+            this.清理进程ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.清理进程ToolStripMenuItem.Text = "清理进程";
+            this.清理进程ToolStripMenuItem.Click += new System.EventHandler(this.清理进程ToolStripMenuItem_Click);
+            // 
+            // 打开LogcatToolStripMenuItem
+            // 
+            this.打开LogcatToolStripMenuItem.Name = "打开LogcatToolStripMenuItem";
+            this.打开LogcatToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.打开LogcatToolStripMenuItem.Text = "打开Logcat";
+            this.打开LogcatToolStripMenuItem.Click += new System.EventHandler(this.打开LogcatToolStripMenuItem_Click);
+            // 
             // 关于ToolStripMenuItem
             // 
             this.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem";
@@ -550,6 +568,7 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.菜单ToolStripMenuItem,
+            this.fireBaseToolStripMenuItem,
             this.关于ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -589,12 +608,28 @@
             this.pictureBox1.TabIndex = 9;
             this.pictureBox1.TabStop = false;
             // 
-            // 清理进程ToolStripMenuItem
+            // fireBaseToolStripMenuItem
             // 
-            this.清理进程ToolStripMenuItem.Name = "清理进程ToolStripMenuItem";
-            this.清理进程ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.清理进程ToolStripMenuItem.Text = "清理进程";
-            this.清理进程ToolStripMenuItem.Click += new System.EventHandler(this.清理进程ToolStripMenuItem_Click);
+            this.fireBaseToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.开启调试ToolStripMenuItem,
+            this.关闭调试ToolStripMenuItem});
+            this.fireBaseToolStripMenuItem.Name = "fireBaseToolStripMenuItem";
+            this.fireBaseToolStripMenuItem.Size = new System.Drawing.Size(69, 21);
+            this.fireBaseToolStripMenuItem.Text = "FireBase";
+            // 
+            // 开启调试ToolStripMenuItem
+            // 
+            this.开启调试ToolStripMenuItem.Name = "开启调试ToolStripMenuItem";
+            this.开启调试ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.开启调试ToolStripMenuItem.Text = "开启调试";
+            this.开启调试ToolStripMenuItem.Click += new System.EventHandler(this.开启调试ToolStripMenuItem_Click);
+            // 
+            // 关闭调试ToolStripMenuItem
+            // 
+            this.关闭调试ToolStripMenuItem.Name = "关闭调试ToolStripMenuItem";
+            this.关闭调试ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.关闭调试ToolStripMenuItem.Text = "关闭调试";
+            this.关闭调试ToolStripMenuItem.Click += new System.EventHandler(this.关闭调试ToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -669,13 +704,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn key;
         private System.Windows.Forms.DataGridViewTextBoxColumn value;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox text_model;
         private System.Windows.Forms.Label label_status;
         private System.Windows.Forms.TextBox text_version;
         private System.Windows.Forms.ToolStripMenuItem 菜单ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 环境监测ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 配置说明ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 连接手机ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 关于ToolStripMenuItem;
@@ -694,6 +727,12 @@
         private System.Windows.Forms.ToolStripMenuItem 查看缓存目录ToolStripMenuItem;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.ToolStripMenuItem 清理进程ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 环境监测ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 打开LogcatToolStripMenuItem;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.ToolStripMenuItem fireBaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 开启调试ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 关闭调试ToolStripMenuItem;
     }
 }
 

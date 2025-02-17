@@ -40,6 +40,8 @@ namespace aabViewer
         private Decoder decoderXAPK;
 
         private AFileType fileType = AFileType.AAB;
+
+        public AndroidLogViewer.MainForm LogcatForm;
         public Decoder decoder
         {
             get
@@ -149,6 +151,11 @@ namespace aabViewer
         {
             base.OnClosing(e);
             CmdTools.Clean();
+
+            if(LogcatForm!=null)
+            {
+                LogcatForm.Close();
+            }
         }
 
         #region KeyConfigs
@@ -626,6 +633,48 @@ namespace aabViewer
         private void 清理进程ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CmdTools.Clean();
+        }
+
+        private void 打开LogcatToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(LogcatForm!=null)
+            {
+                LogcatForm.Focus();
+                return;
+            }
+
+            LogcatForm = new AndroidLogViewer.MainForm();
+            LogcatForm.StartPosition = FormStartPosition.CenterScreen;
+            LogcatForm.Show();
+            LogcatForm.Root = this;
+        }
+
+        private void 开启调试ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string error = "";
+            var ret = CmdTools.ExecAdb($"shell setprop debug.firebase.analytics.app {decoder.PackageName}", ref error);
+            if (string.IsNullOrEmpty(error))
+            {
+                MessageBox.Show(ret);
+            }
+            else
+            {
+                MessageBox.Show(error);
+            }
+        }
+
+        private void 关闭调试ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string error = "";
+            var ret = CmdTools.ExecAdb("shell setprop debug.firebase.analytics.app .none.", ref error);
+            if (string.IsNullOrEmpty(error))
+            {
+                MessageBox.Show(ret);
+            }
+            else
+            {
+                MessageBox.Show(error);
+            }
         }
     }
 

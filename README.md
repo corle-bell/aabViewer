@@ -133,3 +133,10 @@ FacebookId#/manifest/application/meta-data#com.facebook.sdk.ApplicationId
 adb改为直接调用  
 优化安装并运行的流程  
 增加清除进程功能,清理卡住的adb进程
+
+
+
+## v5.0.0
+
+增加Logcat功能  
+增加Firebase的调试开启  

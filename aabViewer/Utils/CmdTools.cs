@@ -146,7 +146,7 @@ namespace aabViewer
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.Arguments = _text;//“/C”表示执行完命令后马上退出 
             ProgressList.Add(p);
-            p.Start();//启动程序  
+            p.Start();//启动程序 
 
             string sOutput = p.StandardOutput.ReadToEnd();
             if (_error != null)
