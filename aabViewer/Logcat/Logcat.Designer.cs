@@ -1,6 +1,6 @@
 ﻿using aabViewer.Logcat;
 
-namespace AndroidLogViewer
+namespace aabViewer.Logcat
 {
     partial class MainForm
     {
@@ -31,8 +31,8 @@ namespace AndroidLogViewer
         private void InitializeComponent()
         {
             this.buttonStart = new System.Windows.Forms.Button();
-            this.textBoxProcessFilter = new System.Windows.Forms.TextBox();
-            this.textBoxStringFilter = new System.Windows.Forms.TextBox();
+            this.tagFilterFilter = new DelayTextBox();
+            this.textBoxStringFilter = new DelayTextBox();
             this.comboBoxTypeFilter = new System.Windows.Forms.ComboBox();
             this.textBoxFullLog = new System.Windows.Forms.TextBox();
             this.buttonSaveSelected = new System.Windows.Forms.Button();
@@ -54,12 +54,12 @@ namespace AndroidLogViewer
             this.buttonStart.UseVisualStyleBackColor = true;
             this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
             // 
-            // textBoxProcessFilter
+            // tagFilterFilter
             // 
-            this.textBoxProcessFilter.Location = new System.Drawing.Point(97, 12);
-            this.textBoxProcessFilter.Name = "textBoxProcessFilter";
-            this.textBoxProcessFilter.Size = new System.Drawing.Size(127, 21);
-            this.textBoxProcessFilter.TabIndex = 1;
+            this.tagFilterFilter.Location = new System.Drawing.Point(97, 12);
+            this.tagFilterFilter.Name = "tagFilterFilter";
+            this.tagFilterFilter.Size = new System.Drawing.Size(127, 21);
+            this.tagFilterFilter.TabIndex = 1;
             // 
             // textBoxStringFilter
             // 
@@ -161,8 +161,6 @@ namespace AndroidLogViewer
             this.listBoxLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listBoxLogs.FormattingEnabled = true;
-            this.listBoxLogs.ItemHeight = 12;
             this.listBoxLogs.Location = new System.Drawing.Point(12, 41);
             this.listBoxLogs.Name = "listBoxLogs";
             this.listBoxLogs.Size = new System.Drawing.Size(816, 268);
@@ -181,7 +179,7 @@ namespace AndroidLogViewer
             this.Controls.Add(this.listBoxLogs);
             this.Controls.Add(this.comboBoxTypeFilter);
             this.Controls.Add(this.textBoxStringFilter);
-            this.Controls.Add(this.textBoxProcessFilter);
+            this.Controls.Add(this.tagFilterFilter);
             this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.buttonClearLogs);
             this.Controls.Add(this.comboBoxProcess);
@@ -198,8 +196,8 @@ namespace AndroidLogViewer
         private System.Windows.Forms.ComboBox comboBoxProcess;
         private System.Windows.Forms.Button buttonClearLogs;
         private System.Windows.Forms.Button buttonStart;
-        private System.Windows.Forms.TextBox textBoxProcessFilter;
-        private System.Windows.Forms.TextBox textBoxStringFilter;
+        private DelayTextBox tagFilterFilter;
+        private DelayTextBox textBoxStringFilter;
         private System.Windows.Forms.ComboBox comboBoxTypeFilter;
         private DoubleBufferedListBox listBoxLogs;
         private System.Windows.Forms.TextBox textBoxFullLog;

@@ -16,7 +16,15 @@ namespace aabViewer
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1(args));
+
+            if(args.Length>0 && args[0].Equals("Logcat"))
+            {
+                Application.Run(new aabViewer.Logcat.MainForm());
+            }
+            else
+            {
+                Application.Run(new Form1(args));
+            }
         }
     }
 }

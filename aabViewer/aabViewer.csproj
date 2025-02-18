@@ -78,6 +78,9 @@
     </Compile>
     <Compile Include="AndroidUtils.cs" />
     <Compile Include="Decoder\Decoder_XAPK.cs" />
+    <Compile Include="Logcat\DelayTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Logcat\DoubleBufferedListBox.cs">
       <SubType>Component</SubType>
     </Compile>

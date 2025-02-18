@@ -41,7 +41,7 @@ namespace aabViewer
 
         private AFileType fileType = AFileType.AAB;
 
-        public AndroidLogViewer.MainForm LogcatForm;
+        public aabViewer.Logcat.MainForm LogcatForm;
         public Decoder decoder
         {
             get
@@ -643,7 +643,7 @@ namespace aabViewer
                 return;
             }
 
-            LogcatForm = new AndroidLogViewer.MainForm();
+            LogcatForm = new aabViewer.Logcat.MainForm();
             LogcatForm.StartPosition = FormStartPosition.CenterScreen;
             LogcatForm.Show();
             LogcatForm.Root = this;

@@ -9,15 +9,15 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace AndroidLogViewer
+namespace aabViewer.Logcat
 {
     public partial class MainForm : Form
     {
         private Process adbProcess;
         private bool isReading = false;
-        private List<string> allLogs = new List<string>();
+        private List<LogInfo> allLogs = new List<LogInfo>();
         private Dictionary<int, string> processList = new Dictionary<int, string>();
-        private List<string> pendingLogs = new List<string>();
+        private List<LogInfo> pendingLogs = new List<LogInfo>();
         private System.Timers.Timer batchUpdateTimer;
 
         public Form1 Root;
@@ -25,17 +25,15 @@ namespace AndroidLogViewer
         {
             InitializeComponent();
             InitializeAdbProcess();
-            listBoxLogs.DrawMode = DrawMode.OwnerDrawFixed;
-            //listBoxLogs.DrawItem += ListBoxLogs_DrawItem;
 
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
 
-            this.textBoxProcessFilter.TextChanged += new System.EventHandler(this.FilterTextBox_TextChanged);
-            this.textBoxStringFilter.TextChanged += new System.EventHandler(this.FilterTextBox_TextChanged);
+            this.tagFilterFilter.DelayTextChange += new EventHandler(this.FilterTextBox_TextChanged);
+            this.textBoxStringFilter.DelayTextChange += new EventHandler(this.FilterTextBox_TextChanged);
             this.comboBoxTypeFilter.SelectedIndexChanged += new System.EventHandler(this.FilterComboBox_SelectedIndexChanged);
 
 
-            this.textBoxProcessFilter.SetWatermark("进程筛选");
+            this.tagFilterFilter.SetWatermark("TAG筛选");
             this.textBoxStringFilter.SetWatermark("文本筛选");
 
             LoadProcessList();
@@ -43,7 +41,7 @@ namespace AndroidLogViewer
             this.checkBox1.Checked = true;
 
             // 初始化定时器，用于批量更新 ListBox
-            batchUpdateTimer = new System.Timers.Timer(350); // 每 350 毫秒更新一次
+            batchUpdateTimer = new System.Timers.Timer(300);
             batchUpdateTimer.Elapsed += BatchUpdateTimer_Elapsed;
             batchUpdateTimer.Start();
         }
@@ -58,15 +56,13 @@ namespace AndroidLogViewer
                     {
                         listBoxLogs.BeginUpdate();
 
-                        foreach (string log in pendingLogs)
+                        foreach (var log in pendingLogs)
                         {
-                            listBoxLogs.Items.Add(log);
+                            listBoxLogs.AddLog(log);
                         }
 
-                        if (this.checkBox1.Checked)
-                        {
-                            listBoxLogs.TopIndex = listBoxLogs.Items.Count - 1;
-                        }
+                        listBoxLogs.EnsureVisibleLast();
+
                         listBoxLogs.EndUpdate();
                         pendingLogs.Clear();
 
@@ -92,7 +88,10 @@ namespace AndroidLogViewer
                 }
             }
 
-            Root.LogcatForm = null;
+            if(Root!=null)
+            {
+                Root.LogcatForm = null;
+            }
             batchUpdateTimer.Stop();
         }
 
@@ -112,35 +111,36 @@ namespace AndroidLogViewer
         {
             if (!string.IsNullOrEmpty(e.Data))
             {
-                if (isReading && FilterLog(e.Data))
+                var log = LogcatTools.ParseLogLine(e.Data);
+                if (isReading && FilterLog(log))
                 {
                     lock (pendingLogs)
                     {
-                        pendingLogs.Add(e.Data);
-                        allLogs.Add(e.Data);
+                        pendingLogs.Add(log);
+                        allLogs.Add(log);
                     }
                 }
             }
         }
 
-        private bool FilterLog(string log)
+        private bool FilterLog(LogInfo log)
         {
-            string processFilter = "";
+            string tagFilter = "";
             string stringFilter = "";
             string typeFilter = "";
             string pidFilter = "";
 
             // 获取进程筛选条件
-            if (textBoxProcessFilter.InvokeRequired)
+            if (tagFilterFilter.InvokeRequired)
             {
-                textBoxProcessFilter.Invoke((MethodInvoker)delegate
+                tagFilterFilter.Invoke((MethodInvoker)delegate
                 {
-                    processFilter = textBoxProcessFilter.Text.Trim();
+                    tagFilter = tagFilterFilter.Text.Trim();
                 });
             }
             else
             {
-                processFilter = textBoxProcessFilter.Text.Trim();
+                tagFilter = tagFilterFilter.Text.Trim();
             }
 
             // 获取字符串筛选条件
@@ -182,29 +182,29 @@ namespace AndroidLogViewer
                 pidFilter = comboBoxProcess.SelectedItem?.ToString();
             }
 
-            if (!string.IsNullOrEmpty(processFilter) && !log.Contains(processFilter))
+            if (!string.IsNullOrEmpty(tagFilter) && !log.Tag.Contains(tagFilter))
             {
                 return false;
             }
 
-            if (!string.IsNullOrEmpty(stringFilter) && !log.Contains(stringFilter))
+            if (!string.IsNullOrEmpty(stringFilter) && !log.Message.Contains(stringFilter))
             {
                 return false;
             }
 
             if (!string.IsNullOrEmpty(typeFilter))
             {
-                string logType = LogcatTools.GetLogType(log);
+                string logType = log.LogLevel;
                 if (logType != typeFilter)
                 {
                     return false;
                 }
             }
 
-            if (!string.IsNullOrEmpty(pidFilter))
+            if (!string.IsNullOrEmpty(pidFilter) && !string.IsNullOrEmpty(log.PId))
             {
                 int pid = int.Parse(pidFilter.Split('|')[0]);
-                if (!LogcatTools.GetPid(log).Equals(pid.ToString()))
+                if (!log.PId.Equals(pid.ToString()))
                 {
                     return false;
                 }
@@ -277,6 +277,11 @@ namespace AndroidLogViewer
             e.DrawFocusRectangle();
         }
 
+        public void FilterByTag(string _tag)
+        {
+            this.tagFilterFilter.Text = _tag;
+            ApplyFilter();
+        }
         
         private void FilterTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -290,30 +295,39 @@ namespace AndroidLogViewer
 
         private void ApplyFilter()
         {
-            listBoxLogs.Items.Clear();
-            foreach (string log in allLogs)
+            listBoxLogs.SuspendLayout();
+            listBoxLogs.BeginUpdate();
+
+            List<LogInfo> filterLogs = new List<LogInfo>();
+            foreach (var log in allLogs)
             {
                 if (FilterLog(log))
                 {
-                    listBoxLogs.Items.Add(log);
+                    filterLogs.Add(log);                    
                 }
             }
+
+            listBoxLogs.UpdateLogs(filterLogs);
+
+            listBoxLogs.EndUpdate();
+            listBoxLogs.ResumeLayout();
         }
 
         private void listBoxLogs_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listBoxLogs.SelectedIndex >= 0)
+            if (listBoxLogs.SelectedItems.Count == 1)
             {
-                string selectedLog = listBoxLogs.SelectedItem.ToString();
+                var t = listBoxLogs.SelectedItems[0];
+                string selectedLog = t.SubItems[t.SubItems.Count- 1].Text;
                 textBoxFullLog.Text = selectedLog;
             }
         }
 
         private void buttonSaveSelected_Click(object sender, EventArgs e)
         {
-            if (listBoxLogs.SelectedIndex >= 0)
+            if (listBoxLogs.SelectedItems.Count >= 0)
             {
-                string selectedLog = listBoxLogs.SelectedItem.ToString();
+                string selectedLog = listBoxLogs.SelectToString();
                 SaveLogToFile(selectedLog);
             }
         }
