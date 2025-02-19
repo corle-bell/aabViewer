@@ -5,6 +5,7 @@
 - v2.3之后的包中移除了谷歌的库，可以在这里[下载](https://github.com/google/bundletool/releases)
 - 如果想了解build-tools具体的使用可以点击[这里](https://developer.android.com/studio/command-line/bundletool)
 - 配置文件中的xml节点的配置是xpath语法，如果想了解更多可以点击[这里 ](https://www.w3school.com.cn/xpath/xpath_syntax.asp)
+- 在快捷方式的选项卡里的目标里加入参数 Logcat可以直接启动Logcat页面
 
 ## v1.0
 
@@ -143,8 +144,6 @@ adb改为直接调用
 
 优化Logcat功能  
 通过参数Logcat调用可以直接 调起Logcat页面
-
-
 
 ## v5.0.2
 
