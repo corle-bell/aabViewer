@@ -139,9 +139,13 @@ adb改为直接调用
 增加Logcat功能  
 增加Firebase的调试开启  
 
-
-
 ## v5.0.1
 
 优化Logcat功能  
 通过参数Logcat调用可以直接 调起Logcat页面
+
+
+
+## v5.0.2
+
+优化log展示的列表，使用了ListView的虚拟化。解决了筛选后卡顿的问题。  

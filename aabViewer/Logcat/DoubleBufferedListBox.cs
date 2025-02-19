@@ -8,13 +8,12 @@ using System.Windows.Forms;
 
 namespace aabViewer.Logcat
 {
-
     public class DoubleBufferedListBox : ListView
     {
-        public int TopIndex;
-
         private ContextMenuStrip contextMenu;
         private ListViewItem contextMenuItem;
+        private List<LogInfo> logInfos = new List<LogInfo>();
+
         public DoubleBufferedListBox()
         {
             View = View.Details;
@@ -36,13 +35,37 @@ namespace aabViewer.Logcat
             // 更新样式
             this.UpdateStyles();
 
+            // 启用虚拟模式
+            this.VirtualMode = true;
+            this.RetrieveVirtualItem += DoubleBufferedListView_RetrieveVirtualItem;
+            this.CacheVirtualItems += DoubleBufferedListView_CacheVirtualItems;
 
             contextMenu = new ContextMenuStrip();
             ToolStripMenuItem menuItem = new ToolStripMenuItem("筛选此TAG");
             menuItem.Click += MenuItem_Click;
             contextMenu.Items.Add(menuItem);
             MouseDown += ListView1_MouseDown;
+        }
 
+        private void DoubleBufferedListView_CacheVirtualItems(object sender, CacheVirtualItemsEventArgs e)
+        {
+            // 缓存虚拟项
+        }
+
+        private void DoubleBufferedListView_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
+        {
+            if (e.ItemIndex < logInfos.Count)
+            {
+                LogInfo log = logInfos[e.ItemIndex];
+                ListViewItem item1 = new ListViewItem(log.Time);
+                item1.ForeColor = LogcatTools.GetLogTextColor(log.LogLevel);
+                item1.SubItems.Add(log.PId);
+                item1.SubItems.Add(log.TId);
+                item1.SubItems.Add(log.LogLevel);
+                item1.SubItems.Add(log.Tag);
+                item1.SubItems.Add(log.Message);
+                e.Item = item1;
+            }
         }
 
         private void ListView1_MouseDown(object sender, MouseEventArgs e)
@@ -69,87 +92,73 @@ namespace aabViewer.Logcat
 
         public void AddLog(LogInfo log)
         {
-            ListViewItem item1 = new ListViewItem(log.Time);
-            item1.ForeColor = LogcatTools.GetLogTextColor(log.LogLevel);            
-            item1.SubItems.Add(log.PId);
-            item1.SubItems.Add(log.TId);
-            item1.SubItems.Add(log.LogLevel);
-            item1.SubItems.Add(log.Tag);
-            item1.SubItems.Add(log.Message);
-            this.Items.Add(item1);
-
-            
+            logInfos.Add(log);
+            this.VirtualListSize = logInfos.Count;
         }
 
         public void EnsureVisibleLast()
         {
             // 确保最后一项可见
-            if (this.Items.Count > 0)
+            if (this.VirtualListSize > 0)
             {
-                this.Items[this.Items.Count - 1].EnsureVisible();
+                this.EnsureVisible(this.VirtualListSize - 1);
             }
         }
 
         public void UpdateLog(LogInfo log, int id)
         {
-            ListViewItem item1 = this.Items[id];
-            item1.ForeColor = LogcatTools.GetLogTextColor(log.LogLevel);
-            item1.SubItems[0].Text = log.Time;
-            item1.SubItems[1].Text = log.PId;
-            item1.SubItems[2].Text = log.TId;
-            item1.SubItems[3].Text = log.LogLevel;
-            item1.SubItems[4].Text = log.Tag;
-            item1.SubItems[5].Text = log.Message;
-            
+            if (id < logInfos.Count)
+            {
+                logInfos[id] = log;
+                this.RedrawItems(id, id, true);
+            }
         }
 
-        public void UpdateLogs(List<LogInfo> logInfos)
+        public void UpdateLogs(List<LogInfo> newLogInfos)
         {
-            int len = this.Items.Count;
-            
-            if(Items.Count>=logInfos.Count)
-            {
-                int i = 0;
-                for (i = 0; i < logInfos.Count; i++)
-                {
-                    UpdateLog(logInfos[i], i);
-                }
-
-                for (int q = Items.Count - 1; q >= i; q--)
-                {
-                    Items.RemoveAt(q);
-                }
-            }
-            else
-            {
-                int i = 0;
-                for (i = 0; i < len; i++)
-                {
-                    UpdateLog(logInfos[i], i);
-                }
-
-                for (int q = i; q< logInfos.Count; q++)
-                {
-                    AddLog(logInfos[q]);
-                }
-            }
+            logInfos = newLogInfos;
+            this.VirtualListSize = logInfos.Count;
+            this.RedrawItems(0, logInfos.Count - 1, true);
         }
 
         public string SelectToString()
         {
             StringBuilder sb = new StringBuilder();
 
-            for(int i=0; i<SelectedItems.Count; i++)
+            for (int i = 0; i < SelectedIndices.Count; i++)
             {
-                var item = SelectedItems[i];
-                for(int q=0; q<item.SubItems.Count; q++)
+                int index = SelectedIndices[i];
+                if (index < logInfos.Count)
                 {
-                    sb.Append(item.SubItems[q].Text);
+                    LogInfo log = logInfos[index];
+                    sb.Append(log.Time);
                     sb.Append(" ");
+                    sb.Append(log.PId);
+                    sb.Append(" ");
+                    sb.Append(log.TId);
+                    sb.Append(" ");
+                    sb.Append(log.LogLevel);
+                    sb.Append(" ");
+                    sb.Append(log.Tag);
+                    sb.Append(" ");
+                    sb.Append(log.Message);
+                    sb.AppendLine();
                 }
-                sb.AppendLine();
             }
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// 清空整个视图
+        /// </summary>
+        public void ClearAll()
+        {
+            logInfos.Clear();
+            this.VirtualListSize = 0;
+            if (this.VirtualListSize > 0)
+            {
+                this.RedrawItems(0, this.VirtualListSize - 1, true);
+            }
         }
     }
 }

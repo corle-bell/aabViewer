@@ -239,7 +239,7 @@ namespace aabViewer.Logcat
                 allLogs.Clear();
 
                 // 清空界面上的日志列表
-                listBoxLogs.Items.Clear();
+                listBoxLogs.ClearAll();
 
                 // 清空完整日志显示框
                 textBoxFullLog.Text = "";
@@ -280,7 +280,6 @@ namespace aabViewer.Logcat
         public void FilterByTag(string _tag)
         {
             this.tagFilterFilter.Text = _tag;
-            ApplyFilter();
         }
         
         private void FilterTextBox_TextChanged(object sender, EventArgs e)
@@ -315,17 +314,15 @@ namespace aabViewer.Logcat
 
         private void listBoxLogs_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listBoxLogs.SelectedItems.Count == 1)
+            if (listBoxLogs.SelectedIndices.Count == 1)
             {
-                var t = listBoxLogs.SelectedItems[0];
-                string selectedLog = t.SubItems[t.SubItems.Count- 1].Text;
-                textBoxFullLog.Text = selectedLog;
+                textBoxFullLog.Text = listBoxLogs.SelectToString();
             }
         }
 
         private void buttonSaveSelected_Click(object sender, EventArgs e)
         {
-            if (listBoxLogs.SelectedItems.Count >= 0)
+            if (listBoxLogs.SelectedIndices.Count >= 0)
             {
                 string selectedLog = listBoxLogs.SelectToString();
                 SaveLogToFile(selectedLog);
