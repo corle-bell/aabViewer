@@ -148,6 +148,29 @@ namespace aabViewer.Logcat
             return sb.ToString();
         }
 
+        public string AllToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < logInfos.Count; i++)
+            {
+                LogInfo log = logInfos[i];
+                sb.Append(log.Time);
+                sb.Append(" ");
+                sb.Append(log.PId);
+                sb.Append(" ");
+                sb.Append(log.TId);
+                sb.Append(" ");
+                sb.Append(log.LogLevel);
+                sb.Append(" ");
+                sb.Append(log.Tag);
+                sb.Append(" ");
+                sb.Append(log.Message);
+                sb.AppendLine();
+            }
+            return sb.ToString();
+        }
+
         /// <summary>
         /// 清空整个视图
         /// </summary>

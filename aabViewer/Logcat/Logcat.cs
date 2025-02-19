@@ -331,7 +331,7 @@ namespace aabViewer.Logcat
 
         private void buttonSaveAll_Click(object sender, EventArgs e)
         {
-            string allLogText = string.Join(Environment.NewLine, allLogs);
+            string allLogText = listBoxLogs.AllToString();
             SaveLogToFile(allLogText);
         }
 
