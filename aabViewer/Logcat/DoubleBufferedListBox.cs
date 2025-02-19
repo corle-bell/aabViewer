@@ -118,7 +118,10 @@ namespace aabViewer.Logcat
         {
             logInfos = newLogInfos;
             this.VirtualListSize = logInfos.Count;
-            this.RedrawItems(0, logInfos.Count - 1, true);
+            if (this.VirtualListSize > 0)
+            {
+                this.RedrawItems(0, logInfos.Count - 1, true);
+            }
         }
 
         public string SelectToString()

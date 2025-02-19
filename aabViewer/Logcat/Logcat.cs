@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace aabViewer.Logcat
@@ -19,14 +20,13 @@ namespace aabViewer.Logcat
         private Dictionary<int, string> processList = new Dictionary<int, string>();
         private List<LogInfo> pendingLogs = new List<LogInfo>();
         private System.Timers.Timer batchUpdateTimer;
-
+        private bool isClose;
         public Form1 Root;
         public MainForm()
         {
             InitializeComponent();
             InitializeAdbProcess();
-
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);            
 
             this.tagFilterFilter.DelayTextChange += new EventHandler(this.FilterTextBox_TextChanged);
             this.textBoxStringFilter.DelayTextChange += new EventHandler(this.FilterTextBox_TextChanged);
@@ -36,36 +36,55 @@ namespace aabViewer.Logcat
             this.tagFilterFilter.SetWatermark("TAG筛选");
             this.textBoxStringFilter.SetWatermark("文本筛选");
 
-            LoadProcessList();
-
+            
             this.checkBox1.Checked = true;
 
             // 初始化定时器，用于批量更新 ListBox
             batchUpdateTimer = new System.Timers.Timer(300);
             batchUpdateTimer.Elapsed += BatchUpdateTimer_Elapsed;
             batchUpdateTimer.Start();
+
+            LoadProcessListAsync();
         }
 
         private void BatchUpdateTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             if (pendingLogs.Count > 0)
             {
+                // 检查窗体是否已经被释放
+                if (this.IsDisposed)
+                {
+                    // 如果窗体已经被释放，停止定时器
+                    batchUpdateTimer.Stop();
+                    return;
+                }
+
                 this.Invoke((MethodInvoker)delegate
                 {
-                    lock (pendingLogs)
+                    // 再次检查窗体是否已经被释放
+                    if (this.IsDisposed)
                     {
-                        listBoxLogs.BeginUpdate();
+                        batchUpdateTimer.Stop();
+                        return;
+                    }
 
-                        foreach (var log in pendingLogs)
+                    // 检查 listBoxLogs 是否已经被释放
+                    if (listBoxLogs != null && !listBoxLogs.IsDisposed)
+                    {
+                        lock (pendingLogs)
                         {
-                            listBoxLogs.AddLog(log);
+                            listBoxLogs.BeginUpdate();
+
+                            foreach (var log in pendingLogs)
+                            {
+                                listBoxLogs.AddLog(log);
+                            }
+
+                            listBoxLogs.EnsureVisibleLast();
+
+                            listBoxLogs.EndUpdate();
+                            pendingLogs.Clear();
                         }
-
-                        listBoxLogs.EnsureVisibleLast();
-
-                        listBoxLogs.EndUpdate();
-                        pendingLogs.Clear();
-
                     }
                 });
             }
@@ -73,13 +92,21 @@ namespace aabViewer.Logcat
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            batchUpdateTimer.Stop();           
+
+            isClose = true;
             if (isReading)
             {
                 try
                 {
+                    pendingLogs.Clear();
                     // 停止当前的 logcat 进程
                     adbProcess.CancelOutputRead();
-                    adbProcess.Kill();
+                    if (!adbProcess.HasExited)
+                    {
+                        adbProcess.Kill();
+                    }
+                    adbProcess.Close();
                     isReading = false;
                 }
                 catch (Exception ex)
@@ -92,7 +119,7 @@ namespace aabViewer.Logcat
             {
                 Root.LogcatForm = null;
             }
-            batchUpdateTimer.Stop();
+            
         }
 
         private void InitializeAdbProcess()
@@ -106,10 +133,11 @@ namespace aabViewer.Logcat
             adbProcess.StartInfo.StandardOutputEncoding = Encoding.UTF8;
             adbProcess.OutputDataReceived += AdbProcess_OutputDataReceived;
         }
+   
 
         private void AdbProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(e.Data))
+            if (!string.IsNullOrEmpty(e.Data) && !isClose)
             {
                 var log = LogcatTools.ParseLogLine(e.Data);
                 if (isReading && FilterLog(log))
@@ -224,8 +252,11 @@ namespace aabViewer.Logcat
             }
             else
             {
-                adbProcess.CancelOutputRead();
-                adbProcess.Kill();
+                adbProcess.CancelOutputRead(); 
+                if(!adbProcess.HasExited)
+                {
+                    adbProcess.Kill();
+                }
                 isReading = false;
                 buttonStart.Text = "开始读取";
             }
@@ -354,9 +385,51 @@ namespace aabViewer.Logcat
             }
         }
 
-        private void buttonRefreshProcessList_Click(object sender, EventArgs e)
+        private void buttonRefreshProcessList_ClickAsync(object sender, EventArgs e)
         {
-            LoadProcessList();
+            LoadProcessListAsync();
+        }
+
+        // 异步加载进程列表的方法
+        private async Task LoadProcessListAsync()
+        {
+            try
+            {
+                Process process = new Process();
+                process.StartInfo.FileName = "adb";
+                process.StartInfo.Arguments = "shell dumpsys activity activities";
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.CreateNoWindow = true;
+
+                // 异步启动进程
+                process.Start();
+
+                // 异步读取输出
+                string output = await process.StandardOutput.ReadToEndAsync();
+
+                // 异步等待进程退出
+                await Task.Run(() => process.WaitForExit());
+
+                // 清空原有的进程列表和 ComboBox 内容
+                processList.Clear();
+                comboBoxProcess.Items.Clear();
+
+                var dict = ExtractProcesses(output);
+
+                // 使用示例
+                foreach (var m in dict)
+                {
+                    string processName = m.Value;
+                    int pid = m.Key;
+                    processList[pid] = processName;
+                    comboBoxProcess.Items.Add($"{pid}|{processName}");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"获取前台进程列表时出错: {ex.Message}");
+            }
         }
 
         public static Dictionary<int, string> ExtractProcesses(string logContent)
@@ -381,42 +454,6 @@ namespace aabViewer.Logcat
             }
 
             return processes;
-        }
-
-        private void LoadProcessList()
-        {
-            try
-            {
-                Process process = new Process();
-                process.StartInfo.FileName = "adb";
-                process.StartInfo.Arguments = "shell dumpsys activity activities";
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.CreateNoWindow = true;
-
-                process.Start();
-                string output = process.StandardOutput.ReadToEnd();
-                process.WaitForExit();
-
-                // 清空原有的进程列表和 ComboBox 内容
-                processList.Clear();
-                comboBoxProcess.Items.Clear();
-
-                var dict = ExtractProcesses(output);
-
-                // 使用示例
-                foreach (var m in dict)
-                {
-                    string processName = m.Value;
-                    int pid = m.Key;
-                    processList[pid] = processName;
-                    comboBoxProcess.Items.Add($"{pid}|{processName}");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"获取前台进程列表时出错: {ex.Message}");
-            }
         }
     }
 }

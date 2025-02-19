@@ -143,7 +143,7 @@ namespace aabViewer.Logcat
             this.buttonRefreshProcessList.TabIndex = 5;
             this.buttonRefreshProcessList.Text = "刷新进程列表";
             this.buttonRefreshProcessList.UseVisualStyleBackColor = true;
-            this.buttonRefreshProcessList.Click += new System.EventHandler(this.buttonRefreshProcessList_Click);
+            this.buttonRefreshProcessList.Click += new System.EventHandler(this.buttonRefreshProcessList_ClickAsync);
             // 
             // checkBox1
             // 
