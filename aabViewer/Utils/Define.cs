@@ -8,34 +8,12 @@ using System.Windows.Forms;
 
 namespace aabViewer
 {
-    /// <summary>
-    /// 基于.NET 2.0的TextBox工具类
-    /// </summary>
-    public static class TextBoxToolV2
+    public enum AFileType
     {
-        private const int EM_SETCUEBANNER = 0x1501;
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-
-        private static extern Int32 SendMessage
-         (IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
-
-        /// <summary>
-        /// 为TextBox设置水印文字
-        /// </summary>
-        /// <param name="textBox">TextBox</param>
-        /// <param name="watermark">水印文字</param>
-        public static void SetWatermark(this TextBox textBox, string watermark)
-        {
-            SendMessage(textBox.Handle, EM_SETCUEBANNER, 0, watermark);
-        }
-        /// <summary>
-        /// 清除水印文字
-        /// </summary>
-        /// <param name="textBox">TextBox</param>
-        public static void ClearWatermark(this TextBox textBox)
-        {
-            SendMessage(textBox.Handle, EM_SETCUEBANNER, 0, string.Empty);
-        }
+        APK,
+        AAB,
+        XAPK,
+        APKS
     }
 
     public class ConfigNode
@@ -45,6 +23,7 @@ namespace aabViewer
         public string filter_name;
     }
 
+    [System.Serializable]
     public class KeyNode
     {
         public string name;
@@ -89,13 +68,13 @@ namespace aabViewer
 
     public class Define
     {
+
         public static string logPath = "";
         public static string lastParse;
         public static string jarPath;
         public static string aaptPath;
         public static string keyConfigPath = "";
-        public const string verion = "v5.0.3";
-
+        
         public const string LogFile = "log.txt";
         public const string BundleToolFile = "bundletool-all-1.8.0.jar";
         public const string KeysFile = "Config/keys.ini";
@@ -104,5 +83,13 @@ namespace aabViewer
 
         public const string AAB_INI = "Config/data.ini";
         public const string APK_INI = "Config/data_apk.ini";
+
+        public const string SignDataFile = "Config/sign_data.json";
+
+
+        public const string GitHub = "GitHub";
+        public const string Gitee = "Gitee";
+
+        public const string GitHub_Home = "https://github.com/corle-bell/aabViewer";
     }
 }

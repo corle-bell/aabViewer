@@ -1,4 +1,5 @@
-﻿using System;
+﻿using aabViewer.VersionUpdate;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace aabViewer
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            if(args.Length>0 && args[0].Equals("Logcat"))
+            if (args.Length>0 && args[0].Equals("Logcat"))
             {
                 Application.Run(new aabViewer.Logcat.MainForm());
             }
@@ -25,6 +26,10 @@ namespace aabViewer
             {
                 Application.Run(new Form1(args));
             }
+
+
+            
         }
+
     }
 }

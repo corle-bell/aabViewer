@@ -69,6 +69,8 @@ namespace aabViewer.Logcat
         {
             switch (logType)
             {
+                case "V":
+                    return Color.SaddleBrown;                    
                 case "D": // Debug 日志，使用蓝色
                     return Color.Blue;
                 case "I": // Info 日志，使用绿色

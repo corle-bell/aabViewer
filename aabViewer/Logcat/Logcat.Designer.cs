@@ -73,6 +73,7 @@ namespace aabViewer.Logcat
             this.comboBoxTypeFilter.FormattingEnabled = true;
             this.comboBoxTypeFilter.Items.AddRange(new object[] {
             "",
+            "V",
             "D",
             "I",
             "W",

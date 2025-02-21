@@ -22,5 +22,26 @@ namespace aabViewer.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5.0.4")]
+        public string Ignored_Ver {
+            get {
+                return ((string)(this["Ignored_Ver"]));
+            }
+            set {
+                this["Ignored_Ver"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string 设置1 {
+            get {
+                return ((string)(this["设置1"]));
+            }
+        }
     }
 }

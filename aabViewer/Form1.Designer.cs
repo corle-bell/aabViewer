@@ -70,7 +70,6 @@
             this.text_version = new System.Windows.Forms.TextBox();
             this.菜单ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.环境监测ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.配置说明ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.连接手机ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.保存Key配置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.清理缓存ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -80,12 +79,15 @@
             this.打开LogcatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.button5 = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.fireBaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.开启调试ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关闭调试ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.button5 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.检查更新ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.关于ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.githubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanel2.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel10.SuspendLayout();
@@ -482,7 +484,6 @@
             // 
             this.菜单ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.环境监测ToolStripMenuItem,
-            this.配置说明ToolStripMenuItem,
             this.连接手机ToolStripMenuItem,
             this.保存Key配置ToolStripMenuItem,
             this.清理缓存ToolStripMenuItem,
@@ -500,13 +501,6 @@
             this.环境监测ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.环境监测ToolStripMenuItem.Text = "环境监测";
             this.环境监测ToolStripMenuItem.Click += new System.EventHandler(this.环境监测ToolStripMenuItem_Click);
-            // 
-            // 配置说明ToolStripMenuItem
-            // 
-            this.配置说明ToolStripMenuItem.Name = "配置说明ToolStripMenuItem";
-            this.配置说明ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.配置说明ToolStripMenuItem.Text = "配置说明";
-            this.配置说明ToolStripMenuItem.Click += new System.EventHandler(this.配置说明ToolStripMenuItem_Click);
             // 
             // 连接手机ToolStripMenuItem
             // 
@@ -559,9 +553,13 @@
             // 
             // 关于ToolStripMenuItem
             // 
+            this.关于ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.检查更新ToolStripMenuItem,
+            this.关于ToolStripMenuItem1,
+            this.githubToolStripMenuItem});
             this.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem";
             this.关于ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
-            this.关于ToolStripMenuItem.Text = "关于";
+            this.关于ToolStripMenuItem.Text = "更多";
             this.关于ToolStripMenuItem.Click += new System.EventHandler(this.关于ToolStripMenuItem_Click);
             // 
             // menuStrip1
@@ -575,6 +573,29 @@
             this.menuStrip1.Size = new System.Drawing.Size(876, 25);
             this.menuStrip1.TabIndex = 10;
             this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fireBaseToolStripMenuItem
+            // 
+            this.fireBaseToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.开启调试ToolStripMenuItem,
+            this.关闭调试ToolStripMenuItem});
+            this.fireBaseToolStripMenuItem.Name = "fireBaseToolStripMenuItem";
+            this.fireBaseToolStripMenuItem.Size = new System.Drawing.Size(69, 21);
+            this.fireBaseToolStripMenuItem.Text = "FireBase";
+            // 
+            // 开启调试ToolStripMenuItem
+            // 
+            this.开启调试ToolStripMenuItem.Name = "开启调试ToolStripMenuItem";
+            this.开启调试ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.开启调试ToolStripMenuItem.Text = "开启调试";
+            this.开启调试ToolStripMenuItem.Click += new System.EventHandler(this.开启调试ToolStripMenuItem_Click);
+            // 
+            // 关闭调试ToolStripMenuItem
+            // 
+            this.关闭调试ToolStripMenuItem.Name = "关闭调试ToolStripMenuItem";
+            this.关闭调试ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.关闭调试ToolStripMenuItem.Text = "关闭调试";
+            this.关闭调试ToolStripMenuItem.Click += new System.EventHandler(this.关闭调试ToolStripMenuItem_Click);
             // 
             // panel1
             // 
@@ -608,28 +629,26 @@
             this.pictureBox1.TabIndex = 9;
             this.pictureBox1.TabStop = false;
             // 
-            // fireBaseToolStripMenuItem
+            // 检查更新ToolStripMenuItem
             // 
-            this.fireBaseToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.开启调试ToolStripMenuItem,
-            this.关闭调试ToolStripMenuItem});
-            this.fireBaseToolStripMenuItem.Name = "fireBaseToolStripMenuItem";
-            this.fireBaseToolStripMenuItem.Size = new System.Drawing.Size(69, 21);
-            this.fireBaseToolStripMenuItem.Text = "FireBase";
+            this.检查更新ToolStripMenuItem.Name = "检查更新ToolStripMenuItem";
+            this.检查更新ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.检查更新ToolStripMenuItem.Text = "检查更新";
+            this.检查更新ToolStripMenuItem.Click += new System.EventHandler(this.检查更新ToolStripMenuItem_Click);
             // 
-            // 开启调试ToolStripMenuItem
+            // 关于ToolStripMenuItem1
             // 
-            this.开启调试ToolStripMenuItem.Name = "开启调试ToolStripMenuItem";
-            this.开启调试ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.开启调试ToolStripMenuItem.Text = "开启调试";
-            this.开启调试ToolStripMenuItem.Click += new System.EventHandler(this.开启调试ToolStripMenuItem_Click);
+            this.关于ToolStripMenuItem1.Name = "关于ToolStripMenuItem1";
+            this.关于ToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.关于ToolStripMenuItem1.Text = "关于";
+            this.关于ToolStripMenuItem1.Click += new System.EventHandler(this.关于ToolStripMenuItem1_Click);
             // 
-            // 关闭调试ToolStripMenuItem
+            // githubToolStripMenuItem
             // 
-            this.关闭调试ToolStripMenuItem.Name = "关闭调试ToolStripMenuItem";
-            this.关闭调试ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.关闭调试ToolStripMenuItem.Text = "关闭调试";
-            this.关闭调试ToolStripMenuItem.Click += new System.EventHandler(this.关闭调试ToolStripMenuItem_Click);
+            this.githubToolStripMenuItem.Name = "githubToolStripMenuItem";
+            this.githubToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.githubToolStripMenuItem.Text = "Github";
+            this.githubToolStripMenuItem.Click += new System.EventHandler(this.githubToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -709,7 +728,6 @@
         private System.Windows.Forms.Label label_status;
         private System.Windows.Forms.TextBox text_version;
         private System.Windows.Forms.ToolStripMenuItem 菜单ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 配置说明ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 连接手机ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 关于ToolStripMenuItem;
         private System.Windows.Forms.MenuStrip menuStrip1;
@@ -733,6 +751,9 @@
         private System.Windows.Forms.ToolStripMenuItem fireBaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 开启调试ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 关闭调试ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 检查更新ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 关于ToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem githubToolStripMenuItem;
     }
 }
 

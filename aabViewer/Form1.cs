@@ -13,17 +13,10 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using System.Reflection;
+using aabViewer.VersionUpdate;
 
 namespace aabViewer
 {
-    public enum AFileType
-    {
-        APK,
-        AAB,
-        XAPK,
-        APKS
-    }
-
     public partial class Form1 : Form
     {
        
@@ -99,11 +92,14 @@ namespace aabViewer
         #endregion
 
 
+
         private Timer InitAab = new Timer();
         public Form1(string [] args)
         {
 
             this.IsMdiContainer = true;
+
+            SignManager.Create();
 
             InitializeComponent();
             ChangeMidBackStyle();
@@ -120,7 +116,7 @@ namespace aabViewer
             }
 
             GetPhoneInfo();
-           
+            //CheckUpdateAsync();
         }
 
         private void Call(object sender, EventArgs e)
@@ -128,6 +124,20 @@ namespace aabViewer
             DecodeFile();
 
             InitAab.Stop();
+        }
+
+
+        private async Task CheckUpdateAsync(bool isForce=false)
+        {
+            bool hasUpdate = await VersionUpdateChecker.CheckForUpdatesAsync(Define.GitHub, isForce);
+            if (hasUpdate)
+            {
+                VersionUpdateForm.Create(VersionUpdateChecker.UpdateInfo);
+            }
+            else
+            {
+                if(isForce) MessageBox.Show("已经是新版本了啊");
+            }
         }
 
         private void ChangeMidBackStyle()
@@ -186,6 +196,23 @@ namespace aabViewer
 
             this.comboBox1.Items.Add(key.name);
             return true;
+        }
+
+        public void UpdateKey(KeyNode key)
+        {
+            text_key_path.Text = key.path;
+            text_pass.Text = key.password;
+            text_alias.Text = key.alias;
+            text_key_pass.Text = key.alias_password;
+
+            if(!File.Exists(text_key_path.Text))
+            {
+                text_key_path.ForeColor = Color.Red;
+            }
+            else
+            {
+                text_key_path.ForeColor = Color.Black;
+            }
         }
 
         public void SaveKeyConfigs()
@@ -445,7 +472,7 @@ namespace aabViewer
         }
         private void 关于ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("AbbViewer " + Define.verion);
+            
         }
 
         private void 配置说明ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -572,10 +599,7 @@ namespace aabViewer
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             var key = keyNodes[this.comboBox1.SelectedIndex];
-            text_key_path.Text = key.path;
-            text_pass.Text = key.password;
-            text_alias.Text = key.alias;
-            text_key_pass.Text = key.alias_password;
+            UpdateKey(key);
         }
 
         private void 清理缓存ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -675,6 +699,21 @@ namespace aabViewer
             {
                 MessageBox.Show(error);
             }
+        }
+
+        private void 关于ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("AAbViewer " + VersionUpdateChecker.GetLocalVersion());
+        }
+
+        private void 检查更新ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CheckUpdateAsync(true);
+        }
+
+        private void githubToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WinformTools.OpenUrl(Define.GitHub_Home);
         }
     }
 

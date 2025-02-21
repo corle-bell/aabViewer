@@ -143,6 +143,7 @@ namespace aabViewer
                     }
                 }
 
+                SignManager.I.Match(view, PackageName);
 
             }, ui);
 
@@ -244,6 +245,8 @@ namespace aabViewer
                 {
                     if (ret.Length > 0) MessageBox.Show("Info:" + ret);
                     if (error.Length > 0) MessageBox.Show("Info:" + error);
+
+                    SignManager.I.UpdateSign(PackageName, view);
                 }
 
                 view.needUpdateApks = false;

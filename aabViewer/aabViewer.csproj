@@ -12,6 +12,8 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>E:\UnityProject\Github\aabViewer\pulish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -24,10 +26,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -123,8 +123,16 @@
     <Compile Include="SignCreator.Designer.cs">
       <DependentUpon>SignCreator.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\SignManager.cs" />
     <Compile Include="Utils\UsbMessage.cs" />
     <Compile Include="Utils\WinformTools.cs" />
+    <Compile Include="VersionUpdate\VersionUpdateChecker.cs" />
+    <Compile Include="VersionUpdate\VersionUpdateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VersionUpdate\VersionUpdateForm.Designer.cs">
+      <DependentUpon>VersionUpdateForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="AboutBox1.resx">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </EmbeddedResource>
@@ -152,6 +160,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SignCreator.resx">
       <DependentUpon>SignCreator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VersionUpdate\VersionUpdateForm.resx">
+      <DependentUpon>VersionUpdateForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -183,5 +194,6 @@
     <Content Include="Bit.ico" />
     <None Include="QQ截图20211224172209.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
