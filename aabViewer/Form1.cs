@@ -198,20 +198,37 @@ namespace aabViewer
             return true;
         }
 
-        public void UpdateKey(KeyNode key)
+        public void UpdateKey(KeyNode key, bool isCheckSelect = true)
         {
-            text_key_path.Text = key.path;
-            text_pass.Text = key.password;
-            text_alias.Text = key.alias;
-            text_key_pass.Text = key.alias_password;
-
-            if(!File.Exists(text_key_path.Text))
+            bool isSet = true;
+            if(isCheckSelect)
             {
-                text_key_path.ForeColor = Color.Red;
+                for (int i = 0; i < keyNodes.Count; i++)
+                {
+                    if (key.alias.Trim().Equals(keyNodes[i].alias.Trim()))
+                    {
+                        this.comboBox1.SelectedIndex = i;
+                        isSet = false;
+                        break;                        
+                    }
+                }
             }
-            else
+            
+            if(isSet)
             {
-                text_key_path.ForeColor = Color.Black;
+                text_key_path.Text = key.path;
+                text_pass.Text = key.password;
+                text_alias.Text = key.alias;
+                text_key_pass.Text = key.alias_password;
+
+                if (!File.Exists(text_key_path.Text))
+                {
+                    text_key_path.ForeColor = Color.Red;
+                }
+                else
+                {
+                    text_key_path.ForeColor = Color.Black;
+                }
             }
         }
 
@@ -599,7 +616,7 @@ namespace aabViewer
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             var key = keyNodes[this.comboBox1.SelectedIndex];
-            UpdateKey(key);
+            UpdateKey(key, false);
         }
 
         private void 清理缓存ToolStripMenuItem_Click(object sender, EventArgs e)
