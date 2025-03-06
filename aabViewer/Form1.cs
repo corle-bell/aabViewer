@@ -116,7 +116,7 @@ namespace aabViewer
             }
 
             GetPhoneInfo();
-            //CheckUpdateAsync();
+            CheckUpdate();
         }
 
         private void Call(object sender, EventArgs e)
@@ -126,6 +126,18 @@ namespace aabViewer
             InitAab.Stop();
         }
 
+        private void CheckUpdate()
+        {
+            var CheckTime = Properties.Settings.Default.CheckTime;
+            var Now = WinformTools.TimeStamp();
+            if(Now-CheckTime>=86400)
+            {
+                Properties.Settings.Default.CheckTime = Now;
+                Properties.Settings.Default.Save();
+
+                CheckUpdateAsync();
+            }            
+        }
 
         private async Task CheckUpdateAsync(bool isForce=false)
         {
@@ -693,7 +705,9 @@ namespace aabViewer
         private void 开启调试ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string error = "";
-            var ret = CmdTools.ExecAdb($"shell setprop debug.firebase.analytics.app {decoder.PackageName}", ref error);
+            string cmd = $"shell setprop debug.firebase.analytics.app {decoder.PackageName}";
+            WinformTools.Log(cmd);
+            var ret = CmdTools.ExecAdb(cmd, ref error);
             if (string.IsNullOrEmpty(error))
             {
                 MessageBox.Show(ret);

@@ -25,7 +25,7 @@ namespace aabViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5.0.4")]
+        [global::System.Configuration.DefaultSettingValueAttribute("5.0.5")]
         public string Ignored_Ver {
             get {
                 return ((string)(this["Ignored_Ver"]));
@@ -35,12 +35,15 @@ namespace aabViewer.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string 设置1 {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public long CheckTime {
             get {
-                return ((string)(this["设置1"]));
+                return ((long)(this["CheckTime"]));
+            }
+            set {
+                this["CheckTime"] = value;
             }
         }
     }

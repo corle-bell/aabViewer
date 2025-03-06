@@ -80,7 +80,10 @@ namespace aabViewer.Logcat
                                 listBoxLogs.AddLog(log);
                             }
 
-                            listBoxLogs.EnsureVisibleLast();
+                            if(this.checkBox1.Checked)
+                            {
+                                listBoxLogs.EnsureVisibleLast();
+                            }
 
                             listBoxLogs.EndUpdate();
                             pendingLogs.Clear();
@@ -283,31 +286,7 @@ namespace aabViewer.Logcat
             }
         }
 
-        private void ListBoxLogs_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            e.DrawBackground();
-            if (e.Index >= 0)
-            {
-                Color c = Color.LightGray;
-                if(e.Index % 2 == 0)
-                {
-                    c = Color.FromArgb(200, c);
-                }
-                using (SolidBrush brush = new SolidBrush(c))
-                {
-                    e.Graphics.FillRectangle(brush, e.Bounds);
-                }
-
-                string log = listBoxLogs.Items[e.Index].ToString();
-                Color textColor = LogcatTools.GetLogTextColor(log);
-                using (SolidBrush textBrush = new SolidBrush(textColor))
-                {
-                    e.Graphics.DrawString(log, e.Font, textBrush, e.Bounds, StringFormat.GenericDefault);
-                }
-            }
-            e.DrawFocusRectangle();
-        }
-
+       
         public void FilterByTag(string _tag)
         {
             this.tagFilterFilter.Text = _tag;
