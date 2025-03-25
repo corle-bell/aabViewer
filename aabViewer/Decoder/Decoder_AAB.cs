@@ -186,7 +186,8 @@ namespace aabViewer
             XmlNodeList nodes = doc.SelectNodes("/manifest/application/activity", nsp);
             foreach (XmlNode item in nodes)
             {
-                if (item.InnerXml.Contains("android.intent.category.LAUNCHER"))
+                if (item.InnerXml.Contains("android.intent.category.LAUNCHER")
+                    && item.InnerXml.Contains("android.intent.action.MAIN"))
                 {
                     LauncherActivity = item.SelectSingleNode("@android:name", nsp).Value;
                 }
