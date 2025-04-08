@@ -9,7 +9,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
 namespace aabViewer.Logcat
 {
     public partial class MainForm : Form
@@ -21,22 +20,35 @@ namespace aabViewer.Logcat
         private List<LogInfo> pendingLogs = new List<LogInfo>();
         private System.Timers.Timer batchUpdateTimer;
         private bool isClose;
+        private bool isPending = true;
         public Form1 Root;
+
+        public UCheckComboBox TagExlude
+        {
+            get
+            {
+                return this.tagExludeFilter;
+            }
+        }
+
+        public string configPath;
         public MainForm()
         {
             InitializeComponent();
             InitializeAdbProcess();
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);            
 
-            this.tagFilterFilter.DelayTextChange += new EventHandler(this.FilterTextBox_TextChanged);
             this.textBoxStringFilter.DelayTextChange += new EventHandler(this.FilterTextBox_TextChanged);
             this.comboBoxTypeFilter.SelectedIndexChanged += new System.EventHandler(this.FilterComboBox_SelectedIndexChanged);
 
-
-            this.tagFilterFilter.SetWatermark("TAG筛选");
+            
             this.textBoxStringFilter.SetWatermark("文本筛选");
 
-            
+            this.tagFilterFilter.OnLeave += new EventHandler(this.FilterTextBox_TextChanged);
+            this.tagExludeFilter.OnLeave += new EventHandler(this.FilterTextBox_TextChanged);
+
+
+
             this.checkBox1.Checked = true;
 
             // 初始化定时器，用于批量更新 ListBox
@@ -44,12 +56,29 @@ namespace aabViewer.Logcat
             batchUpdateTimer.Elapsed += BatchUpdateTimer_Elapsed;
             batchUpdateTimer.Start();
 
+            configPath = Path.Combine(WinformTools.GetCurrentPath(), "Config/LogcatConfig.json");
+
+            if(File.Exists(configPath))
+            {
+                LitJson.JsonData config = LitJson.JsonMapper.ToObject(File.ReadAllText(configPath));
+
+                foreach(var t in config["Include"])
+                {
+                    tagFilterFilter.AddItem(t.ToString(), false);
+                }
+
+                foreach (var t in config["Exclude"])
+                {
+                    tagExludeFilter.AddItem(t.ToString(), false);
+                }
+            }
+
             LoadProcessListAsync();
         }
 
         private void BatchUpdateTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (pendingLogs.Count > 0)
+            if (pendingLogs.Count > 0 && isPending)
             {
                 // 检查窗体是否已经被释放
                 if (this.IsDisposed)
@@ -160,8 +189,9 @@ namespace aabViewer.Logcat
             string stringFilter = "";
             string typeFilter = "";
             string pidFilter = "";
+            string tagExludeFilterText = "";
 
-            // 获取进程筛选条件
+            // 获取TAG筛选条件
             if (tagFilterFilter.InvokeRequired)
             {
                 tagFilterFilter.Invoke((MethodInvoker)delegate
@@ -172,6 +202,19 @@ namespace aabViewer.Logcat
             else
             {
                 tagFilter = tagFilterFilter.Text.Trim();
+            }
+
+            // 获取TAG剔除条件
+            if (tagExludeFilter.InvokeRequired)
+            {
+                tagExludeFilter.Invoke((MethodInvoker)delegate
+                {
+                    tagExludeFilterText = tagExludeFilter.Text.Trim();
+                });
+            }
+            else
+            {
+                tagExludeFilterText = tagExludeFilter.Text.Trim();
             }
 
             // 获取字符串筛选条件
@@ -200,7 +243,7 @@ namespace aabViewer.Logcat
                 typeFilter = comboBoxTypeFilter.SelectedItem?.ToString();
             }
 
-            // 获取类型筛选条件
+            // 获取PID筛选条件
             if (comboBoxProcess.InvokeRequired)
             {
                 comboBoxProcess.Invoke((MethodInvoker)delegate
@@ -213,7 +256,12 @@ namespace aabViewer.Logcat
                 pidFilter = comboBoxProcess.SelectedItem?.ToString();
             }
 
-            if (!string.IsNullOrEmpty(tagFilter) && !log.Tag.Contains(tagFilter))
+            if (!string.IsNullOrEmpty(tagExludeFilterText) && tagExludeFilterText.Contains(log.Tag))
+            {
+                return false;
+            }
+
+            if (!string.IsNullOrEmpty(tagFilter) && !tagFilter.Contains(log.Tag))
             {
                 return false;
             }
@@ -289,7 +337,7 @@ namespace aabViewer.Logcat
        
         public void FilterByTag(string _tag)
         {
-            this.tagFilterFilter.Text = _tag;
+            this.tagFilterFilter.AddItem(_tag, false);
         }
         
         private void FilterTextBox_TextChanged(object sender, EventArgs e)
@@ -302,7 +350,7 @@ namespace aabViewer.Logcat
             ApplyFilter();
         }
 
-        private void ApplyFilter()
+        public void ApplyFilter()
         {
             listBoxLogs.SuspendLayout();
             listBoxLogs.BeginUpdate();
@@ -433,6 +481,40 @@ namespace aabViewer.Logcat
             }
 
             return processes;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            LitJson.JsonData Ret = new LitJson.JsonData();
+            LitJson.JsonData IncludeFilter = new LitJson.JsonData();
+            LitJson.JsonData ExcludeFilter = new LitJson.JsonData();
+
+            IncludeFilter.SetJsonType(LitJson.JsonType.Array);
+            ExcludeFilter.SetJsonType(LitJson.JsonType.Array);
+
+            Ret["Include"] = IncludeFilter;
+            Ret["Exclude"] = ExcludeFilter;
+
+            foreach (var t in this.tagFilterFilter.ListBox.Items)
+            {
+                var item = t as UCheckComboBoxItem;
+                IncludeFilter.Add(item.Name);
+            }
+
+            foreach (var t in this.tagExludeFilter.ListBox.Items)
+            {
+                var item = t as UCheckComboBoxItem;
+                ExcludeFilter.Add(item.Name);
+            }
+            File.WriteAllText(configPath, Ret.ToJson());
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            isPending = !isPending;
+
+            var btn = sender as Button;
+            btn.Text = isPending ? "暂停" : "继续";
         }
     }
 }

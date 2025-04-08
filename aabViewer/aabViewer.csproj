@@ -91,6 +91,10 @@
       <DependentUpon>Logcat.cs</DependentUpon>
     </Compile>
     <Compile Include="Logcat\LogcatTools.cs" />
+    <Compile Include="UCheckComboBox.cs" />
+    <Compile Include="UCheckComboBox.Designer.cs">
+      <DependentUpon>UCheckComboBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utils\BrowserHelper.cs" />
     <Compile Include="Utils\CmdTools.cs" />
     <Compile Include="Decoder\Decoder.cs" />

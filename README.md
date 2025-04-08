@@ -7,6 +7,10 @@
 - 配置文件中的xml节点的配置是xpath语法，如果想了解更多可以点击[这里 ](https://www.w3school.com.cn/xpath/xpath_syntax.asp)
 - 在快捷方式的选项卡里的目标里加入参数 Logcat可以直接启动Logcat页面
 
+下拉选择框 UCheckComboBox 来自
+
+[winform 下拉框多选 List ItemsComboBox _winform combox做多选-CSDN博客](https://blog.csdn.net/qq_38567182/article/details/145593621?spm=1001.2101.3001.6650.1&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EYuanLiJiHua%7EPaidSort-1-145593621-blog-46007311.235%5Ev43%5Epc_blog_bottom_relevance_base2&utm_relevant_index=2)
+
 ## v1.0
 
 可以查看内容有 
@@ -168,3 +172,9 @@ AAB安装后会自动记录当前使用的签名信息，下次进入可直接�
 
 修复了AAB获取启动Activity不正确的问题。  
 修复了更新时下载地址不正确的问题。
+
+## v5.0.7
+
+增强了TAG筛选功能，增加了TAG剔除功能。可以保存TAG配置。  
+增加暂停继续按钮  
+优化了Log的解析

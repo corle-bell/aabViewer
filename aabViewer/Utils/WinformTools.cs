@@ -38,6 +38,24 @@ namespace aabViewer
         {
             SendMessage(textBox.Handle, EM_SETCUEBANNER, 0, string.Empty);
         }
+
+        /// <summary>
+        /// 为TextBox设置水印文字
+        /// </summary>
+        /// <param name="textBox">TextBox</param>
+        /// <param name="watermark">水印文字</param>
+        public static void SetWatermark(this ComboBox textBox, string watermark)
+        {
+            SendMessage(textBox.Handle, EM_SETCUEBANNER, 0, watermark);
+        }
+        /// <summary>
+        /// 清除水印文字
+        /// </summary>
+        /// <param name="textBox">TextBox</param>
+        public static void ClearWatermark(this ComboBox textBox)
+        {
+            SendMessage(textBox.Handle, EM_SETCUEBANNER, 0, string.Empty);
+        }
     }
 
     public class WinformTools

@@ -41,9 +41,17 @@ namespace aabViewer.Logcat
             this.CacheVirtualItems += DoubleBufferedListView_CacheVirtualItems;
 
             contextMenu = new ContextMenuStrip();
-            ToolStripMenuItem menuItem = new ToolStripMenuItem("筛选此TAG");
+
+            ToolStripMenuItem menuItem = new ToolStripMenuItem("添加此TAG");
             menuItem.Click += MenuItem_Click;
             contextMenu.Items.Add(menuItem);
+            
+
+            menuItem = new ToolStripMenuItem("剔除此TAG");
+            menuItem.Click += MenuItem_ClickExclue;
+            contextMenu.Items.Add(menuItem);
+
+
             MouseDown += ListView1_MouseDown;
         }
 
@@ -87,7 +95,18 @@ namespace aabViewer.Logcat
             if (string.IsNullOrEmpty(contextMenuItem.SubItems[4].Text)) return;
 
             var root = this.Parent as MainForm;
-            root.FilterByTag(contextMenuItem.SubItems[4].Text);
+            root.FilterByTag(contextMenuItem.SubItems[4].Text);            
+        }
+
+        private void MenuItem_ClickExclue(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(contextMenuItem.SubItems[4].Text)) return;
+
+            var root = this.Parent as MainForm;
+            if(root.TagExlude.AddItem(contextMenuItem.SubItems[4].Text))
+            {
+                root.ApplyFilter();
+            }            
         }
 
         public void AddLog(LogInfo log)

@@ -30,9 +30,8 @@ namespace aabViewer.Logcat
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonStart = new System.Windows.Forms.Button();
-            this.tagFilterFilter = new DelayTextBox();
-            this.textBoxStringFilter = new DelayTextBox();
             this.comboBoxTypeFilter = new System.Windows.Forms.ComboBox();
             this.textBoxFullLog = new System.Windows.Forms.TextBox();
             this.buttonSaveSelected = new System.Windows.Forms.Button();
@@ -41,32 +40,23 @@ namespace aabViewer.Logcat
             this.comboBoxProcess = new System.Windows.Forms.ComboBox();
             this.buttonRefreshProcessList = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.listBoxLogs = new aabViewer.Logcat.DoubleBufferedListBox();
+            this.textBoxStringFilter = new aabViewer.Logcat.DelayTextBox();
+            this.tagFilterFilter = new aabViewer.UCheckComboBox(this.components);
+            this.tagExludeFilter = new aabViewer.UCheckComboBox(this.components);
+            this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(12, 12);
+            this.buttonStart.Location = new System.Drawing.Point(12, 7);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(79, 23);
             this.buttonStart.TabIndex = 0;
             this.buttonStart.Text = "开始读取";
             this.buttonStart.UseVisualStyleBackColor = true;
             this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
-            // 
-            // tagFilterFilter
-            // 
-            this.tagFilterFilter.Location = new System.Drawing.Point(97, 12);
-            this.tagFilterFilter.Name = "tagFilterFilter";
-            this.tagFilterFilter.Size = new System.Drawing.Size(127, 21);
-            this.tagFilterFilter.TabIndex = 1;
-            // 
-            // textBoxStringFilter
-            // 
-            this.textBoxStringFilter.Location = new System.Drawing.Point(230, 12);
-            this.textBoxStringFilter.Name = "textBoxStringFilter";
-            this.textBoxStringFilter.Size = new System.Drawing.Size(154, 21);
-            this.textBoxStringFilter.TabIndex = 2;
             // 
             // comboBoxTypeFilter
             // 
@@ -78,7 +68,7 @@ namespace aabViewer.Logcat
             "I",
             "W",
             "E"});
-            this.comboBoxTypeFilter.Location = new System.Drawing.Point(390, 12);
+            this.comboBoxTypeFilter.Location = new System.Drawing.Point(538, 7);
             this.comboBoxTypeFilter.Name = "comboBoxTypeFilter";
             this.comboBoxTypeFilter.Size = new System.Drawing.Size(98, 20);
             this.comboBoxTypeFilter.TabIndex = 3;
@@ -87,19 +77,19 @@ namespace aabViewer.Logcat
             // 
             this.textBoxFullLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxFullLog.Location = new System.Drawing.Point(12, 323);
+            this.textBoxFullLog.Location = new System.Drawing.Point(12, 386);
             this.textBoxFullLog.Multiline = true;
             this.textBoxFullLog.Name = "textBoxFullLog";
             this.textBoxFullLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxFullLog.Size = new System.Drawing.Size(816, 100);
+            this.textBoxFullLog.Size = new System.Drawing.Size(928, 91);
             this.textBoxFullLog.TabIndex = 5;
             // 
             // buttonSaveSelected
             // 
             this.buttonSaveSelected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonSaveSelected.Location = new System.Drawing.Point(12, 429);
+            this.buttonSaveSelected.Location = new System.Drawing.Point(12, 483);
             this.buttonSaveSelected.Name = "buttonSaveSelected";
-            this.buttonSaveSelected.Size = new System.Drawing.Size(120, 23);
+            this.buttonSaveSelected.Size = new System.Drawing.Size(106, 23);
             this.buttonSaveSelected.TabIndex = 6;
             this.buttonSaveSelected.Text = "保存选中日志";
             this.buttonSaveSelected.UseVisualStyleBackColor = true;
@@ -108,9 +98,9 @@ namespace aabViewer.Logcat
             // buttonSaveAll
             // 
             this.buttonSaveAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonSaveAll.Location = new System.Drawing.Point(138, 429);
+            this.buttonSaveAll.Location = new System.Drawing.Point(124, 483);
             this.buttonSaveAll.Name = "buttonSaveAll";
-            this.buttonSaveAll.Size = new System.Drawing.Size(120, 23);
+            this.buttonSaveAll.Size = new System.Drawing.Size(101, 23);
             this.buttonSaveAll.TabIndex = 7;
             this.buttonSaveAll.Text = "保存所有日志";
             this.buttonSaveAll.UseVisualStyleBackColor = true;
@@ -119,9 +109,9 @@ namespace aabViewer.Logcat
             // buttonClearLogs
             // 
             this.buttonClearLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonClearLogs.Location = new System.Drawing.Point(264, 429);
+            this.buttonClearLogs.Location = new System.Drawing.Point(231, 483);
             this.buttonClearLogs.Name = "buttonClearLogs";
-            this.buttonClearLogs.Size = new System.Drawing.Size(120, 23);
+            this.buttonClearLogs.Size = new System.Drawing.Size(96, 23);
             this.buttonClearLogs.TabIndex = 8;
             this.buttonClearLogs.Text = "清理日志";
             this.buttonClearLogs.UseVisualStyleBackColor = true;
@@ -130,7 +120,7 @@ namespace aabViewer.Logcat
             // comboBoxProcess
             // 
             this.comboBoxProcess.FormattingEnabled = true;
-            this.comboBoxProcess.Location = new System.Drawing.Point(494, 12);
+            this.comboBoxProcess.Location = new System.Drawing.Point(642, 7);
             this.comboBoxProcess.Name = "comboBoxProcess";
             this.comboBoxProcess.Size = new System.Drawing.Size(192, 20);
             this.comboBoxProcess.TabIndex = 9;
@@ -138,7 +128,7 @@ namespace aabViewer.Logcat
             // 
             // buttonRefreshProcessList
             // 
-            this.buttonRefreshProcessList.Location = new System.Drawing.Point(692, 12);
+            this.buttonRefreshProcessList.Location = new System.Drawing.Point(840, 7);
             this.buttonRefreshProcessList.Name = "buttonRefreshProcessList";
             this.buttonRefreshProcessList.Size = new System.Drawing.Size(100, 23);
             this.buttonRefreshProcessList.TabIndex = 5;
@@ -148,31 +138,88 @@ namespace aabViewer.Logcat
             // 
             // checkBox1
             // 
-            this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(390, 433);
+            this.checkBox1.Location = new System.Drawing.Point(868, 490);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(72, 16);
             this.checkBox1.TabIndex = 10;
             this.checkBox1.Text = "自动刷新";
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button1.Location = new System.Drawing.Point(333, 483);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(79, 23);
+            this.button1.TabIndex = 11;
+            this.button1.Text = "保存TAG配置";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // listBoxLogs
             // 
             this.listBoxLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listBoxLogs.Location = new System.Drawing.Point(12, 41);
+            this.listBoxLogs.FullRowSelect = true;
+            this.listBoxLogs.GridLines = true;
+            this.listBoxLogs.HideSelection = false;
+            this.listBoxLogs.Location = new System.Drawing.Point(12, 36);
             this.listBoxLogs.Name = "listBoxLogs";
-            this.listBoxLogs.Size = new System.Drawing.Size(816, 268);
+            this.listBoxLogs.Size = new System.Drawing.Size(928, 344);
             this.listBoxLogs.TabIndex = 4;
+            this.listBoxLogs.UseCompatibleStateImageBehavior = false;
+            this.listBoxLogs.View = System.Windows.Forms.View.Details;
+            this.listBoxLogs.VirtualMode = true;
             this.listBoxLogs.SelectedIndexChanged += new System.EventHandler(this.listBoxLogs_SelectedIndexChanged);
+            // 
+            // textBoxStringFilter
+            // 
+            this.textBoxStringFilter.Location = new System.Drawing.Point(378, 6);
+            this.textBoxStringFilter.Name = "textBoxStringFilter";
+            this.textBoxStringFilter.Size = new System.Drawing.Size(154, 21);
+            this.textBoxStringFilter.TabIndex = 2;
+            // 
+            // tagFilterFilter
+            // 
+            this.tagFilterFilter.DropDownHeight = 1;
+            this.tagFilterFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.tagFilterFilter.IntegralHeight = false;
+            this.tagFilterFilter.Location = new System.Drawing.Point(106, 6);
+            this.tagFilterFilter.Name = "tagFilterFilter";
+            this.tagFilterFilter.Size = new System.Drawing.Size(133, 20);
+            this.tagFilterFilter.TabIndex = 1;
+            // 
+            // tagExludeFilter
+            // 
+            this.tagExludeFilter.DropDownHeight = 1;
+            this.tagExludeFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.tagExludeFilter.IntegralHeight = false;
+            this.tagExludeFilter.Location = new System.Drawing.Point(245, 6);
+            this.tagExludeFilter.Name = "tagExludeFilter";
+            this.tagExludeFilter.Size = new System.Drawing.Size(127, 20);
+            this.tagExludeFilter.TabIndex = 1;
+            // 
+            // button2
+            // 
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.Location = new System.Drawing.Point(773, 486);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(79, 23);
+            this.button2.TabIndex = 12;
+            this.button2.Text = "暂停";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(840, 464);
+            this.ClientSize = new System.Drawing.Size(952, 518);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.buttonSaveAll);
             this.Controls.Add(this.buttonSaveSelected);
@@ -181,6 +228,7 @@ namespace aabViewer.Logcat
             this.Controls.Add(this.comboBoxTypeFilter);
             this.Controls.Add(this.textBoxStringFilter);
             this.Controls.Add(this.tagFilterFilter);
+            this.Controls.Add(this.tagExludeFilter);
             this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.buttonClearLogs);
             this.Controls.Add(this.comboBoxProcess);
@@ -197,13 +245,16 @@ namespace aabViewer.Logcat
         private System.Windows.Forms.ComboBox comboBoxProcess;
         private System.Windows.Forms.Button buttonClearLogs;
         private System.Windows.Forms.Button buttonStart;
-        private DelayTextBox tagFilterFilter;
+        private UCheckComboBox tagFilterFilter;
         private DelayTextBox textBoxStringFilter;
+        private UCheckComboBox tagExludeFilter;
         private System.Windows.Forms.ComboBox comboBoxTypeFilter;
         private DoubleBufferedListBox listBoxLogs;
         private System.Windows.Forms.TextBox textBoxFullLog;
         private System.Windows.Forms.Button buttonSaveSelected;
         private System.Windows.Forms.Button buttonSaveAll;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
     }
 }

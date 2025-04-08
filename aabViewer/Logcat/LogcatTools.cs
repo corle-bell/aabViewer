@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace aabViewer.Logcat
 {
-
     public struct LogInfo
     {
         public string Time;
@@ -84,8 +83,12 @@ namespace aabViewer.Logcat
             }
         }
 
-        private static readonly string LogPattern = @"^(\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3})\s+(\d+)\s+(\d+)\s+([VIDWEFS])\s+(\S+)\s+(.*)$";
+        public static void Test()
+        {
+            var t = ParseLogLine("04-08 14:31:06.712 10597 10597 V ONet:ScreenStatusLiveData: (LoadedApk.java:1888)Screen STATE_OFF ");
+        }
 
+        private static readonly string LogPattern = @"^(\d{2}-\d{2})\s+(\d{2}:\d{2}:\d{2}\.\d+)\s+(\d+)\s+(\d+)\s+([VDIWEFS])\s+([^:]*):\s*(.*)$";
         public static LogInfo ParseLogLine(string logLine)
         {
             // 创建正则表达式对象
@@ -95,12 +98,12 @@ namespace aabViewer.Logcat
             if (match.Success)
             {
                 // 提取匹配到的各个部分
-                info.Time = match.Groups[1].Value;
-                info.PId = (match.Groups[2].Value);
-                info.TId = (match.Groups[3].Value);
-                info.LogLevel = match.Groups[4].Value;
-                info.Tag = match.Groups[5].Value;
-                info.Message = match.Groups[6].Value;
+                info.Time = $"{match.Groups[1].Value.Trim()} {match.Groups[2].Value.Trim()}";
+                info.PId = (match.Groups[3].Value).Trim();
+                info.TId = (match.Groups[4].Value).Trim();
+                info.LogLevel = match.Groups[5].Value.Trim();
+                info.Tag = match.Groups[6].Value.Trim();
+                info.Message = match.Groups[7].Value;
             }
             else
             {

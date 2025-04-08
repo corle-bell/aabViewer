@@ -25,7 +25,7 @@ namespace aabViewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5.0.6")]
+        [global::System.Configuration.DefaultSettingValueAttribute("5.0.7")]
         public string Ignored_Ver {
             get {
                 return ((string)(this["Ignored_Ver"]));

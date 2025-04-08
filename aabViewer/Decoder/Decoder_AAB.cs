@@ -264,6 +264,10 @@ namespace aabViewer
 
             if (ret.Length == 0)
             {
+                if(string.IsNullOrEmpty(error))
+                {
+                    WinformTools.WriteLog("Install Success Error: " + error);
+                }
                 MessageBox.Show("安装成功!");
             }
             else
