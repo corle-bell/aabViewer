@@ -11,7 +11,7 @@
 
 [winform 下拉框多选 List ItemsComboBox _winform combox做多选-CSDN博客](https://blog.csdn.net/qq_38567182/article/details/145593621?spm=1001.2101.3001.6650.1&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EYuanLiJiHua%7EPaidSort-1-145593621-blog-46007311.235%5Ev43%5Epc_blog_bottom_relevance_base2&utm_relevant_index=2)
 
-![](https://github.com/corle-bell/aabViewer/blob/main/ScreenShot/main.png)
+![](https://github.com/corle-bell/aabViewer/blob/main/ScreenShot/view.png)
 
 https://github.com/user-attachments/assets/23495070-91c3-4943-9229-cb0d4946c232
 
