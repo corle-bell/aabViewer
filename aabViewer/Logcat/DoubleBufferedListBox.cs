@@ -153,18 +153,7 @@ namespace aabViewer.Logcat
                 if (index < logInfos.Count)
                 {
                     LogInfo log = logInfos[index];
-                    sb.Append(log.Time);
-                    sb.Append(" ");
-                    sb.Append(log.PId);
-                    sb.Append(" ");
-                    sb.Append(log.TId);
-                    sb.Append(" ");
-                    sb.Append(log.LogLevel);
-                    sb.Append(" ");
-                    sb.Append(log.Tag);
-                    sb.Append(" ");
-                    sb.Append(log.Message);
-                    sb.AppendLine();
+                    
                 }
             }
             return sb.ToString();
@@ -176,19 +165,7 @@ namespace aabViewer.Logcat
 
             for (int i = 0; i < logInfos.Count; i++)
             {
-                LogInfo log = logInfos[i];
-                sb.Append(log.Time);
-                sb.Append(" ");
-                sb.Append(log.PId);
-                sb.Append(" ");
-                sb.Append(log.TId);
-                sb.Append(" ");
-                sb.Append(log.LogLevel);
-                sb.Append(" ");
-                sb.Append(log.Tag);
-                sb.Append(" ");
-                sb.Append(log.Message);
-                sb.AppendLine();
+                sb.AppendLine(logInfos[i].ToString());
             }
             return sb.ToString();
         }

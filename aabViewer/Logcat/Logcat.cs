@@ -172,13 +172,16 @@ namespace aabViewer.Logcat
             if (!string.IsNullOrEmpty(e.Data) && !isClose)
             {
                 var log = LogcatTools.ParseLogLine(e.Data);
-                if (isReading && FilterLog(log))
+                if (isReading)
                 {
-                    lock (pendingLogs)
+                    if(FilterLog(log))
                     {
-                        pendingLogs.Add(log);
-                        allLogs.Add(log);
+                        lock (pendingLogs)
+                        {
+                            pendingLogs.Add(log);                            
+                        }
                     }
+                    allLogs.Add(log);
                 }
             }
         }
@@ -515,6 +518,31 @@ namespace aabViewer.Logcat
 
             var btn = sender as Button;
             btn.Text = isPending ? "暂停" : "继续";
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var file = WinformTools.FileSelect("选择文件", "");
+
+            if (!File.Exists(file)) return;
+            var lines = File.ReadAllLines(file);
+
+            listBoxLogs.BeginUpdate();
+            for (var i=0; i<lines.Length; i++)
+            {
+                var log = LogcatTools.ParseLogLine(lines[i]);
+
+                if (FilterLog(log))
+                {
+                    listBoxLogs.AddLog(log);
+                }
+                allLogs.Add(log);
+            }
+            if (this.checkBox1.Checked)
+            {
+                listBoxLogs.EnsureVisibleLast();
+            }
+            listBoxLogs.EndUpdate();
         }
     }
 }

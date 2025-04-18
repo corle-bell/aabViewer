@@ -26,6 +26,11 @@ namespace aabViewer.Logcat
                     || string.IsNullOrEmpty(Tag) || string.IsNullOrEmpty(Message);
             }
         }
+
+        public override string ToString()
+        {
+            return $"{Time} {PId} {TId} {LogLevel} {Tag} : {Message}";
+        }
     }
 
     public class LogcatTools

@@ -46,6 +46,7 @@ namespace aabViewer.Logcat
             this.tagFilterFilter = new aabViewer.UCheckComboBox(this.components);
             this.tagExludeFilter = new aabViewer.UCheckComboBox(this.components);
             this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonStart
@@ -87,7 +88,7 @@ namespace aabViewer.Logcat
             // buttonSaveSelected
             // 
             this.buttonSaveSelected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonSaveSelected.Location = new System.Drawing.Point(12, 483);
+            this.buttonSaveSelected.Location = new System.Drawing.Point(114, 483);
             this.buttonSaveSelected.Name = "buttonSaveSelected";
             this.buttonSaveSelected.Size = new System.Drawing.Size(106, 23);
             this.buttonSaveSelected.TabIndex = 6;
@@ -98,7 +99,7 @@ namespace aabViewer.Logcat
             // buttonSaveAll
             // 
             this.buttonSaveAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonSaveAll.Location = new System.Drawing.Point(124, 483);
+            this.buttonSaveAll.Location = new System.Drawing.Point(226, 483);
             this.buttonSaveAll.Name = "buttonSaveAll";
             this.buttonSaveAll.Size = new System.Drawing.Size(101, 23);
             this.buttonSaveAll.TabIndex = 7;
@@ -109,7 +110,7 @@ namespace aabViewer.Logcat
             // buttonClearLogs
             // 
             this.buttonClearLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonClearLogs.Location = new System.Drawing.Point(231, 483);
+            this.buttonClearLogs.Location = new System.Drawing.Point(333, 483);
             this.buttonClearLogs.Name = "buttonClearLogs";
             this.buttonClearLogs.Size = new System.Drawing.Size(96, 23);
             this.buttonClearLogs.TabIndex = 8;
@@ -150,7 +151,7 @@ namespace aabViewer.Logcat
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Location = new System.Drawing.Point(333, 483);
+            this.button1.Location = new System.Drawing.Point(435, 483);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(79, 23);
             this.button1.TabIndex = 11;
@@ -213,11 +214,23 @@ namespace aabViewer.Logcat
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // button3
+            // 
+            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button3.Location = new System.Drawing.Point(12, 483);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(96, 23);
+            this.button3.TabIndex = 13;
+            this.button3.Text = "加载日志";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(952, 518);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.checkBox1);
@@ -256,5 +269,6 @@ namespace aabViewer.Logcat
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
     }
 }
