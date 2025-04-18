@@ -80,9 +80,10 @@ namespace aabViewer.VersionUpdate
                     string json = await response.Content.ReadAsStringAsync();
                     // 使用 LitJson 解析 JSON 数据
                     JsonData data = JsonMapper.ToObject(json);
+                    var assets = data["assets"];
                     string tagName = data["tag_name"].ToString();                    
                     UpdateInfo = $"{tagName}\r\n{data["body"].ToString()}";
-                    DownLoadURL = data["browser_download_url"].ToString();
+                    DownLoadURL = assets[0]["browser_download_url"].ToString();
                     // 移除版本号前面可能存在的 "v" 字符
                     if (tagName.StartsWith("v"))
                     {
