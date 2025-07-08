@@ -130,7 +130,8 @@ namespace aabViewer
         {
             var CheckTime = Properties.Settings.Default.CheckTime;
             var Now = WinformTools.TimeStamp();
-            if(Now-CheckTime>=86400)
+            var t = Now - CheckTime;
+            if (t>=86400)
             {
                 Properties.Settings.Default.CheckTime = Now;
                 Properties.Settings.Default.Save();
@@ -550,7 +551,7 @@ namespace aabViewer
                 this.text_model.Text = string.Format("{0} {1}", brand, model);
                 this.text_version.Text = string.Format("Android {0}", sys_ver);
 
-                if (brand == "")
+                if (string.IsNullOrEmpty(brand) || string.IsNullOrEmpty(model))
                 {
                     this.label_status.ForeColor = Color.Red;
                     this.label_status.Text = "未连接";

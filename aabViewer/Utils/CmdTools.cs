@@ -109,6 +109,8 @@ namespace aabViewer
             p.StartInfo.Arguments = _text;
             p.StartInfo.UseShellExecute = false;
             p.StartInfo.RedirectStandardInput = true;
+            p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+            p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
             ProgressList.Add(p);
             p.Start();
             
@@ -125,6 +127,9 @@ namespace aabViewer
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.Arguments = _text;//“/C”表示执行完命令后马上退出 
+            p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+            p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
+            
             p.Start();//启动程序  
            
             string sOutput = p.StandardOutput.ReadToEnd();
@@ -145,6 +150,8 @@ namespace aabViewer
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.Arguments = _text;//“/C”表示执行完命令后马上退出 
+            p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+            p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
             ProgressList.Add(p);
             p.Start();//启动程序 
 
