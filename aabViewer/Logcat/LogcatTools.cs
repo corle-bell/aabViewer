@@ -90,11 +90,13 @@ namespace aabViewer.Logcat
 
         public static void Test()
         {
-            var t = ParseLogLine("04-08 14:31:06.712 10597 10597 V ONet:ScreenStatusLiveData: (LoadedApk.java:1888)Screen STATE_OFF ");
+            var t0 = ParseLogLine("04-08 14:31:06.712 10597 10597 V ONet:ScreenStatusLiveData: (LoadedApk.java:1888)Screen STATE_OFF ");
+            var t1 = ParseLogLine("2025-07-28	12:23:38.978	1159	3578	D		WindowManager		takeScreenshotToTargetWindow: targetSurface=null, sourceCrop=Rect(0, 0 - 0, 0)");
         }
 
         private static readonly string LogPattern = @"^(\d{2}-\d{2})\s+(\d{2}:\d{2}:\d{2}\.\d+)\s+(\d+)\s+(\d+)\s+([VDIWEFS])\s+([^:]*):\s*(.*)$";
-        public static LogInfo ParseLogLine(string logLine)
+
+        private static LogInfo ParseLogByRegex(string logLine)
         {
             // 创建正则表达式对象
             Regex regex = new Regex(LogPattern);
@@ -122,6 +124,47 @@ namespace aabViewer.Logcat
                 info.Message = logLine;
             }
             return info;
+        }
+
+        private static LogInfo ParseLogBySplit(string logLine)
+        {
+            string[] log_groups = logLine.Split(new char[] { '\t', ' '}, StringSplitOptions.RemoveEmptyEntries);
+
+            LogInfo info = new LogInfo();
+            if (log_groups!=null && log_groups.Length>=7)
+            {
+                info.Time = $"{log_groups[0].Trim()} {log_groups[1].Trim()}";
+                info.PId = (log_groups[2]).Trim();
+                info.TId = (log_groups[3]).Trim();
+                info.LogLevel = log_groups[4].Trim();
+                info.Tag = log_groups[5].Trim();
+               
+
+                StringBuilder sb = new StringBuilder();
+
+                for (int i=6; i<log_groups.Length; i++)
+                {
+                    sb.Append(log_groups[i]);
+                }
+
+                info.Message = sb.ToString();
+            }
+            else
+            {
+                Console.WriteLine("Invalid log line format.");
+
+                info.Time = "";
+                info.PId = "";
+                info.TId = "";
+                info.LogLevel = "";
+                info.Tag = "";
+                info.Message = logLine;
+            }
+            return info;
+        }
+        public static LogInfo ParseLogLine(string logLine)
+        {
+            return ParseLogBySplit(logLine);
         }
     }
 }

@@ -26,9 +26,6 @@ namespace aabViewer
             {
                 Application.Run(new Form1(args));
             }
-
-
-            
         }
 
     }

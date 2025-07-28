@@ -51,6 +51,9 @@ namespace aabViewer.Logcat
             menuItem.Click += MenuItem_ClickExclue;
             contextMenu.Items.Add(menuItem);
 
+            menuItem = new ToolStripMenuItem("复制");
+            menuItem.Click += MenuItem_ClickCopy;
+            contextMenu.Items.Add(menuItem);
 
             MouseDown += ListView1_MouseDown;
         }
@@ -103,10 +106,26 @@ namespace aabViewer.Logcat
             if (string.IsNullOrEmpty(contextMenuItem.SubItems[4].Text)) return;
 
             var root = this.Parent as MainForm;
-            if(root.TagExlude.AddItem(contextMenuItem.SubItems[4].Text))
+            if (root.TagExlude.AddItem(contextMenuItem.SubItems[4].Text))
             {
                 root.ApplyFilter();
-            }            
+            }
+        }
+
+        private void MenuItem_ClickCopy(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(contextMenuItem.SubItems[4].Text)) return;
+
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < contextMenuItem.SubItems.Count; i++)
+            {
+                sb.Append(contextMenuItem.SubItems[i].Text);
+                sb.Append(" ");
+            }
+            string text = sb.ToString().TrimEnd();
+            Clipboard.SetText(text);
+            
         }
 
         public void AddLog(LogInfo log)
@@ -153,7 +172,7 @@ namespace aabViewer.Logcat
                 if (index < logInfos.Count)
                 {
                     LogInfo log = logInfos[index];
-                    
+                    sb.AppendLine(log.ToString());
                 }
             }
             return sb.ToString();
