@@ -116,15 +116,7 @@ namespace aabViewer.Logcat
         {
             if (string.IsNullOrEmpty(contextMenuItem.SubItems[4].Text)) return;
 
-            StringBuilder sb = new StringBuilder();
-
-            for (int i = 0; i < contextMenuItem.SubItems.Count; i++)
-            {
-                sb.Append(contextMenuItem.SubItems[i].Text);
-                sb.Append(" ");
-            }
-            string text = sb.ToString().TrimEnd();
-            Clipboard.SetText(text);
+            Clipboard.SetText(SelectToString());
             
         }
 

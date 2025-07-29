@@ -131,23 +131,40 @@ namespace aabViewer.Logcat
             string[] log_groups = logLine.Split(new char[] { '\t', ' '}, StringSplitOptions.RemoveEmptyEntries);
 
             LogInfo info = new LogInfo();
-            if (log_groups!=null && log_groups.Length>=7)
+            if (log_groups!=null && log_groups.Length>=6)
             {
-                info.Time = $"{log_groups[0].Trim()} {log_groups[1].Trim()}";
-                info.PId = (log_groups[2]).Trim();
-                info.TId = (log_groups[3]).Trim();
-                info.LogLevel = log_groups[4].Trim();
-                info.Tag = log_groups[5].Trim();
-               
-
-                StringBuilder sb = new StringBuilder();
-
-                for (int i=6; i<log_groups.Length; i++)
+                int PId_StartIndex = 0;
+                StringBuilder sb = new StringBuilder();               
+                for (int i=0; i< log_groups.Length; i++)
                 {
-                    sb.Append(log_groups[i]);
+                    if (int.TryParse(log_groups[i], out var t))
+                    {
+                        PId_StartIndex = i;
+                        break;
+                    }
+                    else
+                    {
+                        sb.Append(log_groups[i]);
+                        sb.Append(" ");
+                    }
                 }
 
-                info.Message = sb.ToString();
+                info.Time = sb.ToString().Trim();
+                info.PId = (log_groups[PId_StartIndex]).Trim();
+                info.TId = (log_groups[PId_StartIndex+1]).Trim();
+                info.LogLevel = log_groups[PId_StartIndex+2].Trim();
+                info.Tag = log_groups[PId_StartIndex+3].Trim();
+               
+                if(log_groups.Length> PId_StartIndex + 3)
+                {
+                    sb.Clear();
+                    for (int i = PId_StartIndex + 3; i < log_groups.Length; i++)
+                    {
+                        sb.Append(log_groups[i]);
+                    }
+
+                    info.Message = sb.ToString();
+                }                
             }
             else
             {
