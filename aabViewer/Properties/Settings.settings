@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="Ignored_Ver" Type="System.String" Scope="User">
-      <Value Profile="(Default)">5.1.1</Value>
+      <Value Profile="(Default)">5.1.2</Value>
     </Setting>
     <Setting Name="CheckTime" Type="System.Int64" Scope="User">
       <Value Profile="(Default)">0</Value>

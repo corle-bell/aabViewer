@@ -94,23 +94,33 @@ namespace aabViewer.Logcat
             var t1 = ParseLogLine("2025-07-28	12:23:38.978	1159	3578	D		WindowManager		takeScreenshotToTargetWindow: targetSurface=null, sourceCrop=Rect(0, 0 - 0, 0)");
         }
 
-        private static readonly string LogPattern = @"^(\d{2}-\d{2})\s+(\d{2}:\d{2}:\d{2}\.\d+)\s+(\d+)\s+(\d+)\s+([VDIWEFS])\s+([^:]*):\s*(.*)$";
+        private static readonly Regex LineRegex = new Regex(
+        @"^(?<time>\d\d-\d\d\s+\d\d:\d\d:\d\d\.\d+)\s+" +
+        @"(?<pid>\d+)\s+" +
+        @"(?<tid>\d+)\s+" +
+        @"(?<level>[VDIWEF])\s+" +
+        @"(?<tag>[^:]+):\s*" +
+        @"(?<msg>.*)$",
+        RegexOptions.Compiled
+    );
 
         private static LogInfo ParseLogByRegex(string logLine)
         {
             // 创建正则表达式对象
-            Regex regex = new Regex(LogPattern);
+            Regex regex = LineRegex;
             Match match = regex.Match(logLine);
             LogInfo info = new LogInfo();
             if (match.Success)
             {
                 // 提取匹配到的各个部分
-                info.Time = $"{match.Groups[1].Value.Trim()} {match.Groups[2].Value.Trim()}";
-                info.PId = (match.Groups[3].Value).Trim();
-                info.TId = (match.Groups[4].Value).Trim();
-                info.LogLevel = match.Groups[5].Value.Trim();
-                info.Tag = match.Groups[6].Value.Trim();
-                info.Message = match.Groups[7].Value;
+                // Time 字段：保留完整时间戳（含日期）
+                info.Time = $"{match.Groups["date"].Value} {match.Groups["time"].Value}";
+
+                info.PId = match.Groups["pid"].Value;
+                info.TId = match.Groups["tid"].Value;
+                info.LogLevel = match.Groups["level"].Value;
+                info.Tag = match.Groups["tag"].Value.Trim();
+                info.Message = match.Groups["msg"].Value;
             }
             else
             {
@@ -181,7 +191,7 @@ namespace aabViewer.Logcat
         }
         public static LogInfo ParseLogLine(string logLine)
         {
-            return ParseLogBySplit(logLine);
+            return ParseLogByRegex(logLine);
         }
     }
 }
