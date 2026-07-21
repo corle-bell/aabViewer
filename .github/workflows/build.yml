@@ -2,9 +2,11 @@ name: build
 
 on:
   push:
-    branches: [main]
-  pull_request:
+    tags: ['v*']
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -44,3 +46,12 @@ jobs:
         with:
           name: aabViewer-Release
           path: aabViewer-Release.zip
+
+      - name: Release on tag
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: aabViewer ${{ github.ref_name }}
+          files: aabViewer-Release.zip
+          generate_release_notes: true
+          make_latest: true
