@@ -1,0 +1,46 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup NuGet
+        uses: nuget/setup-nuget@v2
+
+      - name: Restore NuGet packages
+        run: nuget restore aabViewer.sln
+
+      - name: Build
+        run: msbuild aabViewer.sln -p:Configuration=Release "-p:Platform=Any CPU" -p:TargetFrameworkVersion=v4.8 -m
+
+      - name: Stage release
+        shell: pwsh
+        run: |
+          $stage = "_release/aabViewer"
+          New-Item -ItemType Directory -Force -Path $stage | Out-Null
+          Copy-Item -Path "aabViewer/bin/Release/*" -Destination $stage -Recurse -Force
+          Copy-Item -Path "Config" -Destination $stage -Recurse -Force
+          Get-ChildItem -Recurse $stage | Select-Object FullName
+
+      - name: Zip release
+        shell: pwsh
+        run: Compress-Archive -Path "_release/aabViewer" -DestinationPath "aabViewer-Release.zip"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aabViewer-Release
+          path: aabViewer-Release.zip
