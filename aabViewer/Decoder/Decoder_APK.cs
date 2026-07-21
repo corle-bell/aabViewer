@@ -183,14 +183,28 @@ namespace aabViewer
         private string FindLauncherActivity()
         {
             var item = AxmlLines.Find((x) => { return x.Contains("android.intent.category.LAUNCHER"); });
-            var index = AxmlLines.IndexOf(item);
+            if (item == null) return "";
+            int index = AxmlLines.IndexOf(item);
+            if (index < 0) return "";
 
-            for(int i=index-1; i>=0; i--)
+            // 向上回溯定位 E: activity / E: activity-alias 元素行
+            // ("E: activity" 是 "E: activity-alias" 的子串，故两者均可命中)
+            for (int i = index - 1; i >= 0; i--)
             {
-                if(AxmlLines[i].Contains("activity"))
+                if (AxmlLines[i].Contains("E: activity"))
                 {
-                    var str = Regex.Match(AxmlLines[i+2], "(?<==\")[^\"]+(?=\")").Value.Replace("\"", "");
-                    return str;
+                    // 从该元素行向下一行起正向扫描其 A: 属性，
+                    // 遇到下一个 E: 元素即停止(避免误取 intent-filter 内 action/category 的 android:name)
+                    for (int j = i + 1; j < AxmlLines.Count; j++)
+                    {
+                        if (AxmlLines[j].Contains("E: ")) break;
+                        if (AxmlLines[j].Contains("android:name"))
+                        {
+                            var str = Regex.Match(AxmlLines[j], "(?<==\")[^\"]+(?=\")").Value.Replace("\"", "");
+                            return str;
+                        }
+                    }
+                    return "";
                 }
             }
             return "";

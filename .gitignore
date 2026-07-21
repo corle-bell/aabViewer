@@ -6,3 +6,5 @@
 obj
 .vs
 .vsconfig
+.codebuddy
+.idea

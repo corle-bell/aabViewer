@@ -1,12 +1,13 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="aabViewer.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="Ignored_Ver" Type="System.String" Scope="User">
-      <Value Profile="(Default)">5.1.2</Value>
+      <Value Profile="(Default)">5.1.3</Value>
     </Setting>
     <Setting Name="CheckTime" Type="System.Int64" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>
+

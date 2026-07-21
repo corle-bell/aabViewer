@@ -94,13 +94,14 @@ namespace aabViewer.Logcat
             var t1 = ParseLogLine("2025-07-28	12:23:38.978	1159	3578	D		WindowManager		takeScreenshotToTargetWindow: targetSurface=null, sourceCrop=Rect(0, 0 - 0, 0)");
         }
 
+        // 统一兼容旧格式(MM-DD 空格分隔, TAG: 消息)与新格式(YYYY-MM-DD Tab分隔, TAG\t消息)
         private static readonly Regex LineRegex = new Regex(
-        @"^(?<time>\d\d-\d\d\s+\d\d:\d\d:\d\d\.\d+)\s+" +
+        @"^(?<date>\d{2}-\d{2}|\d{4}-\d{2}-\d{2})\s+" +
+        @"(?<time>\d{2}:\d{2}:\d{2}\.\d+)\s+" +
         @"(?<pid>\d+)\s+" +
         @"(?<tid>\d+)\s+" +
-        @"(?<level>[VDIWEF])\s+" +
-        @"(?<tag>[^:]+):\s*" +
-        @"(?<msg>.*)$",
+        @"(?<level>[VDIWEFS])\s+" +
+        @"(?<tag>.+?)(?::\s+|\t+\s*)(?<msg>.*)$",
         RegexOptions.Compiled
     );
 
@@ -136,61 +137,51 @@ namespace aabViewer.Logcat
             return info;
         }
 
-        private static LogInfo ParseLogBySplit(string logLine)
+        private static LogInfo ParseLogBySplit(string line)
         {
-            string[] log_groups = logLine.Split(new char[] { '\t', ' '}, StringSplitOptions.RemoveEmptyEntries);
+            LogInfo info = default;
 
-            LogInfo info = new LogInfo();
-            if (log_groups!=null && log_groups.Length>=6)
-            {
-                int PId_StartIndex = 0;
-                StringBuilder sb = new StringBuilder();               
-                for (int i=0; i< log_groups.Length; i++)
-                {
-                    if (int.TryParse(log_groups[i], out var t))
-                    {
-                        PId_StartIndex = i;
-                        break;
-                    }
-                    else
-                    {
-                        sb.Append(log_groups[i]);
-                        sb.Append(" ");
-                    }
-                }
+            info.Time = "";
+            info.PId = "";
+            info.TId = "";
+            info.LogLevel = "";
+            info.Tag = "";
+            info.Message = line;
 
-                info.Time = sb.ToString().Trim();
-                info.PId = (log_groups[PId_StartIndex]).Trim();
-                info.TId = (log_groups[PId_StartIndex+1]).Trim();
-                info.LogLevel = log_groups[PId_StartIndex+2].Trim();
-                info.Tag = log_groups[PId_StartIndex+3].Trim();
-               
-                if(log_groups.Length> PId_StartIndex + 3)
-                {
-                    sb.Clear();
-                    for (int i = PId_StartIndex + 3; i < log_groups.Length; i++)
-                    {
-                        sb.Append(log_groups[i]);
-                    }
-
-                    info.Message = sb.ToString();
-                }                
-            }
-            else
+            int colonIndex = line.IndexOf(": ");
+            if (colonIndex < 0)
             {
                 Console.WriteLine("Invalid log line format.");
-
-                info.Time = "";
-                info.PId = "";
-                info.TId = "";
-                info.LogLevel = "";
-                info.Tag = "";
-                info.Message = logLine;
+                return info;
             }
+
+            string header = line.Substring(0, colonIndex);
+            string message = line.Substring(colonIndex + 2); // 保留全部空格
+
+            var parts = header.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length < 5)
+            {
+                return info;
+            }
+
+            info.Time = parts[0] + " " + parts[1];
+            info.PId = parts[2];
+            info.TId = parts[3];
+            info.LogLevel = parts[4];
+            info.Tag = parts[5];
+
+            info.Message = message;
             return info;
         }
         public static LogInfo ParseLogLine(string logLine)
         {
+            // 快速预判：日志头必以数字(日期)开头，非数字开头的续行/堆栈跟踪直接作为 Message-only 返回，跳过正则开销
+            if (string.IsNullOrEmpty(logLine) || !char.IsDigit(logLine[0]))
+            {
+                LogInfo info = new LogInfo();
+                info.Message = logLine;
+                return info;
+            }
             return ParseLogByRegex(logLine);
         }
     }

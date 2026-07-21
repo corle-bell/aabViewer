@@ -73,9 +73,32 @@ namespace aabViewer
 
                     LoadingForm.PerformStep("正在启动应用!");
 
-                    var cmd = $"shell am start {PackageName}/{LauncherActivity}";
                     var error = "";
-                    var result = CmdTools.ExecAdb(cmd, ref error);
+                    string result = "";
+                    bool started = false;
+
+                    // LauncherActivity 非空时优先用 am start(更快、输出更明确)
+                    if (!string.IsNullOrEmpty(LauncherActivity))
+                    {
+                        var cmd = $"shell am start {PackageName}/{LauncherActivity}";
+                        result = CmdTools.ExecAdb(cmd, ref error);
+                        // am start 成功输出形如 "Starting: Intent { cmp=... }"
+                        started = result.Contains("Starting:") && !result.Contains("Error");
+                    }
+
+                    // am start 失败或未解析到 LauncherActivity 时，回退用 monkey
+                    // 由系统 PackageManager 自行解析启动 Activity，对 manifest 结构零依赖
+                    if (!started)
+                    {
+                        var mcmd = $"shell monkey -p {PackageName} -c android.intent.category.LAUNCHER 1";
+                        error = "";
+                        result = CmdTools.ExecAdb(mcmd, ref error);
+                        // monkey 成功输出含 "Events injected:"
+                        if (result.Contains("Events injected:") && !result.ToLower().Contains("no activities found"))
+                        {
+                            result = "启动成功";
+                        }
+                    }
 
                     MessageBox.Show(result);
 
