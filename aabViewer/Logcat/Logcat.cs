@@ -124,34 +124,38 @@ namespace aabViewer.Logcat
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            batchUpdateTimer.Stop();           
-
+            // 先标记关闭并解绑筛选事件，避免关闭时下拉框 Closed/OnLeave 再触发 ApplyFilter
             isClose = true;
-            if (isReading)
+            isReading = false;
+            batchUpdateTimer.Stop();
+
+            this.tagFilterFilter.OnLeave -= FilterTextBox_TextChanged;
+            this.tagExludeFilter.OnLeave -= FilterTextBox_TextChanged;
+            this.textBoxStringFilter.DelayTextChange -= FilterTextBox_TextChanged;
+            this.comboBoxTypeFilter.SelectedIndexChanged -= FilterComboBox_SelectedIndexChanged;
+
+            try
             {
-                try
+                pendingLogs.Clear();
+                if (adbProcess != null)
                 {
-                    pendingLogs.Clear();
-                    // 停止当前的 logcat 进程
-                    adbProcess.CancelOutputRead();
+                    try { adbProcess.CancelOutputRead(); } catch { }
                     if (!adbProcess.HasExited)
                     {
                         adbProcess.Kill();
                     }
                     adbProcess.Close();
-                    isReading = false;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"停止日志捕获时出错：{ex.Message}");
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"停止日志捕获时出错：{ex.Message}");
+            }
 
-            if(Root!=null)
+            if (Root != null)
             {
                 Root.LogcatForm = null;
             }
-            
         }
 
         private void InitializeAdbProcess()
@@ -181,95 +185,114 @@ namespace aabViewer.Logcat
                             pendingLogs.Add(log);                            
                         }
                     }
-                    allLogs.Add(log);
+                    lock (allLogs)
+                    {
+                        allLogs.Add(log);
+                    }
                 }
             }
         }
 
         private bool FilterLog(LogInfo log)
         {
+            if (isClose || IsDisposed)
+            {
+                return false;
+            }
+
             string tagFilter = "";
             string stringFilter = "";
             string typeFilter = "";
             string pidFilter = "";
             string tagExludeFilterText = "";
 
-            // 获取TAG筛选条件
-            if (tagFilterFilter.InvokeRequired)
+            try
             {
-                tagFilterFilter.Invoke((MethodInvoker)delegate
+                // 获取TAG筛选条件
+                if (tagFilterFilter.InvokeRequired)
                 {
-                    tagFilter = tagFilterFilter.Text.Trim();
-                });
-            }
-            else
-            {
-                tagFilter = tagFilterFilter.Text.Trim();
-            }
-
-            // 获取TAG剔除条件
-            if (tagExludeFilter.InvokeRequired)
-            {
-                tagExludeFilter.Invoke((MethodInvoker)delegate
+                    tagFilterFilter.Invoke((MethodInvoker)delegate
+                    {
+                        tagFilter = tagFilterFilter.Text?.Trim() ?? "";
+                    });
+                }
+                else
                 {
-                    tagExludeFilterText = tagExludeFilter.Text.Trim();
-                });
-            }
-            else
-            {
-                tagExludeFilterText = tagExludeFilter.Text.Trim();
-            }
+                    tagFilter = tagFilterFilter.Text?.Trim() ?? "";
+                }
 
-            // 获取字符串筛选条件
-            if (textBoxStringFilter.InvokeRequired)
-            {
-                textBoxStringFilter.Invoke((MethodInvoker)delegate
+                // 获取TAG剔除条件
+                if (tagExludeFilter.InvokeRequired)
                 {
-                    stringFilter = textBoxStringFilter.Text.Trim();
-                });
-            }
-            else
-            {
-                stringFilter = textBoxStringFilter.Text.Trim();
-            }
+                    tagExludeFilter.Invoke((MethodInvoker)delegate
+                    {
+                        tagExludeFilterText = tagExludeFilter.Text?.Trim() ?? "";
+                    });
+                }
+                else
+                {
+                    tagExludeFilterText = tagExludeFilter.Text?.Trim() ?? "";
+                }
 
-            // 获取类型筛选条件
-            if (comboBoxTypeFilter.InvokeRequired)
-            {
-                comboBoxTypeFilter.Invoke((MethodInvoker)delegate
+                // 获取字符串筛选条件
+                if (textBoxStringFilter.InvokeRequired)
+                {
+                    textBoxStringFilter.Invoke((MethodInvoker)delegate
+                    {
+                        stringFilter = textBoxStringFilter.Text?.Trim() ?? "";
+                    });
+                }
+                else
+                {
+                    stringFilter = textBoxStringFilter.Text?.Trim() ?? "";
+                }
+
+                // 获取类型筛选条件
+                if (comboBoxTypeFilter.InvokeRequired)
+                {
+                    comboBoxTypeFilter.Invoke((MethodInvoker)delegate
+                    {
+                        typeFilter = comboBoxTypeFilter.SelectedItem?.ToString();
+                    });
+                }
+                else
                 {
                     typeFilter = comboBoxTypeFilter.SelectedItem?.ToString();
-                });
-            }
-            else
-            {
-                typeFilter = comboBoxTypeFilter.SelectedItem?.ToString();
-            }
+                }
 
-            // 获取PID筛选条件
-            if (comboBoxProcess.InvokeRequired)
-            {
-                comboBoxProcess.Invoke((MethodInvoker)delegate
+                // 获取PID筛选条件
+                if (comboBoxProcess.InvokeRequired)
+                {
+                    comboBoxProcess.Invoke((MethodInvoker)delegate
+                    {
+                        pidFilter = comboBoxProcess.SelectedItem?.ToString();
+                    });
+                }
+                else
                 {
                     pidFilter = comboBoxProcess.SelectedItem?.ToString();
-                });
+                }
             }
-            else
-            {
-                pidFilter = comboBoxProcess.SelectedItem?.ToString();
-            }
-
-            if (!string.IsNullOrEmpty(tagExludeFilterText) && tagExludeFilterText.Contains(log.Tag))
+            catch (ObjectDisposedException)
             {
                 return false;
             }
 
-            if (!string.IsNullOrEmpty(tagFilter) && !tagFilter.Contains(log.Tag))
+            // 续行/堆栈等行 Tag 可能为 null，Contains(null) 会抛 ArgumentNullException
+            string logTag = log.Tag ?? string.Empty;
+            string logMessage = log.Message ?? string.Empty;
+
+            if (!string.IsNullOrEmpty(tagExludeFilterText) && !string.IsNullOrEmpty(logTag) && tagExludeFilterText.Contains(logTag))
             {
                 return false;
             }
 
-            if (!string.IsNullOrEmpty(stringFilter) && !log.Message.Contains(stringFilter))
+            if (!string.IsNullOrEmpty(tagFilter) && (string.IsNullOrEmpty(logTag) || !tagFilter.Contains(logTag)))
+            {
+                return false;
+            }
+
+            if (!string.IsNullOrEmpty(stringFilter) && !logMessage.Contains(stringFilter))
             {
                 return false;
             }
@@ -321,7 +344,10 @@ namespace aabViewer.Logcat
             try
             {
                 // 清空程序内部存储的日志列表
-                allLogs.Clear();
+                lock (allLogs)
+                {
+                    allLogs.Clear();
+                }
 
                 // 清空界面上的日志列表
                 listBoxLogs.ClearAll();
@@ -345,32 +371,66 @@ namespace aabViewer.Logcat
         
         private void FilterTextBox_TextChanged(object sender, EventArgs e)
         {
+            if (isClose || IsDisposed)
+            {
+                return;
+            }
             ApplyFilter();
         }
 
         private void FilterComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (isClose || IsDisposed)
+            {
+                return;
+            }
             ApplyFilter();
         }
 
         public void ApplyFilter()
         {
-            listBoxLogs.SuspendLayout();
-            listBoxLogs.BeginUpdate();
-
-            List<LogInfo> filterLogs = new List<LogInfo>();
-            foreach (var log in allLogs)
+            if (isClose || IsDisposed || listBoxLogs == null || listBoxLogs.IsDisposed)
             {
-                if (FilterLog(log))
-                {
-                    filterLogs.Add(log);                    
-                }
+                return;
             }
 
-            listBoxLogs.UpdateLogs(filterLogs);
+            listBoxLogs.SuspendLayout();
+            listBoxLogs.BeginUpdate();
+            try
+            {
+                List<LogInfo> filterLogs = new List<LogInfo>();
+                // 快照，避免关闭/后台写 allLogs 时枚举抛错
+                LogInfo[] snapshot;
+                lock (allLogs)
+                {
+                    snapshot = allLogs.ToArray();
+                }
 
-            listBoxLogs.EndUpdate();
-            listBoxLogs.ResumeLayout();
+                foreach (var log in snapshot)
+                {
+                    if (isClose)
+                    {
+                        return;
+                    }
+                    if (FilterLog(log))
+                    {
+                        filterLogs.Add(log);
+                    }
+                }
+
+                if (!isClose && !IsDisposed && listBoxLogs != null && !listBoxLogs.IsDisposed)
+                {
+                    listBoxLogs.UpdateLogs(filterLogs);
+                }
+            }
+            finally
+            {
+                if (listBoxLogs != null && !listBoxLogs.IsDisposed)
+                {
+                    listBoxLogs.EndUpdate();
+                    listBoxLogs.ResumeLayout();
+                }
+            }
         }
 
         private void listBoxLogs_SelectedIndexChanged(object sender, EventArgs e)
@@ -536,7 +596,10 @@ namespace aabViewer.Logcat
                 {
                     listBoxLogs.AddLog(log);
                 }
-                allLogs.Add(log);
+                lock (allLogs)
+                {
+                    allLogs.Add(log);
+                }
             }
             if (this.checkBox1.Checked)
             {

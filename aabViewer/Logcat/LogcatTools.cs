@@ -178,7 +178,13 @@ namespace aabViewer.Logcat
             // 快速预判：日志头必以数字(日期)开头，非数字开头的续行/堆栈跟踪直接作为 Message-only 返回，跳过正则开销
             if (string.IsNullOrEmpty(logLine) || !char.IsDigit(logLine[0]))
             {
+                // 续行/堆栈跟踪：仅作 Message，其余字段置空串，避免 Filter 时 Tag 为 null
                 LogInfo info = new LogInfo();
+                info.Time = "";
+                info.PId = "";
+                info.TId = "";
+                info.LogLevel = "";
+                info.Tag = "";
                 info.Message = logLine;
                 return info;
             }
